@@ -19,7 +19,8 @@ PREFIX = /usr/local
 LIBDIR = $(PREFIX)/lib
 BINDIR = $(PREFIX)/bin
 
-# Handle commit messages
+# Handle Git and commit messages
+BRANCH = $(shell git branch | grep '* ' | cut -d\  -f 2)
 MSG = Quick Save
 ifneq ($(msg),)
 MSG = $(msg)
