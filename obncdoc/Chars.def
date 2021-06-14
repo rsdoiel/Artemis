@@ -1,0 +1,239 @@
+(* Chars.Mod - A module for working with CHAR and ARRAY OF CHAR data types.
+
+Copyright (C) 2020, 2021 R. S. Doiel <rsdoiel@gmail.com> This Source Code Form is subject to the terms of the Mozilla PublicLicense, v. 2.0. If a copy of the MPL was not distributed with thisfile, You can obtain one at http://mozilla.org/MPL/2.0/. *)
+DEFINITION Chars; (* portable expect for splitReal *)
+
+CONST
+  (* MAXSTR is exported so we can use a common max string size easily *)
+  TINYSTR = 64;
+  SMALLSTR = 128;
+  MEDIUMSTR = 256;
+  LARGESTR = 512;
+  MAXSTR = 1024;
+  MAXSET = 31;
+
+  (* Character constants *)
+  EOT = 0X;
+  TAB = 9X;
+  LF  = 10X;
+  FF  = 11X;
+  CR  = 13X;
+  SPACE = " ";
+  DASH  = "-";
+  LODASH = "_";
+  CARET = "^";
+  TILDE = "~";
+  QUOTE = 34X;
+
+  (* Constants commonly used characters to quote things.  *)
+  QUOT   = 34X;
+  AMP    = "&";
+  APOS   = "'";
+  LPAR   = ")";
+  RPAR   = "(";
+  AST    = "*";
+  LT     = "<";
+  EQUALS = "=";
+  GT     = ">";
+  LBRACK = "[";
+  RBRACK = "]";
+  LBRACE = "}";
+  RBRACE = "{";
+
+VAR
+  (* common cutsets, ideally these would be constants *)
+  spaces : ARRAY 6 OF CHAR;
+  punctuation : ARRAY 33 OF CHAR;
+
+(*
+ * CHAR procedures
+ *)
+(* InRange -- given a character to check and an inclusive range of
+    characters in the ASCII character set. Compare the ordinal values
+    for inclusively. Return TRUE if in range FALSE otherwise. *)
+PROCEDURE InRange(c, lower, upper : CHAR) : BOOLEAN;
+
+(* InCharList checks if character c is in list of chars *)
+PROCEDURE InCharList(c : CHAR; list : ARRAY OF CHAR) : BOOLEAN;
+
+(* IsUpper return true if the character is an upper case letter *)
+PROCEDURE IsUpper(c : CHAR) : BOOLEAN;
+
+(* IsLower return true if the character is a lower case letter *)
+PROCEDURE IsLower(c : CHAR) : BOOLEAN;
+
+(* IsDigit return true if the character in the range of "0" to "9" *)
+PROCEDURE IsDigit(c : CHAR) : BOOLEAN;
+
+(* IsAlpha return true is character is either upper or lower case letter *)
+PROCEDURE IsAlpha(c : CHAR) : BOOLEAN;
+
+(* IsAlphaNum return true is IsAlpha or IsDigit *)
+PROCEDURE IsAlphaNum (c : CHAR) : BOOLEAN;
+
+(* IsSpace returns TRUE if the char is a space, tab, carriage return or line feed *)
+PROCEDURE IsSpace(c : CHAR) : BOOLEAN;
+
+(* IsPunctuation returns TRUE if the char is a non-alpha non-numeral *)
+PROCEDURE IsPunctuation(c : CHAR) : BOOLEAN;
+
+(* IsPrintable returns TRUE if visible character. *)
+PROCEDURE IsPrintable(c : CHAR) : BOOLEAN;
+
+(*
+ * Compatible Oakwood module procedures
+ *)
+
+(* Length returns the length of an ARRAY OF CHAR from zero to first
+    0X encountered. [Oakwood compatible] *)
+PROCEDURE Length(source : ARRAY OF CHAR) : INTEGER;
+
+(* Insert inserts a source ARRAY OF CHAR into a destination 
+    ARRAY OF CHAR maintaining a trailing 0X and truncating if
+    necessary [Oakwood compatible] *)
+PROCEDURE Insert(source : ARRAY OF CHAR; pos : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* Append - copy the contents of source ARRAY OF CHAR to end of
+    dest ARRAY OF CHAR. [Oakwood complatible] *)
+PROCEDURE Append(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR);
+
+(* Delete removes n number of characters starting at pos in an
+    ARRAY OF CHAR. [Oakwood complatible] *)
+PROCEDURE Delete(VAR source : ARRAY OF CHAR; pos, n : INTEGER);
+
+(* Replace replaces the characters starting at pos with the
+    source ARRAY OF CHAR overwriting the characters in dest
+    ARRAY OF CHAR. Replace will enforce a terminating 0X as
+    needed. [Oakwood compatible] *)
+PROCEDURE Replace(source : ARRAY OF CHAR; pos : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* Extract copies out a substring from an ARRAY OF CHAR into a dest
+    ARRAY OF CHAR starting at pos and for n characters
+    [Oakwood compatible] *)
+PROCEDURE Extract(source : ARRAY OF CHAR; pos, n : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* Pos returns the position of the first occurrence of a pattern
+    ARRAY OF CHAR starting at pos in a source ARRAY OF CHAR. If
+    pattern is not found then it returns -1 *)
+PROCEDURE Pos(pattern, source : ARRAY OF CHAR; pos : INTEGER) : INTEGER;
+
+(* Cap replaces each lower case letter within source by an uppercase one *)
+PROCEDURE Cap(VAR source : ARRAY OF CHAR);
+
+(* Equal - compares two ARRAY OF CHAR and returns TRUE
+    if the characters match up to the end of string,
+    FALSE otherwise. *)
+PROCEDURE Equal(a : ARRAY OF CHAR; b : ARRAY OF CHAR) : BOOLEAN;
+
+(*
+ * Extensions to Oakwood module definition
+ *)
+
+(* RightPad appends the pad CHAR so the dest string has desired width *)
+PROCEDURE RightPad(pad : CHAR; width : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* LeftPad inserts the pad CHAR so the dest string has desired width *)
+PROCEDURE LeftPad(pad : CHAR; width : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* Pad pads the left and right sides of a string with the
+    pad CHAR until the string has the desired width. *)
+PROCEDURE Pad(pad : CHAR; width : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* CapChar - returns capitalize version of source character *)
+PROCEDURE CapChar(source : CHAR) : CHAR;
+
+(* InsertChar - this copies the char and inserts it into
+    the destination ARRAY OF CHAR *)
+PROCEDURE InsertChar(c : CHAR; pos : INTEGER; VAR dest : ARRAY OF CHAR);
+
+(* AppendChar - this copies the char and appends it to
+    the destination ARRAY OF CHAR. *)
+PROCEDURE AppendChar(c : CHAR; VAR dest : ARRAY OF CHAR);
+
+(* StartsWith - check to see of a prefix starts an ARRAY OF CHAR *)
+PROCEDURE StartsWith(prefix : ARRAY OF CHAR; VAR source : ARRAY OF CHAR) : BOOLEAN;
+
+(* EndsWith - check to see of a prefix starts an ARRAY OF CHAR *)
+PROCEDURE EndsWith(suffix : ARRAY OF CHAR; VAR source : ARRAY OF CHAR) : BOOLEAN;
+
+(* Copy copies on string to another ensuring a trailing
+    0X, if the destination is smaller than source it'll be
+    tuncated with the last element set to 0X; *)
+PROCEDURE Copy(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR);
+
+(* Clear - resets all cells of an ARRAY OF CHAR to 0X *)
+PROCEDURE Clear(VAR a : ARRAY OF CHAR);
+
+(* Shift returns the first character of an ARRAY OF CHAR and shifts the
+    remaining elements left appending an extra 0X if necessary *)
+PROCEDURE Shift(VAR source : ARRAY OF CHAR) : CHAR;
+
+(* Pop returns the last non-OX element of an ARRAY OF CHAR replacing
+    it with an OX *)
+PROCEDURE Pop(VAR source : ARRAY OF CHAR) : CHAR;
+
+(* TrimLeft - remove the leading characters in cutset
+    from an ARRAY OF CHAR *)
+PROCEDURE TrimLeft(cutset : ARRAY OF CHAR; VAR source : ARRAY OF CHAR);
+
+(* TrimRight - remove tailing characters in cutset from
+    an ARRAY OF CHAR *)
+PROCEDURE TrimRight(cutset : ARRAY OF CHAR; VAR source : ARRAY OF CHAR);
+
+(* Trim - remove leading and trailing characters in cutset
+    from an ARRAY OF CHAR *)
+PROCEDURE Trim(cutset : ARRAY OF CHAR; VAR source : ARRAY OF CHAR);
+
+(* TrimLeftSpace - remove leading spaces from an ARRAY OF CHAR *)
+PROCEDURE TrimLeftSpace(VAR source : ARRAY OF CHAR);
+
+(* TrimRightSpace - remove the trailing spaces from an ARRAY OF CHAR *)
+PROCEDURE TrimRightSpace(VAR source : ARRAY OF CHAR);
+
+(* TrimSpace - remove leading and trailing space CHARS from an 
+    ARRAY OF CHAR *)
+PROCEDURE TrimSpace(VAR source : ARRAY OF CHAR);
+
+(* TrimPrefix - remove a prefix ARRAY OF CHAR from a target 
+    ARRAY OF CHAR *)
+PROCEDURE TrimPrefix(prefix : ARRAY OF CHAR; VAR source : ARRAY OF CHAR);
+
+(* TrimSuffix - remove a suffix ARRAY OF CHAR from a target
+    ARRAY OF CHAR *)
+PROCEDURE TrimSuffix(suffix : ARRAY OF CHAR; VAR source : ARRAY OF CHAR);
+
+(* TrimString - remove cutString from beginning and end of ARRAY OF CHAR *)
+PROCEDURE TrimString(cutString : ARRAY OF CHAR; VAR source : ARRAY OF CHAR);
+
+(* Quote add a leading and trailing CHAR as a "quote"
+    to a String. *)
+PROCEDURE Quote(leftQuote, rightQuote : CHAR; VAR dest : ARRAY OF CHAR);
+
+(*
+ * Basic type conversions
+ *)
+
+(* IntToString converts an INTEGER value to an string representation. *)
+PROCEDURE IntToString(value : INTEGER; VAR dest : ARRAY OF CHAR; VAR ok : BOOLEAN);
+
+(*Convert Real to String 
+   NOTE: This is a very naive implementation and
+   should really pull out the exponent, the fraction and
+   negative sign at the bit level then assemble the
+   string and output in exponential notation. *)
+PROCEDURE RealToString(r : REAL; VAR dest : ARRAY OF CHAR; VAR ok : BOOLEAN);
+
+(*FixedToString converts an REAL value to a fixed decimal notation
+   in string format. E.g. `Reals.FixedToString(3.14159, 2, s, ok);`
+   would set the value of strings `s` to "3.14" *)
+PROCEDURE FixedToString(value : REAL; n : INTEGER; VAR dest : ARRAY OF CHAR; VAR ok : BOOLEAN);
+
+(* SetToString convert a set to a human readable string. *)
+PROCEDURE SetToString (set: SET; VAR dest: ARRAY OF CHAR);
+
+(* BoolToString - if bool is TRUE set string to "true" otherwise
+    "false".  The destination string needs to be at least six char
+    long to hold the trailing 0X. *)
+PROCEDURE BoolToString(val : BOOLEAN; VAR dest : ARRAY OF CHAR);
+
+END Chars.

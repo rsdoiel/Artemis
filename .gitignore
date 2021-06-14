@@ -1,0 +1,8 @@
+a.out
+*.bak
+*~
+*.swp
+*.k
+*.o
+*.so
+*test

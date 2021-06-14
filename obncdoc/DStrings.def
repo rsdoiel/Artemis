@@ -1,0 +1,274 @@
+(* DStrings.Mod implements a dynamic string with Rider support in Oberon-7.
+
+Copyright (C) 2021 R. S. Doiel <rsdoiel@gmail.com> This Source Code Form is subject to the terms of the Mozilla PublicLicense, v. 2.0. If a copy of the MPL was not distributed with thisfile, You can obtain one at http://mozilla.org/MPL/2.0/. *)
+DEFINITION DStrings;
+
+IMPORT Chars;
+
+CONST
+  (* Constants describing special characters *)
+  EOT = Chars.EOT;
+  TAB = Chars.TAB;
+  LF  = Chars.LF;
+  FF  = Chars.FF;
+  CR  = Chars.CR;
+
+  (* Constants commonly used characters to quote things.  *)
+  QUOT   = Chars.QUOT;
+  AMP    = Chars.AMP;
+  APOS   = Chars.APOS;
+  LPAR   = Chars.LPAR;
+  RPAR   = Chars.RPAR;
+  AST    = Chars.AST;
+  LT     = Chars.LT;
+  EQUALS = Chars.EQUALS;
+  GT     = Chars.GT;
+  LBRACK = Chars.LBRACK;
+  RBRACK = Chars.RBRACK;
+  LBRACE = Chars.LBRACE;
+  RBRACE = Chars.RBRACE;
+
+TYPE
+  (* String, StringDesc implements a data structure to provide
+      dynamic string in Oberon-7 type. NOTE: In memory the
+      implentation is currently a private linked list of CHAR. *)
+  String     = POINTER TO StringDesc;
+  StringDesc = RECORD END;
+
+  (* Rider when combined with a String gives you a char buffer 
+      with a File like interface.
+
+      NOTE: The Rider has two public attributes. Rider.eot and
+      Rider.pos. Use the pos attribute to get the position of the
+      rider in a string. The procedure Pos is used to mimic the
+      Oakwood Pos procedure in Strings module operating on array of
+      char. *)
+  Rider = RECORD
+             pos : INTEGER;
+             eot : BOOLEAN 
+           END;
+
+(* Init takes an ARRAY OF CHAR and a String copying the values from
+    the ARRAY OF CHAR into String. Init is destructive and will
+    overwrite or allocate memory for each element as needed.
+
+    If you initialize a long String then Initialize to a shorter
+    one the element with the 0X will indicate the end of the string.
+    The procedure Prune can be used to unlink the first element after
+    the initial 0X. *)
+PROCEDURE Init(str : ARRAY OF CHAR; VAR s : String);
+
+(* Set takes a Rider, a String and a pos and initializes a Rider
+    to that position. *)
+PROCEDURE Set(VAR r : Rider; s : String; pos : INTEGER);
+
+(* Base returns the string the Rider operates on *)
+PROCEDURE Base( r : Rider ) : String;
+
+(* Peek takes a Rider RETURN CHAR value without moving the rider. *)
+PROCEDURE Peek(r : Rider) : CHAR;
+
+(* Get returns a CHAR found at the pos or 0X. It advances the
+    current position of the Rider. NOTE the rider has a public
+    attribute eot which becomes TRUE if 0X is encountered, remains
+    FALSE otherwise. *)
+PROCEDURE Get(VAR r : Rider) : CHAR;
+
+(* Put sets the value of what the rider is pointing at 
+    then moves the rider to the next element. It will
+    allocate new elements as needed ans ensure the last
+    element remains an 0X. *)
+PROCEDURE Put(VAR r : Rider; c : CHAR);
+
+(* Copy duplicates the contents into another. It will
+    initialize the destination if needed. *)
+PROCEDURE Copy(source : String; VAR dest : String);
+
+(* CopyChars copies an ARRAY OF CHAR into a String initalizing
+    destination String if necessary *)
+PROCEDURE CopyChars(source : ARRAY OF CHAR; VAR dest : String);
+
+(* Clear sets all element of a DString to 0X. NOTE this not
+    free memory allocated by NEW. *)
+PROCEDURE Clear(VAR dest : String);
+
+(* Prune removes trailing String elements after the first 0X,
+    The removed elements should then be able to be garbage
+    collected. *)
+PROCEDURE Prune(VAR s : String);
+
+(* ToChars copies the contents from a String into an ARRAY OF CHARs
+    return the number of chars trunctated and terminating the
+    ARRAY OF CHAR with an 0X *)
+PROCEDURE ToChars(s : String; VAR str: ARRAY OF CHAR; VAR res : INTEGER);
+
+(* String procedures that implement Oakword Strings functionality but for the String type instread of ARRAY OF CHAR *)
+
+(* Length is the number of CHAR before 0X is encountered. *)
+PROCEDURE Length( s : String ) : INTEGER;
+
+(* Insert *)
+PROCEDURE Insert(source : String; pos : INTEGER; VAR dest : String);
+
+(* Append *)
+PROCEDURE Append(extra : String; VAR dest: String);
+
+(* Delete *)
+PROCEDURE Delete(VAR s : String; pos, n : INTEGER);
+
+(* Replace replace the contents of dest with source starting at
+    pos. *)
+PROCEDURE Replace(source : String; pos : INTEGER; VAR dest : String);
+
+(* Extract *)
+PROCEDURE Extract(source : String; pos, n : INTEGER; VAR dest : String);
+
+(* Pos return the position of the first occurrance of pattern in
+    source starting at pos. If pattern not found return -1.
+    pos must be less than length of s. *) 
+PROCEDURE Pos(pattern, source : String; pos : INTEGER) : INTEGER;
+
+(* Cap replace lower case 'a' to 'z' with uppercase 'A' to 'Z' *)
+PROCEDURE Cap(VAR s : String);
+
+(* Beyond Oakwood, the follows the procedure signatures of Chars.Mod *)
+
+(* Equal - compares two string and returns TRUE if all elements
+    match through to the terminating 0X *)    
+PROCEDURE Equal( s1, s2 : String) : BOOLEAN;
+
+(* StartsWith compares a prefix String with a source string,
+    returns TRUE if prefix matches, FALSE otherwise. *)
+PROCEDURE StartsWith(prefix, source : String) : BOOLEAN;
+
+(* EndsWith compares a suffix with source String. Returns
+    TRUE if suffix is found, FALSE otherwise. *)
+PROCEDURE EndsWith(suffix, source : String) : BOOLEAN;
+
+PROCEDURE TrimPrefix(prefix : String; VAR source : String);
+
+PROCEDURE TrimSuffix(suffix : String; VAR source : String);
+
+(* TrimString removes cutString from beginning and end of a string *)
+PROCEDURE TrimString(cutString : String; VAR source : String);
+
+(* TrimLeft removes any of the characters in cutset (an
+    ARRAY OF CHAR) from left end of String *)
+PROCEDURE TrimLeft(cutset : ARRAY OF CHAR; VAR source : String);
+
+(* TrimRight removes any of the characters in cutset (an
+    ARRAY OF CHAR) from right end of String *)
+PROCEDURE TrimRight(cutset: ARRAY OF CHAR; VAR source : String);
+
+(* TrimCutset removes any of the characters in cutset (an 
+    ARRAY OF CHAR) from left or right side of String *)
+PROCEDURE Trim(cutset : ARRAY OF CHAR; VAR source : String);
+
+(* TrimSpaceLeft removes leading space characters from beginning
+    of String. *)
+PROCEDURE TrimSpaceLeft(VAR source : String);
+
+(* TrimSpaceRight removes trailing space characters from end of
+    String *)
+PROCEDURE TrimSpaceRight(VAR source : String);
+
+(* TrimSpace removes leading and trailing space characters from String *)
+PROCEDURE TrimSpace(VAR source : String);
+
+(* Quote add leading and trailing CHAR to a string. This
+    makes it easy to add double single or any specific 
+    characters to a string.
+
+    Example: Adding double quotes around a string.
+
+        String.Init("this string needs quotes", source);
+        String.QuoteString(QUOT, QUOT, source);
+
+  *)
+PROCEDURE Quote(leftQuote, rightQuote : CHAR; VAR source : String);
+
+(* 
+  * The following procedures work using Riders treating a String 
+  * as a buffer. Combining a Rider and a String Provides a powerful
+  * approach for working with plain text in memory. 
+  *
+  * The procedures are based Files procedure signatures.
+  *)
+
+(* Read takes a Rider and reads the next CHAR from a DString, 
+    setting the value of b (a BYTE). It similar to Get but
+    is a proper procedure instead of a function. *)
+PROCEDURE Read(VAR r : Rider; VAR value : BYTE);
+
+(* ReadChar takes a Rider and returns the next CHAR from a 
+    It is like Get but implemented as a proper procedure instead of
+    a function. *)
+PROCEDURE ReadChar(VAR r : Rider; VAR value : CHAR);
+
+(* ReadInt reads an integer from Rider. *)
+PROCEDURE ReadInt(VAR r : Rider; VAR value : INTEGER);
+
+(* ReadReal reads a real from Rider in decimal notation *)
+PROCEDURE ReadReal(VAR r : Rider; VAR value : REAL);
+
+(* ReadString takes a Rider and extracts through Rider.eot content
+    saving results in dest ARRAY OF CHAR *)
+PROCEDURE ReadString(VAR r : Rider; VAR dest : ARRAY OF CHAR);
+
+(* ReadDString takes a Rider and extracts through Rider.eot content
+    saving the results in dest String. *)
+PROCEDURE ReadDString(VAR r : Rider; VAR dest : String);
+
+(* ReadBool reads a boolean representation from Rider.
+    Recognized values are 1, 0, t, f, true, false including
+    upper and lower case variations. *)
+PROCEDURE ReadBool(VAR r : Rider; VAR value : BOOLEAN);
+
+(* ReadBytes reads an ARRAY OF BYTE from a Rider *)
+PROCEDURE ReadBytes(VAR r : Rider; VAR buf : ARRAY OF BYTE; n : INTEGER);
+
+(* ReadSet reads a set from a Rider *)
+PROCEDURE ReadSet(VAR r : Rider; VAR value : SET);
+
+(*ReadFixed reads a real value with fixed decimal notation.
+   E.g. s holds "3.145" read with ReadRealFixed(r, pi, 2) would
+   Set pi to 3.14 but advance the rider beyond the value read *)
+PROCEDURE ReadFixed(VAR r : Rider; VAR value : REAL; n : INTEGER);
+
+(* Write takes a Rider and writes a BYTE advancing the Rider *)
+PROCEDURE Write(VAR r : Rider; value : BYTE);
+
+(* WriteChar takes a Rider and a char and writes it to a String *)
+PROCEDURE WriteChar(VAR r : Rider; value : CHAR);
+
+(* WriteString takes a Rider and writes an ARRAY OF CHAR to String *)
+PROCEDURE WriteString(VAR r: Rider; value : ARRAY OF CHAR);
+
+(* WriteDString takes a Rider and a String writes the content into a 
+    String until terminating 0X is encountered *)
+PROCEDURE WriteDString(VAR r : Rider; source : String);
+
+(* WriteInt takes a Rider, String, integer and padding count and writes
+    the value i to the string *)
+PROCEDURE WriteInt(VAR r : Rider; value : INTEGER);
+
+(* WriteReal takes a Rider, String and Real value and writes it into
+    the String *)
+PROCEDURE WriteReal(VAR r: Rider; value : REAL);
+
+(* WriteBool takes a Rider, String and Boolean converting the boolean
+    into "true" or "false" *)
+PROCEDURE WriteBool(VAR r : Rider; value : BOOLEAN);
+
+(* WriteBytes takes a Rider and writes an ARRAY OF BYTE to a String *)
+PROCEDURE WriteBytes(VAR r : Rider; buf : ARRAY OF BYTE; n : INTEGER);
+
+(* WriteSet reads a set from a Rider *)
+PROCEDURE WriteSet(VAR r : Rider; value : SET);
+
+(*WriteFixed writes a renumber with a fixed number of decimal places
+   to a string. E.g. write out dollar ammounts as 1.32 rather then E
+   notation *)
+PROCEDURE WriteFixed(VAR r : Rider; value : REAL; n : INTEGER);
+
+END DStrings.
