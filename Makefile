@@ -19,6 +19,12 @@ PREFIX = /usr/local
 LIBDIR = $(PREFIX)/lib
 BINDIR = $(PREFIX)/bin
 
+# Handle commit messages
+MSG = Quick Save
+ifneq ($(msg),)
+MSG = $(msg)
+endif
+
 # Overrides
 oc =
 ifneq ($(oc), )
@@ -87,5 +93,21 @@ dist: $(PROG_NAMES)
 	@for FNAME in $(PROG_NAMES); do cp -p $$FNAME dist/$(BUILD_NAME)/bin/; done
 	@for FNAME in $(MODULES) $(DOCS) Makefile; do cp -p $$FNAME dist/$(BUILD_NAME)/;done
 	@cd dist && zip -r $(BUILD_NAME)-$(OS)-$(ARCH).zip $(BUILD_NAME)/*
+
+
+save:
+	git commit -am "$(MSG)"
+	git push origin $(BRANCH)
+
+status:
+	git status
+
+website: README.md page.tmpl
+	./mk_website.py
+
+publish:
+	./mk_website.py
+	./publish.bash
+
 
 .FORCE:
