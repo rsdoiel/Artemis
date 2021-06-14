@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <title>…</title>
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="artemis">
+Artemis
+</h1>
+<p>
+Artemis is a collection of Oberon-7 modules implemented for use in a POSIX environment or in some cases a Oberon-7 based Oberon System (e.g. <a href="https://projectoberon.com">Project Oberon 2013</a>).
+</p>
+<p>
+Initial development is being done in the POSIX environment and relies on Karl Landström’s <a href="https://miasap.se/obnc/">OBNC</a> compiler. Some module versions are provided for compilation with Mike Spivey’s <a href="https://github.com/Spivoxity/obc-3">Obc-3</a>.
+</p>
+<p>
+Artemis draws inspiration from Wirth and Reed’s Project Oberon 2013, Joseph Templ’s <a href="https://github.com/jtempl/ofront">Ofront</a> with V4 and Karl Landström’s <a href="https://miasap.se/obnc/">OBNC</a>.
+</p>
+<p>
+A big thank you goes to all the inspiring people who contributed to Oberon and Oberon Systems over the years particularly where their source code is publically available or through published articles, presentations and who wrote books about the language and system. All have help me study path Prof. Wirth and Prof. Gutkneckt pioneered all the many years ago.
+</p>
+<h2 id="project-layout">
+Project layout
+</h2>
+<p>
+The root repository directory is for modules that are portable between POSIX Oberon-7 compiler implementations and portable to an Oberon-7 based Oberon System. The Makefile in the root repository assumes OBNC is available.
+</p>
+<p>
+Some code just isn’t compatible between Oberon-7 compiler implementations in POSIX. I’ve split these out into two directories. The directory <a href="obnc/" title="Non-portable, requires OBNC">obnc</a> provides Module sources compatible with the OBNC compiler. This <a href="oxford/" title="Non-portable, requires obc-3">oxford</a> directory provides modules I’ve ported OBNC implementation providing compatibility with Obc-3. The primary differences between the two are default library modules, incompatibility in a few Oakwood modules and how each approaches extension fia C level libraries. To further make this distiction I’m used Karl’s file extension <code>.obn</code> in the <code>obnc</code> directory and Mike’s <code>.m</code> in the <code>oxford</code> directory.
+</p>
+<h2 id="why-artemis">
+Why Artemis?
+</h2>
+<p>
+This project started as a re-imagining of the efforts that began at the Oakwood Hotel in the 1992. As at Oakwood I hope to enrouage convergence in Oberon-7 compiler implementations outside Oberon Systems. My need is greatest in the POSIX environment so I am starting there.
+</p>
+<h2 id="new-modules">
+New Modules
+</h2>
+<p>
+<a href="Chars.Mod">Chars</a> is a module for working with CHAR and ARRAY OF CHAR. It is inspired by the Oakwood Strings module. It goes beyond the Oakwood minimum. It can function as a drop in replacement for the Oakwood Strings module.
+</p>
+<p>
+<a href="DStrings.Mod">DStrings</a> provides a dynamic string implementation for Oberon-7. The procedures signatures are often compatible with the Chars module. It leverages the Rider concept borrowed from Files and Texts in the Oberon System.
+</p>
+<p>
+<a href="Tests.Mod">Tests</a> is a minimal test library used to implement module tests in Artemus. It tries to honor the advice of “simple but no simpler”.
+</p>
+<h2 id="obnc-specific-modules">
+OBNC specific modules
+</h2>
+<p>
+The <a href="np/README.md">following modules</a> are not portable to Project Oberon. They even require use of the OBNC compiler so are not portable for use with other POSIX compilers. This is due to dependency on OBNC extension modules or because they are derived from C code and use C libraries.
+</p>
+<p>
+<a href="obnc/Unix.obn">Unix</a> provides access to some Unix/C facilities.
+</p>
+<ul>
+<li>
+<code>Exit(exitCode : INTEGER);</code> will cause a program to exist with the given POSIX exit code.
+</li>
+<li>
+<code>KernelName(dest : ARRAY OF CHAR)</code> uses the POSIX command <code>uname</code> to populate <code>dest</code> with the name of the host OS kernel if known
+</li>
+<li>
+<code>Architecture(dest : ARRAY OF CHAR)</code> uses the POSIX command <code>uname</code> to populate the <code>dest</code> with the name of the host architectures, e.g. x86_64, armv7.
+</li>
+</ul>
+<p>
+<a href="obnc/Clock.obn">Clock</a> is an abstraction layer for system clock built. It uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
+</p>
+<p>
+<a href="obnc/TextsCmdLn.obn">TextsCmdLn</a> an tempted port of Texts from Project Oberon 2013 Texts module to a POSIX environment.
+</p>
+<p>
+<a href="obnc/ocat.obn">ocat</a> is a naive implementation of Joseph Templ’s ocat
+</p>
+<h2 id="oxford-specific-modules">
+Oxford Specific Modules
+</h2>
+<p>
+<a href="oxford/Env.m">extEnv</a> provides an OBNC compatible Env module
+</p>
+<p>
+<a href="oxford/Convert.m">extConvert</a> provides an OBNC comatible Convert module
+</p>
+<p>
+<a href="oxford/Unix.m">Unix</a> provides access to some Unix/C facilities.
+</p>
+<ul>
+<li>
+<code>Exit(exitCode : INTEGER);</code> will cause a program to exist with the given POSIX exit code.
+</li>
+<li>
+<code>KernelName(dest : ARRAY OF CHAR)</code> uses the POSIX command <code>uname</code> to populate <code>dest</code> with the name of the host OS kernel if known
+</li>
+<li>
+<code>Architecture(dest : ARRAY OF CHAR)</code> uses the POSIX command <code>uname</code> to populate the <code>dest</code> with the name of the host architectures, e.g. x86_64, armv7.
+</li>
+</ul>
+<p>
+<a href="oxford/Clock.m">Clock</a> is an abstraction layer for system clock built. It uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
+</p>
+<p>
+<a href="oxford/TextsCmdLn.m">TextsCmdLn</a> an tempted port of Texts from Project Oberon 2013 Texts module to a POSIX environment.
+</p>
+<p>
+<a href="oxford/ocat.m">ocat</a> is a naive implementation of Joseph Templ’s ocat
+</p>
+<h2 id="command-line-tools">
+Command line tools
+</h2>
+<p>
+The following are modules are implementation of POSIX cli.
+</p>
+<p>
+<strong>ocat</strong> is inspired by Joseph Templ’s <code>ocat</code> command from <a href="https://github.com/jtempl/ofront">Ofront</a>. It converts Oberon Texts into plain text used on POSIX systems. There is also an option to convert tabs to spaces. It will attempt to convert LF, CR or CRLF to a system appropriate end of line.
+</p>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="./">README</a>
+</li>
+<li>
+<a href="license.html">LICENSE</a>
+</li>
+<li>
+<a href="install.html">INSTALL</a>
+</li>
+<li>
+<a href="./obncdoc/">Modules Defs</a>
+</li>
+<li>
+<a href="./obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="./oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>
