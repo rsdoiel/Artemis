@@ -1,14 +1,20 @@
 Artemis
 =======
 
-Artemis is a collection of Oberon-7 modules implemented
-for use in a POSIX environment or in some cases a Oberon-7
-based Oberon System (e.g. [Project Oberon 2013](https://projectoberon.com)).
+Artemus is an Oberon-7 module collection. My hope is
+to encourage continued use and development of the Oberon-7
+language and encourage convergence towards compatibilty
+in implementations of Oberon-7 compilers. 
+
+This project started as a re-imagining of the efforts that
+began at the Oakwood Hotel in the 1992. As at Oakwood I hope
+to enrouage convergence Oberon/Oberon-2 language implementations
+but unlike Oakwood my focus is in Oberon-7 and systems implemented
+in Oberon-7.
 
 Initial development is being done in the POSIX environment and
-relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler.
-Some module versions are provided for compilation with Mike Spivey's
-[Obc-3](https://github.com/Spivoxity/obc-3).
+relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler
+and Mike Spivery's [Obc-3](https://github.com/Spivoxity/obc-3).
 
 Artemis draws inspiration from Wirth and Reed's Project Oberon 2013,
 Joseph Templ's [Ofront](https://github.com/jtempl/ofront) with V4 and
@@ -25,33 +31,41 @@ pioneered all the many years ago.
 Project layout
 --------------
 
+- root
+    - obncdocs
+    - obnc (not portable)
+    - oxford (not portable)
+    - ports
+        - s3
+        - v4
+
 The root repository directory is for modules that are
 portable between POSIX Oberon-7 compiler implementations
-and portable to an Oberon-7 based Oberon System. The Makefile
-in the root repository assumes OBNC is available.
+and portable to an Oberon-7 based Oberon System. 
 
-Some code just isn't compatible between Oberon-7
-compiler implementations in POSIX. I've split these out
-into two directories. The directory 
-[obnc](obnc/ "Non-portable, requires OBNC")
-provides Module sources compatible with the OBNC compiler.
-This [oxford](oxford/ "Non-portable, requires obc-3")
-directory provides modules I've ported OBNC implementation
-providing compatibility with Obc-3. The primary differences
-between the two are default library modules, incompatibility
-in a few Oakwood modules and how each approaches extension
-fia C level libraries. To further make this distiction I'm
-used Karl's file extension `.obn` in the `obnc` directory
-and Mike's `.m` in the `oxford` directory.
+The __obncdocs__ directory contains documentation of the
+module definitions for the common modules in the root directory.
 
-Why Artemis?
-------------
+The __obnc__ directory contains modules that target
+specific features of the OBNC compiler. This is primarily
+integration with C based libraries and services. These aren't
+portable between compilers but should work across POSIX systems
+where OBNC is available.
 
-This project started as a re-imagining of the efforts that
-began at the Oakwood Hotel in the 1992. As at Oakwood I hope
-to enrouage convergence in Oberon-7 compiler implementations
-outside Oberon Systems. My need is greatest in the POSIX
-environment so I am starting there.
+The __oxford__ directory contains modules that target the
+Oxford Oberon Compiler, aka Obc-3. This is primarily
+integration with C based libraries and services. These aren't
+portable between compilers but should work across POSIX systems
+where Obc-3 is available.
+
+The __ports__ directory contains sub directories of code ported
+from a historic Oberon System, usually the original code was
+implemented in Oberon-2. The code in the __ports__ directory
+are subject to their own copyright and licenses. __ports__
+is focused on "porting" code from S3 (Native Oberon) and 
+V4 (Linz Oberon) to Oberon-7 as an exploration of Oberon-7 language
+and with an eye to eventually porting to the Oberon System
+that evolved from Project Oberon 2013.
 
 
 New Modules
@@ -71,6 +85,11 @@ concept borrowed from Files and Texts in the Oberon System.
 implement module tests in Artemus. It tries to honor the
 advice of "simple but no simpler".
 
+[Obn2](Obn2.Mod) is a module intended to help port Oberon-2 code
+to Oberon-7 in a portable way. Focus is on implementing Oberon-2
+built-in functions that were dropped in the evolution to Oberon-7.
+
+
 OBNC specific modules
 ---------------------
 
@@ -79,7 +98,7 @@ They even require use of the OBNC compiler so are not portable for use
 with other POSIX compilers. This is due to dependency on OBNC extension
 modules or because they are derived from C code and use C libraries. 
 
-[Unix](obnc/Unix.obn) provides access to some Unix/C facilities.
+[Unix](obnc/Unix.Mod) provides access to some Unix/C facilities.
 
 - `Exit(exitCode : INTEGER);` will cause a program to exist with the given
    POSIX exit code.
@@ -89,13 +108,13 @@ modules or because they are derived from C code and use C libraries.
   populate the `dest` with the name of the host architectures, e.g. x86_64,
   armv7.
 
-[Clock](obnc/Clock.obn) is an abstraction layer for system clock built.
+[Clock](obnc/Clock.Mod) is an abstraction layer for system clock built.
 It uses the C `clock_gettime()` and `clock_settime()`.
 
-[TextsCmdLn](obnc/TextsCmdLn.obn) an tempted  port of Texts from
+[TextsCmdLn](obnc/TextsCmdLn.Mod) an tempted  port of Texts from
 Project Oberon 2013 Texts module to a POSIX environment.
 
-[ocat](obnc/ocat.obn) is a naive implementation of Joseph Templ's ocat
+[ocat](obnc/ocat.Mod) is a naive implementation of Joseph Templ's ocat
 
 
 Oxford Specific Modules
@@ -134,4 +153,56 @@ The following are modules are implementation of POSIX cli.
 into plain text used on POSIX systems.  There is also an option to
 convert tabs to spaces. It will attempt to convert LF, CR or CRLF to
 a system appropriate end of line.
+
+
+Project approach to portabilty
+------------------------------
+
+Artemis is made up of several categories of Oberon-7 modules.
+Modules in the root should be portable across POSIX Oberon-7
+compilers and portable to an Oberon Systems based on Project Oberon
+2013. A second category are modules written for specific 
+POSIX based Oberon-7 compilers. The third category is code 
+ported from historic Oberon Systesm such as S3 and V4.
+
+- Portable modules are in "root" project directory
+- Compiler specific modules their own sub directories (e.g. "obnc", "oxford")
+- Ported modules in the "ports" sub directory
+
+In the POSIX environment Oberon-7 compilers have not
+converged (2021-06-16).  This is true for Oakwood module
+implementations and and particularly true for
+how C code is integrated. The later is the important
+divergence as integration with legacy C libraries and services
+is likely to be required for some time into the future.
+
+Putting it all together
+-----------------------
+
+Both non-portable and portable modules can be used together in
+a project. This requires knowing the compiler you're using and
+targetting it's way of managing where to find modules.
+
+In the __obnc__ directory is an example of create an implementation
+of **ocat**. My implementation uses the module "Chars" from the
+Artemis project. This means you need to include both portable and
+non-portable code to compile **ocat**.  With OBNC you need to
+set some environment variables to let the compiler known where to
+search for modules. Here's what you can do to compile this
+implementation of **ocat** in the __obnc__ directory.
+
+~~~
+export OBNC_IMPORT_PATH=".:../"
+obnc ocat.Mod
+~~~
+
+For the Obc-3 compiler we need to be in the __oxford__ sub-directory.
+With Obc-3 you can just provide the full path the module you want to
+include. Compiling the implementation of **ocat** in the __oxford__
+directory looks like
+
+~~~
+obc -o ocat ../Chars.Mod -m ocat.m
+~~~
+~~~
 
