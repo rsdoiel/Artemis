@@ -1,6 +1,11 @@
-(* Obn2.Mod is a module to help port Oberon-2 modules
-    to Oberon-7 providing a compatibility layer for
-    features missing in Oberon-7 but used in Oberon-7 *)
+(* Obn2.Mod is a module to help port Oberon-2 modules to Oberon-7.
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
 DEFINITION Obn2;
 
 (* ASH provides the Oberon-2 built-in ASH functionilty for 
