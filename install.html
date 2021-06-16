@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <title>…</title>
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="installation">
+Installation
+</h1>
+<p>
+Installing a released version
+</p>
+<ol type="1">
+<li>
+Change into that directory you want to place Artemis
+</li>
+<li>
+Unzip the release Zip file
+</li>
+<li>
+Make sure the “Artemis” “bin” sub-directory is in your PATH
+</li>
+</ol>
+<h2 id="example">
+Example
+</h2>
+<pre><code>    mkdir -p $HOME/tools
+    cd $HOME/tools
+    unzip $HOME/Download/Artemis-0.0.1-Linux-x86_64.zip
+    export PATH=&quot;$HOME/tools/Artimis/bin:$PATH&quot;</code></pre>
+<h2 id="from-source">
+From source
+</h2>
+<p>
+Compiling from source requires <a href="https://miasap.se/obnc">OBNC</a>, Git, GNU Make, a C compiler and linker.
+</p>
+<ol type="1">
+<li>
+Clone the Git repository for the project
+</li>
+<li>
+Change into the repository directory
+</li>
+<li>
+Run <code>make</code>, <code>make test</code>, and <code>sudo make install</code>
+</li>
+</ol>
+<p>
+Example install:
+</p>
+<pre><code>    git clone git@github.com:rsdoiel/Artemis
+    cd Artemis
+    make
+    make full_test
+    sudo make install</code></pre>
+<p>
+Example uninstall
+</p>
+<pre><code>    cd Artemis
+    sudo make uninstall</code></pre>
+<p>
+The Makefile supports an installation prefix. If you install with a prefix you need to uninstall with the same prefix. E.g.
+</p>
+<pre><code>    sudo make install prefix=/opt/local
+    sudo make uninstall prefix=/opt/local</code></pre>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="./">README</a>
+</li>
+<li>
+<a href="license.html">LICENSE</a>
+</li>
+<li>
+<a href="install.html">INSTALL</a>
+</li>
+<li>
+<a href="./ports/">Ports</a>
+</li>
+<li>
+<a href="./obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="./oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>
