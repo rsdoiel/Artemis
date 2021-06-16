@@ -1,0 +1,37 @@
+table {
+  table-layout: fixed;
+  width: 80%;
+  border-collapse: collapse;
+  color: white;
+  background-color: darkblue;
+  /* border: 3px solid #5f0202; */
+  caption-side: bottom;
+}
+
+th, td {
+  font-family: comic, cursive, helvetica;
+  padding: 0.72em;
+}
+
+tr, td {
+  font-family: monospace, courier, serif;
+}
+
+tbody tr:nth-child(odd) {
+  color: blue;
+  background-color: white;
+}
+
+tbody tr:nth-child(even) {
+  color: white;
+  background-color: blue;
+}
+
+caption {
+    color: black;
+    background-color: white;
+    text-align: left;
+    text-transform: lowercase;
+    font-size: smaller;
+}
+

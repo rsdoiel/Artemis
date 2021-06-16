@@ -1,7 +1,7 @@
-@import 'https://fonts.googleapis.com/css?family=Concert+One|Dosis';
+/* @import 'https://fonts.googleapis.com/css?family=Concert+One|Dosis'; */
 
 body {
-    font-family: 'Dosis', sans-serif;
+    font-family: 'Atkinson-Hyperlegible', 'Open Sans', sans-serif;
     font-size: calc(1em+1vw);
     padding: 0;
     margin: 0;
@@ -82,7 +82,7 @@ nav ul li {
 
 section, article {
     display: block;
-    width: 90%;
+    max-width: 90%;
     height: auto;
     padding: 1.24em;
     margin-top: 1.24em;
@@ -97,48 +97,30 @@ img.rss-valid {
 }
 
 h1 {
-    font-family: 'Concert One', cursive;
     font-size: 200%;
 }
 
 h2 {
-    font-family: 'Concert One', cursive;
     font-weight: lighter;
     font-size: 170%;
 }
 
 h3 {
-    font-family: 'Concert One', cursive;
     font-weight: lighter;
     font-size: 120%;
     text-transform: uppercase;
 }
 
 h4 {
-    font-family: 'Concert One', cursive;
     font-weight: lighter;
     font-size: 100%;
     text-transform: lowercase;
 }
 
-header {
-    display: block;
-    width: 100%;
-    padding: 0;
-    margin: 0;
+h1 code, h2 code, h3 code, h4 code {
+    text-transform:none;
 }
 
-header h1 {
-    display: block;
-    width: 100%;
-    height: auto;
-    padding-top: 2em;
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: 0;
-    margin: 0;
-    text-align: center;
-}
 
 footer {
     position: fixed;
@@ -191,5 +173,48 @@ footer a, footer a:link, footer a:visited {
 footer a:active, footer a:focus, footer a:hover {
     font-weight: lighter;
     color: lightgreen;
+}
+
+/* color injections for AndOr */
+.red {
+    color: red;
+}
+
+/* Google prittyprint customizaions CSS */
+li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
+{
+    color: #555;
+    list-style-type: decimal;
+}
+
+
+/* Mmark css */
+#footnote-section {
+    font-size: 80%;
+    display: none;
+}
+
+.footnotes {
+    font-size: 80%;
+}
+
+/*
+ * Project Customizations
+ */
+div.project-name {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding-top: 1.24em;
+    padding-left: 1.24em;
+    margin-top: 1.24em;
+}
+
+header blockquote {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 0em;
+    margin-left: 2.48em;
 }
 

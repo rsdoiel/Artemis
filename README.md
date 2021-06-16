@@ -1,28 +1,30 @@
 Artemis
 =======
 
-Artemus is an Oberon-7 module collection. My hope is
+Artemis is an Oberon-7 module collection. My hope is
 to encourage continued use and development of the Oberon-7
-language and encourage convergence towards compatibilty
+language and encourage convergence towards compatibility
 in implementations of Oberon-7 compilers. 
 
 This project started as a re-imagining of the efforts that
 began at the Oakwood Hotel in the 1992. As at Oakwood I hope
-to enrouage convergence Oberon/Oberon-2 language implementations
-but unlike Oakwood my focus is in Oberon-7 and systems implemented
-in Oberon-7.
+to encourage convergence to help my Oberon code to become 
+more portable but unlike Oakwood my focus is only on Oberon-7
+and systems implemented in Oberon-7 or providing an Oberon-7
+compiler (the scope of Artemis is narrow).
 
-Initial development is being done in the POSIX environment and
+Initial development is being done in a POSIX environment and
 relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler
-and Mike Spivery's [Obc-3](https://github.com/Spivoxity/obc-3).
+and Mike Spivey's [Obc-3](https://github.com/Spivoxity/obc-3).
 
 Artemis draws inspiration from Wirth and Reed's Project Oberon 2013,
-Joseph Templ's [Ofront](https://github.com/jtempl/ofront) with V4 and
-Karl Landström's [OBNC](https://miasap.se/obnc/).
+Joseph Templ's [Ofront](https://github.com/jtempl/ofront) with V4.
+It also draws inspiration from the discussions and community on the 
+[Oberon List](https://lists.inf.ethz.ch/mailman/listinfo/oberon).
 
 A big thank you goes to all the inspiring people who contributed to
 Oberon and Oberon Systems over the years particularly where their
-source code is publically available or through published articles,
+source code is publicly available or through published articles,
 presentations and who wrote books about the language and system.
 All have help me study path Prof. Wirth and Prof. Gutkneckt
 pioneered all the many years ago.
@@ -82,13 +84,11 @@ compatible with the Chars module. It leverages the Rider
 concept borrowed from Files and Texts in the Oberon System.
 
 [Tests](Tests.Mod) is a minimal test library used to
-implement module tests in Artemus. It tries to honor the
+implement module tests in Artemis. It tries to honor the
 advice of "simple but no simpler".
 
-[Obn2](Obn2.Mod) is a module intended to help port Oberon-2 code
-to Oberon-7 in a portable way. Focus is on implementing Oberon-2
-built-in functions that were dropped in the evolution to Oberon-7.
-
+[Obn2](Obn2.Mod) is a module is for Oberon-2 compatible
+built-in procedures that were dropped in the evolution to Oberon-7.
 
 OBNC specific modules
 ---------------------
@@ -111,7 +111,7 @@ modules or because they are derived from C code and use C libraries.
 [Clock](obnc/Clock.Mod) is an abstraction layer for system clock built.
 It uses the C `clock_gettime()` and `clock_settime()`.
 
-[TextsCmdLn](obnc/TextsCmdLn.Mod) an tempted  port of Texts from
+[TextsCmdLn](obnc/TextsCmdLn.Mod) an port of Texts from
 Project Oberon 2013 Texts module to a POSIX environment.
 
 [ocat](obnc/ocat.Mod) is a naive implementation of Joseph Templ's ocat
@@ -122,7 +122,7 @@ Oxford Specific Modules
 
 [extEnv](oxford/Env.m) provides an OBNC compatible Env module
 
-[extConvert](oxford/Convert.m) provides an OBNC comatible Convert module
+[extConvert](oxford/Convert.m) provides an OBNC compatible Convert module
 
 [Unix](oxford/Unix.m) provides access to some Unix/C facilities.
 
@@ -137,7 +137,7 @@ Oxford Specific Modules
 [Clock](oxford/Clock.m) is an abstraction layer for system clock built.
 It uses the C `clock_gettime()` and `clock_settime()`.
 
-[TextsCmdLn](oxford/TextsCmdLn.m) an tempted  port of Texts from
+[TextsCmdLn](oxford/TextsCmdLn.m) a port of Texts from
 Project Oberon 2013 Texts module to a POSIX environment.
 
 [ocat](oxford/ocat.m) is a naive implementation of Joseph Templ's ocat
@@ -146,7 +146,7 @@ Project Oberon 2013 Texts module to a POSIX environment.
 Command line tools
 ------------------
 
-The following are modules are implementation of POSIX cli.
+The following are modules are implementation of POSIX CLI.
 
 **ocat** is inspired by Joseph Templ's `ocat` command from
 [Ofront](https://github.com/jtempl/ofront).  It converts Oberon Texts
@@ -155,7 +155,7 @@ convert tabs to spaces. It will attempt to convert LF, CR or CRLF to
 a system appropriate end of line.
 
 
-Project approach to portabilty
+Project approach to portability
 ------------------------------
 
 Artemis is made up of several categories of Oberon-7 modules.
@@ -163,7 +163,7 @@ Modules in the root should be portable across POSIX Oberon-7
 compilers and portable to an Oberon Systems based on Project Oberon
 2013. A second category are modules written for specific 
 POSIX based Oberon-7 compilers. The third category is code 
-ported from historic Oberon Systesm such as S3 and V4.
+ported from historic Oberon Systems such as S3 and V4.
 
 - Portable modules are in "root" project directory
 - Compiler specific modules their own sub directories (e.g. "obnc", "oxford")
@@ -181,7 +181,7 @@ Putting it all together
 
 Both non-portable and portable modules can be used together in
 a project. This requires knowing the compiler you're using and
-targetting it's way of managing where to find modules.
+targeting it's way of managing where to find modules.
 
 In the __obnc__ directory is an example of create an implementation
 of **ocat**. My implementation uses the module "Chars" from the
@@ -204,4 +204,5 @@ directory looks like
 ~~~
 obc -o ocat ../Chars.Mod -m ocat.m
 ~~~
+
 
