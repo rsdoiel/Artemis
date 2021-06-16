@@ -204,5 +204,4 @@ directory looks like
 ~~~
 obc -o ocat ../Chars.Mod -m ocat.m
 ~~~
-~~~
 
