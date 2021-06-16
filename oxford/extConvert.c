@@ -1,8 +1,12 @@
 /**
- * extConvert.c provides the C implementation of primatives
- * that are used in extConvert.m
+ * extConvert.c provides the C implementation used in extConvert.m
+ *
+ * Copyright (C) 2021 R. S. Doiel
+ *
+ * Released under The 3-Clause BSD License.
+ * See https://opensource.org/licenses/BSD-3-Clause
+ *
  */
-
 #include <stdlib.h>
 #include <stdio.h>
 

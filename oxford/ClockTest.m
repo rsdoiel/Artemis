@@ -1,6 +1,11 @@
-(** ClockTest.Mod - Tests for Clock.Mod.
+(** ClockTest.m provide module Tests for Clock.mo.
 
-Copyright (C) 2021 R. S. Doiel <rsdoiel@gmail.com> This Source Code Form is subject to the terms of the Mozilla PublicLicense, v. 2.0. If a copy of the MPL was not distributed with thisfile, You can obtain one at http://mozilla.org/MPL/2.0/. *)
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
 MODULE ClockTest;
 
 IMPORT T := Tests, Clock, Env := extEnv, Out, Strings;

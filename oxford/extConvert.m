@@ -1,6 +1,13 @@
 (** extConvert.m provides procedures to convert between numbers and
     strings. It is based on the definition found in OBNC's 
-    extended library extConvert.Mod. *)
+    extended library extConvert.Mod. 
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
 MODULE extConvert;
 
 IMPORT SYSTEM;

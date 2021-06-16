@@ -1,5 +1,12 @@
 (** extArgs.m provides access to POSIX system arguments. It is based
-    on the definition found in OBNC's extended library extArgs.Mod. *)
+    on the definition found in OBNC's extended library extArgs.Mod. 
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
 MODULE extArgs;
 
 IMPORT Args;

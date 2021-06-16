@@ -1,6 +1,7 @@
 README Ports
 ============
 
+
 The ports directory contains modules that were ported to a
 POSIX environment from previous Oberon Systems written in 
 Oberon-2. The ported code is written in Oberon-7. Where necessary
@@ -9,6 +10,10 @@ to the ported code.
 
 - [s3](s3/) contains ports from Native Oberon to Oberon-7
 - [v4](v4/) contains ports of Linz V4 code to Oberon-7
+
+NOTE: Authorship of the modules in this sub directory vary.
+They included "ported" code. The "ports" retain their original
+authorship, copyright, license, etc.
 
 Porting Strategy
 ----------------

@@ -5,7 +5,7 @@
 #
 VERSION = $(shell if [ -f VERSION ]; then cat VERSION; else echo "0.0.0"; fi)
 BUILD_NAME = Artemis-Modules-NP
-PROG_NAMES = ocat
+PROG_NAMES =
 TEST_NAMES = ClockTest UnixTest
 MODULES = $(shell ls *.obn)
 DOCS= README.md ../LICENSE ../INSTALL.txt
@@ -71,6 +71,7 @@ docs: .FORCE
 clean: .FORCE
 	@if [ -d dist ]; then rm -fR dist; fi
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
+	@if [ -d ../ports/po2013/.obnc ]; then rm -fR ../ports/po2013/.obnc; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
 	@for FNAME in $(TEST_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
 

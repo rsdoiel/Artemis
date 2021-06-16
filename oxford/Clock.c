@@ -1,4 +1,12 @@
-
+/*
+ * Clock.c provides an interface to C libraries used to implement Clock.m.
+ *
+ * Copyright (C) 2021 R. S. Doiel
+ *
+ * Released under The 3-Clause BSD License.
+ * See https://opensource.org/licenses/BSD-3-Clause
+ *
+ */
 #include <stdio.h>
 #include <time.h>
 

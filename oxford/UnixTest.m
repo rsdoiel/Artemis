@@ -1,3 +1,11 @@
+(** UnixTest.m provide module tests for Unix.m
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
 MODULE UnixTest;
 
 IMPORT T := Tests, Unix, Out, Env := extEnv;

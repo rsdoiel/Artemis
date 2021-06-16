@@ -1,4 +1,4 @@
-(** helloworld.m is intended to test the Obc-3 compiler installation. *)
+(** helloworld.m is intended to test the Obc-3 compiler installation.  *)
 MODULE helloworld;
 
 IMPORT Args, Strings, Out;

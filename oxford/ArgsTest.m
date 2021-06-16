@@ -1,3 +1,11 @@
+(** ArgsTest.m modules provides test coverage for extArgs.m
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
 MODULE ArgsTest;
 
 IMPORT T := Tests, Args := extArgs, Out;
