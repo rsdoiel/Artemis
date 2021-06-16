@@ -18,19 +18,19 @@ extConvert.so: extConvert.m extConvert.c
 	gcc -fPIC -shared extConvert.c -o extConvert.so
 
 argstest: extArgs.m ArgsTest.m
-	obc -07 -o argstest extArgs.m Tests.m ArgsTest.m
+	obc -07 -o argstest extArgs.m ../Tests.Mod ArgsTest.m
 
 envtest: extEnv.m EnvTest.m
-	obc -07 -o envtest extEnv.m Tests.m EnvTest.m
+	obc -07 -o envtest extEnv.m ../Tests.Mod EnvTest.m
 
 converttest: extConvert.m ConvertTest.m extConvert.so
-	obc -07 -o converttest extConvert.m Tests.m ConvertTest.m
+	obc -07 -o converttest extConvert.m ../Tests.Mod ConvertTest.m
 
 helloworld: helloworld.m
-	obc -07 -o helloworld Env.m helloworld.m
+	obc -07 -o helloworld helloworld.m
 
-clocktest: Clock.so extEnv.m Tests.m Clock.m ClockTest.m
-	obc -07 -o clocktest Clock.m Tests.m extEnv.m ClockTest.m
+clocktest: Clock.so extEnv.m ../Tests.Mod Clock.m ClockTest.m
+	obc -07 -o clocktest Clock.m ../Tests.Mod extEnv.m ClockTest.m
 
 test: $(PROGRAMS)
 	./helloworld
