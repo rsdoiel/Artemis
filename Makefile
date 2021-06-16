@@ -6,7 +6,7 @@
 VERSION = $(shell if [ -f VERSION ]; then cat VERSION; else echo "0.0.0"; fi)
 BUILD_NAME = Artemis-Modules
 PROG_NAMES =
-TEST_NAMES = CharsTest DStringsTest
+TEST_NAMES = CharsTest DStringsTest Obn2Test
 MODULES = $(shell ls *.Mod)
 DOCS= README.md LICENSE INSTALL.txt
 
