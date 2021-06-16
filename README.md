@@ -113,18 +113,15 @@ modules or because they are derived from C code and use C libraries.
 [Clock](obnc/Clock.Mod) is an abstraction layer for system clock built.
 It uses the C `clock_gettime()` and `clock_settime()`.
 
-[TextsCmdLn](obnc/TextsCmdLn.Mod) an port of Texts from
-Project Oberon 2013 Texts module to a POSIX environment.
-
-[ocat](obnc/ocat.Mod) is a naive implementation of Joseph Templ's ocat
-
 
 Oxford Specific Modules
 -----------------------
 
-[extEnv](oxford/Env.m) provides an OBNC compatible Env module
+[extArgs](oxford/extArgs.m) provides an OBNC compatible Env module
 
-[extConvert](oxford/Convert.m) provides an OBNC compatible Convert module
+[extEnv](oxford/extEnv.m) provides an OBNC compatible Env module
+
+[extConvert](oxford/extConvert.m) provides an OBNC compatible Convert module
 
 [Unix](oxford/Unix.m) provides access to some Unix/C facilities.
 
@@ -139,33 +136,17 @@ Oxford Specific Modules
 [Clock](oxford/Clock.m) is an abstraction layer for system clock built.
 It uses the C `clock_gettime()` and `clock_settime()`.
 
-[TextsCmdLn](oxford/TextsCmdLn.m) a port of Texts from
-Project Oberon 2013 Texts module to a POSIX environment.
-
-[ocat](oxford/ocat.m) is a naive implementation of Joseph Templ's ocat
-
-
-Command line tools
-------------------
-
-The following are modules are implementation of POSIX CLI.
-
-**ocat** is inspired by Joseph Templ's `ocat` command from
-[Ofront](https://github.com/jtempl/ofront).  It converts Oberon Texts
-into plain text used on POSIX systems.  There is also an option to
-convert tabs to spaces. It will attempt to convert LF, CR or CRLF to
-a system appropriate end of line.
-
 
 Project approach to portability
 ------------------------------
 
 Artemis is made up of several categories of Oberon-7 modules.
 Modules in the root should be portable across POSIX Oberon-7
-compilers and portable to an Oberon Systems based on Project Oberon
-2013. A second category are modules written for specific 
-POSIX based Oberon-7 compilers. The third category is code 
-ported from historic Oberon Systems such as S3 and V4.
+compilers and portable to Oberon Systems with an Oberon-7 compiler
+(e.g.  on Project Oberon 2013). A second category are modules
+written for specific POSIX based Oberon-7 compilers. The third
+category is code ported from historic Oberon Systems such as 
+S3 (aka Native Oberon) and V4 (aka Linz Oberon).
 
 - Portable modules are in "root" project directory
 - Compiler specific modules their own sub directories (e.g. "obnc", "oxford")
@@ -185,26 +166,24 @@ Both non-portable and portable modules can be used together in
 a project. This requires knowing the compiler you're using and
 targeting it's way of managing where to find modules.
 
-In the __obnc__ directory is an example of create an implementation
-of **ocat**. My implementation uses the module "Chars" from the
-Artemis project. This means you need to include both portable and
-non-portable code to compile **ocat**.  With OBNC you need to
-set some environment variables to let the compiler known where to
-search for modules. Here's what you can do to compile this
-implementation of **ocat** in the __obnc__ directory.
+An example is using [Tests.Mod](Tests.Mod) for the **clocktest**
+implementations in both __obnc__ and __oxford__ directories.
+With OBNC you need to set some environment variables to let the
+compiler known where to search for modules.
+Here's what you can do to compile this implementation of **clocktest**
+in the __obnc__ directory.
 
 ~~~
 export OBNC_IMPORT_PATH=".:../"
-obnc ocat.Mod
+obnc -o clocktest ClockTest.obn
 ~~~
 
-For the Obc-3 compiler we need to be in the __oxford__ sub-directory.
-With Obc-3 you can just provide the full path the module you want to
-include. Compiling the implementation of **ocat** in the __oxford__
-directory looks like
+With Obc-3 you can just provide the full path to the module you want to
+include. Compiling the implementation of **clocktest** in the __oxford__
+directory looks like ---
 
 ~~~
-obc -o ocat ../Chars.Mod -m ocat.m
+obc -07 -o clocktest Clock.m ../Tests.Mod extEnv.m ClockTest.m
 ~~~
 
 

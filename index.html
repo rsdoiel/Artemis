@@ -113,20 +113,17 @@ The <a href="np/README.md">following modules</a> are not portable to Project Obe
 <p>
 <a href="obnc/Clock.Mod">Clock</a> is an abstraction layer for system clock built. It uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
 </p>
-<p>
-<a href="obnc/TextsCmdLn.Mod">TextsCmdLn</a> an port of Texts from Project Oberon 2013 Texts module to a POSIX environment.
-</p>
-<p>
-<a href="obnc/ocat.Mod">ocat</a> is a naive implementation of Joseph Templ’s ocat
-</p>
 <h2 id="oxford-specific-modules">
 Oxford Specific Modules
 </h2>
 <p>
-<a href="oxford/Env.m">extEnv</a> provides an OBNC compatible Env module
+<a href="oxford/extArgs.m">extArgs</a> provides an OBNC compatible Env module
 </p>
 <p>
-<a href="oxford/Convert.m">extConvert</a> provides an OBNC compatible Convert module
+<a href="oxford/extEnv.m">extEnv</a> provides an OBNC compatible Env module
+</p>
+<p>
+<a href="oxford/extConvert.m">extConvert</a> provides an OBNC compatible Convert module
 </p>
 <p>
 <a href="oxford/Unix.m">Unix</a> provides access to some Unix/C facilities.
@@ -145,26 +142,11 @@ Oxford Specific Modules
 <p>
 <a href="oxford/Clock.m">Clock</a> is an abstraction layer for system clock built. It uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
 </p>
-<p>
-<a href="oxford/TextsCmdLn.m">TextsCmdLn</a> a port of Texts from Project Oberon 2013 Texts module to a POSIX environment.
-</p>
-<p>
-<a href="oxford/ocat.m">ocat</a> is a naive implementation of Joseph Templ’s ocat
-</p>
-<h2 id="command-line-tools">
-Command line tools
-</h2>
-<p>
-The following are modules are implementation of POSIX CLI.
-</p>
-<p>
-<strong>ocat</strong> is inspired by Joseph Templ’s <code>ocat</code> command from <a href="https://github.com/jtempl/ofront">Ofront</a>. It converts Oberon Texts into plain text used on POSIX systems. There is also an option to convert tabs to spaces. It will attempt to convert LF, CR or CRLF to a system appropriate end of line.
-</p>
 <h2 id="project-approach-to-portability">
 Project approach to portability
 </h2>
 <p>
-Artemis is made up of several categories of Oberon-7 modules. Modules in the root should be portable across POSIX Oberon-7 compilers and portable to an Oberon Systems based on Project Oberon 2013. A second category are modules written for specific POSIX based Oberon-7 compilers. The third category is code ported from historic Oberon Systems such as S3 and V4.
+Artemis is made up of several categories of Oberon-7 modules. Modules in the root should be portable across POSIX Oberon-7 compilers and portable to Oberon Systems with an Oberon-7 compiler (e.g. on Project Oberon 2013). A second category are modules written for specific POSIX based Oberon-7 compilers. The third category is code ported from historic Oberon Systems such as S3 (aka Native Oberon) and V4 (aka Linz Oberon).
 </p>
 <ul>
 <li>
@@ -187,14 +169,14 @@ Putting it all together
 Both non-portable and portable modules can be used together in a project. This requires knowing the compiler you’re using and targeting it’s way of managing where to find modules.
 </p>
 <p>
-In the <strong>obnc</strong> directory is an example of create an implementation of <strong>ocat</strong>. My implementation uses the module “Chars” from the Artemis project. This means you need to include both portable and non-portable code to compile <strong>ocat</strong>. With OBNC you need to set some environment variables to let the compiler known where to search for modules. Here’s what you can do to compile this implementation of <strong>ocat</strong> in the <strong>obnc</strong> directory.
+An example is using <a href="Tests.Mod">Tests.Mod</a> for the <strong>clocktest</strong> implementations in both <strong>obnc</strong> and <strong>oxford</strong> directories. With OBNC you need to set some environment variables to let the compiler known where to search for modules. Here’s what you can do to compile this implementation of <strong>clocktest</strong> in the <strong>obnc</strong> directory.
 </p>
 <pre><code>export OBNC_IMPORT_PATH=&quot;.:../&quot;
-obnc ocat.Mod</code></pre>
+obnc -o clocktest ClockTest.obn</code></pre>
 <p>
-For the Obc-3 compiler we need to be in the <strong>oxford</strong> sub-directory. With Obc-3 you can just provide the full path the module you want to include. Compiling the implementation of <strong>ocat</strong> in the <strong>oxford</strong> directory looks like
+With Obc-3 you can just provide the full path to the module you want to include. Compiling the implementation of <strong>clocktest</strong> in the <strong>oxford</strong> directory looks like —
 </p>
-<pre><code>obc -o ocat ../Chars.Mod -m ocat.m</code></pre>
+<pre><code>obc -07 -o clocktest Clock.m ../Tests.Mod extEnv.m ClockTest.m</code></pre>
 </section>
 <nav>
 <ul>
