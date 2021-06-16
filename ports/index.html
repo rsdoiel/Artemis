@@ -26,14 +26,36 @@ The ports directory contains modules that were ported to a POSIX environment fro
 <h2 id="porting-strategy">
 Porting Strategy
 </h2>
+<ol type="1">
+<li>
+<a href="https://people.inf.ethz.ch/wirth/Oberon/PortingOberon.pdf">Porting the Oberon Compiler from Oberon to Oberon-07</a>, Niklaus Wirth, 2007-08-15.
+</li>
+<li>
+<a href="https://people.inf.ethz.ch/wirth/Oberon/Oberon07.pdf">Differences between Revised Oberon and Oberon</a>, Niklaus Wirth, 2008-03-22 / 2011-07-05
+</li>
+<li>
+<a href="https://people.inf.ethz.ch/wirth/Oberon/Oberon07.Report.pdf">The Programming Language Oberon</a>, Niklaus Wirth, Revision 2013-10-01 / 2016-05-03
+<ul>
+<li>
+aka “The Programming Language Oberon-07 (Revised Oberon)”
+</li>
+<li>
+A <a href="http://miasap.se/obnc/oberon-report.html">HTML version</a> is available at Karl Landström’s OBNC site
+</li>
+</ul>
+</li>
+</ol>
+<p>
+What follows are my notes which might be helpful to others (YMMV).
+</p>
 <p>
 The basic data types in Oberon-7 are more limitted. In some cases the data types could simply be mapped to the newer version of the language. The built-in procedures and functions are different from Oberon-2 to Oberon-7. The <a href="Obn2.Mod">Obn2.Mod</a> provides a small collection of formerly build-in Oberon-2 function for use in Oberon-7.
 </p>
 <p>
-Oberon-2 Oberon-7 Compatibility ——– ——– ————–
+Oberon-2 Oberon-7 Compatibility Comp. Notes ——– ——– ————– ———–
 </p>
 <p>
-LONGINT INTEGER LONGREAL REAL ASH() Obn2.ASH() MAX() Obn2.MAX()
+LONGINT INTEGER LONGREAL REAL ASH() Obn2.ASH() Operates on INTEGER MAX() Obn2.MAX() Operates on INTEGER
 </p>
 <h2 id="posix-compilers">
 POSIX compilers
@@ -43,7 +65,7 @@ Artemis and these ports have been developed with two Oberon-7 POSIX based compil
 </p>
 <ul>
 <li>
-<a href="">OBNC</a>
+<a href="https://">OBNC</a>
 </li>
 <li>
 <a href="https://github.com/Spivoxity/Obc-3" title="aka Oxford Oberon Compiler">Obc-3</a>

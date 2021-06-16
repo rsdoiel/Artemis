@@ -8,10 +8,10 @@ in implementations of Oberon-7 compilers.
 
 This project started as a re-imagining of the efforts that
 began at the Oakwood Hotel in the 1992. As at Oakwood I hope
-to encourage convergence to help my Oberon code to become 
-more portable but unlike Oakwood my focus is only on Oberon-7
-and systems implemented in Oberon-7 or providing an Oberon-7
-compiler (the scope of Artemis is narrow).
+to encourage convergence to help code become more portable.
+Unlike Oakwood my focus is only on Oberon-7 and systems
+implemented in Oberon-7 or providing an Oberon-7 compiler.
+That is the scope of Artemis project for now.
 
 Initial development is being done in a POSIX environment and
 relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler
