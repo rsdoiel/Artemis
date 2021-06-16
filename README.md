@@ -87,8 +87,10 @@ concept borrowed from Files and Texts in the Oberon System.
 implement module tests in Artemis. It tries to honor the
 advice of "simple but no simpler".
 
-[Obn2](Obn2.Mod) is a module is for Oberon-2 compatible
-built-in procedures that were dropped in the evolution to Oberon-7.
+[Obn2](Obn2.Mod) is a module provides compatibilty for some
+built-in Oberon-2 procedures that were dropped in the evolution
+to Oberon-7.
+
 
 OBNC specific modules
 ---------------------

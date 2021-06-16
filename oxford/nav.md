@@ -3,7 +3,7 @@
 + [README](../)
 + [LICENSE](../license.html)
 + [INSTALL](../install.html)
-+ [OBNC Defs](../obncdoc/)
++ [Ports](../ports/)
 + [OBNC Modules](../obnc/)
 + [Obc-3 Modules](./)
 + [Github](https://github.com/rsdoiel/Artemis)

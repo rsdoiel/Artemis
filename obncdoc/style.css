@@ -1,3 +1,4 @@
+/* @import 'https://fonts.googleapis.com/css?family=Concert+One|Dosis'; */
 
 body {
     font-family: 'Atkinson-Hyperlegible', 'Open Sans', sans-serif;
@@ -217,33 +218,3 @@ header blockquote {
     margin-left: 2.48em;
 }
 
-pre {
-	font-family: inherit;
-	font-size: inherit;
-
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-}
-
-pre em {
-	font-style: normal;
-	font-weight: bold;
-}
-
-pre .comment {
-	color: #800000;
-	display: inline-block;
-	max-width: 42em;
-	vertical-align: text-top;
-
-	white-space: pre-wrap;
-	white-space: -moz-pre-wrap;
-	white-space: -pre-wrap;
-	white-space: -o-pre-wrap;
-	word-wrap: break-word;
-}
-
-pre .string {
-	color: #767676;
-}

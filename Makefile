@@ -80,6 +80,7 @@ clean: .FORCE
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
 	@for FNAME in $(TEST_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
+	@for FNAME in $(shell find . -type f | grep -E '.html'); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
 
 install: $(PROG_NAMES)
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
@@ -96,6 +97,7 @@ dist: $(PROG_NAMES)
 	@cd dist && zip -r $(BUILD_NAME)-$(OS)-$(ARCH).zip $(BUILD_NAME)/*
 
 
+
 save:
 	git commit -am "$(MSG)"
 	git push origin $(BRANCH)
@@ -103,10 +105,14 @@ save:
 status:
 	git status
 
-website: README.md page.tmpl
+website: README.md page.tmpl css/site.css
+	obncdoc
+	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 
-publish:
+publish: clean
+	obncdoc
+	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 	./publish.bash
 

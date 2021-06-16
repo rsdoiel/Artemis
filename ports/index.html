@@ -40,7 +40,7 @@ Porting Strategy
 aka “The Programming Language Oberon-07 (Revised Oberon)”
 </li>
 <li>
-A <a href="http://miasap.se/obnc/oberon-report.html">HTML version</a> is available at Karl Landström’s OBNC site
+Karl Landström provides an <a href="http://miasap.se/obnc/oberon-report.html">HTML version</a>
 </li>
 </ul>
 </li>
@@ -51,12 +51,116 @@ What follows are my notes which might be helpful to others (YMMV).
 <p>
 The basic data types in Oberon-7 are more limitted. In some cases the data types could simply be mapped to the newer version of the language. The built-in procedures and functions are different from Oberon-2 to Oberon-7. The <a href="Obn2.Mod">Obn2.Mod</a> provides a small collection of formerly build-in Oberon-2 function for use in Oberon-7.
 </p>
-<p>
-Oberon-2 Oberon-7 Compatibility Comp. Notes ——– ——– ————– ———–
-</p>
-<p>
-LONGINT INTEGER LONGREAL REAL ASH() Obn2.ASH() Operates on INTEGER MAX() Obn2.MAX() Operates on INTEGER
-</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">
+Oberon-2
+</th>
+<th style="text-align: left;">
+Oberon-7
+</th>
+<th style="text-align: left;">
+Compatibility
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">
+LONGINT
+</td>
+<td style="text-align: left;">
+INTEGER
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">
+LONGREAL
+</td>
+<td style="text-align: left;">
+REAL
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">
+SHORTINT
+</td>
+<td style="text-align: left;">
+BYTE
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">
+ASH
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Obn2.ASH
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">
+MAX
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Obn2.MAX
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">
+MIN
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+Obn2.MIN
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">
+ENTIER
+</td>
+<td style="text-align: left;">
+FLOOR
+</td>
+<td style="text-align: left;">
+Obn2.ENTIER
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">
+HALT
+</td>
+<td style="text-align: left;">
+ASSERT(FALSE)
+</td>
+<td style="text-align: left;">
+Obn2.HALT
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">
+ROT
+</td>
+<td style="text-align: left;">
+ROR
+</td>
+<td style="text-align: left;">
+Obn2.ROT
+</td>
+</tr>
+</tbody>
+</table>
 <h2 id="posix-compilers">
 POSIX compilers
 </h2>
@@ -72,7 +176,7 @@ Artemis and these ports have been developed with two Oberon-7 POSIX based compil
 </li>
 </ul>
 <p>
-OBNC advantage is it is realatively easy to port between POSIX systems. It only requires a good C compiler and perhaps SLD. Obc-3 has the advantage of also being able to compile both Oberon-2 and Oberon-7 code selectable with a command line flag. This has been used to help compare behaviors in the language.
+OBNC advantage is it is realatively easy to port between POSIX systems. It only requires a good C compiler and optionally SDL 1.2. Obc-3 has the advantage of also being able to compile both Oberon-2 and Oberon-7 code selectable with a command line flag. This has been used to help compare behaviors in the language.
 </p>
 <h2 id="obnc">
 OBNC
@@ -81,7 +185,7 @@ OBNC
 Standard compiler envocation, <code>obnc MODULE_NAME</code>
 </p>
 <p>
-Haven’t noticed deviation from Oakwood except Out has some additional output formats. Relying on these means you’re use of Out is not portable.
+Haven’t noticed deviation from Oakwood except Out has some additional output formats.
 </p>
 <h2 id="oxford-oberon-compiler-obc-3">
 Oxford Oberon Compiler (obc-3)
@@ -90,11 +194,36 @@ Oxford Oberon Compiler (obc-3)
 Standard compiler envocation, <code>obc -07 DEP_MODULE_LIST PROG_MODULE -m</code>
 </p>
 <p>
-The latest version on GitHub includes more standard Oakwood style implementations of Out and Math modules.
+The latest version on GitHub includes a more Oakwood-ish implementation of Out and Math modules.
 </p>
 </section>
 <nav>
-
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="../">README</a>
+</li>
+<li>
+<a href="../license.html">LICENSE</a>
+</li>
+<li>
+<a href="../install.html">INSTALL</a>
+</li>
+<li>
+<a href="./">Ports</a>
+</li>
+<li>
+<a href="../obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="../oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
 </nav>
 <footer>
 copyright (c) 2021 all rights reserved.

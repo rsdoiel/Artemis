@@ -41,4 +41,24 @@ BEGIN
   RETURN res
 END MIN;
 
+(** ENTIER is a wrapper around FLOOR, you should really just use
+    FLOOR. *)
+PROCEDURE ENTIER(r : REAL) : INTEGER;
+BEGIN
+  RETURN FLOOR(r)
+END ENTIER;
+
+(** HALT is a wrapper around ASSERT(FALSE), you should just replace
+    ASSERT(FALSE) *) 
+PROCEDURE HALT();
+BEGIN
+  ASSERT(FALSE);
+END HALT;
+
+(** ROT is a wrapper around ROR, you should just replace ROT with ROR *)
+PROCEDURE ROT(VAR x, n : INTEGER);
+BEGIN
+  ROR(x, n);
+END ROT;
+
 END Obn2.
