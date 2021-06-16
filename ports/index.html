@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <title>…</title>
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="readme-ports">
+README Ports
+</h1>
+<p>
+The ports directory contains modules that were ported to a POSIX environment from previous Oberon Systems written in Oberon-2. The ported code is written in Oberon-7. Where necessary compatibility modules have been created to minimize the changes to the ported code.
+</p>
+<ul>
+<li>
+<a href="s3/">s3</a> contains ports from Native Oberon to Oberon-7
+</li>
+<li>
+<a href="v4/">v4</a> contains ports of Linz V4 code to Oberon-7
+</li>
+</ul>
+<h2 id="porting-strategy">
+Porting Strategy
+</h2>
+<p>
+The basic data types in Oberon-7 are more limitted. In some cases the data types could simply be mapped to the newer version of the language. The built-in procedures and functions are different from Oberon-2 to Oberon-7. The <a href="Obn2.Mod">Obn2.Mod</a> provides a small collection of formerly build-in Oberon-2 function for use in Oberon-7.
+</p>
+<p>
+Oberon-2 Oberon-7 Compatibility ——– ——– ————–
+</p>
+<p>
+LONGINT INTEGER LONGREAL REAL ASH() Obn2.ASH() MAX() Obn2.MAX()
+</p>
+<h2 id="posix-compilers">
+POSIX compilers
+</h2>
+<p>
+Artemis and these ports have been developed with two Oberon-7 POSIX based compilers in mind
+</p>
+<ul>
+<li>
+<a href="">OBNC</a>
+</li>
+<li>
+<a href="https://github.com/Spivoxity/Obc-3" title="aka Oxford Oberon Compiler">Obc-3</a>
+</li>
+</ul>
+<p>
+OBNC advantage is it is realatively easy to port between POSIX systems. It only requires a good C compiler and perhaps SLD. Obc-3 has the advantage of also being able to compile both Oberon-2 and Oberon-7 code selectable with a command line flag. This has been used to help compare behaviors in the language.
+</p>
+<h2 id="obnc">
+OBNC
+</h2>
+<p>
+Standard compiler envocation, <code>obnc MODULE_NAME</code>
+</p>
+<p>
+Haven’t noticed deviation from Oakwood except Out has some additional output formats. Relying on these means you’re use of Out is not portable.
+</p>
+<h2 id="oxford-oberon-compiler-obc-3">
+Oxford Oberon Compiler (obc-3)
+</h2>
+<p>
+Standard compiler envocation, <code>obc -07 DEP_MODULE_LIST PROG_MODULE -m</code>
+</p>
+<p>
+The latest version on GitHub includes more standard Oakwood style implementations of Out and Math modules.
+</p>
+</section>
+<nav>
+
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>
