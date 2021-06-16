@@ -80,6 +80,8 @@ clean: .FORCE
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
 	@for FNAME in $(TEST_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
+
+web_clean:
 	@for FNAME in $(shell find . -type f | grep -E '.html'); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
 
 install: $(PROG_NAMES)
@@ -105,12 +107,12 @@ save:
 status:
 	git status
 
-website: README.md page.tmpl css/site.css
+website: web_clean README.md page.tmpl css/site.css
 	obncdoc
 	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 
-publish: clean
+publish: web_clean clean
 	obncdoc
 	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
