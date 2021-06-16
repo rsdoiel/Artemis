@@ -68,8 +68,8 @@ END ExpectedInt;
 PROCEDURE ExpectedReal*(expected, got : REAL; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
 BEGIN
   IF expected # got THEN
-     Out.String("Expected ");Out.Real(expected);
-     Out.String(", got ");Out.Real(got);
+     Out.String("Expected ");Out.Real(expected, 1);
+     Out.String(", got ");Out.Real(got, 1);
      Out.String(" "); Out.String(msg); Out.Ln();
      test := FALSE;
   END;
