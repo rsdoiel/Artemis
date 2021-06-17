@@ -183,7 +183,15 @@ include. Compiling the implementation of **clocktest** in the __oxford__
 directory looks like ---
 
 ~~~
-obc -07 -o clocktest Clock.m ../Tests.Mod extEnv.m ClockTest.m
+obc -07 -o clocktest Clock.m ../Tests.m extEnv.m ClockTest.m
 ~~~
+
+NOTE (2021-06-16): Not sure why yet but I found it necessary to
+rename Tests.Mod to Tests.m to get compilation with obc. It might
+be because the other files I am compiling use the '.m' extension.
+Need to check with Mike.
+
+
+
 
 
