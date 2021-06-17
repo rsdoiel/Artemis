@@ -103,11 +103,7 @@ BEGIN
   WHILE (r.cursor # NIL) & (r.cursor.c # 0X) & (r.pos < pos) DO
       INC(r.pos); r.cursor := r.cursor.next
   END;
-  IF (r.cursor = NIL) OR (r.cursor.c = 0X) THEN
-    r.eot := TRUE;
-  ELSE
-    r.eot := FALSE;
-  END;
+  r.eot := (r.cursor = NIL) OR (r.cursor.c = 0X);
 END Set;
 
 (** Base returns the string the Rider operates on *)
