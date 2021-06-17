@@ -16,10 +16,10 @@
 Artemis
 </h1>
 <p>
-Artemis is an Oberon-7 module collection. My hope is to encourage continued use and development of the Oberon-7 language and encourage convergence towards compatibility in implementations of Oberon-7 compilers.
+Artemis is an Oberon-07 module collection. My hope is to encourage continued use and development of the Oberon-07 language and encourage convergence towards compatibility in implementations of Oberon-07 compilers.
 </p>
 <p>
-This project started as a re-imagining of the efforts that began at the Oakwood Hotel in the 1992. As at Oakwood I hope to encourage convergence to help code become more portable. Unlike Oakwood my focus is only on Oberon-7 and systems implemented in Oberon-7 or providing an Oberon-7 compiler. That is the scope of Artemis project for now.
+This project started as a re-imagining of the efforts that began at the Oakwood Hotel in the 1992. As at Oakwood I hope to encourage convergence to help code become more portable. Unlike Oakwood my focus is only on Oberon-07 and systems implemented in Oberon-07 or providing an Oberon-07 compiler. That is the scope of Artemis project for now.
 </p>
 <p>
 Initial development is being done in a POSIX environment and relies on Karl Landström’s <a href="https://miasap.se/obnc/">OBNC</a> compiler and Mike Spivey’s <a href="https://github.com/Spivoxity/obc-3">Obc-3</a>.
@@ -61,7 +61,7 @@ v4
 </li>
 </ul>
 <p>
-The root repository directory is for modules that are portable between POSIX Oberon-7 compiler implementations and portable to an Oberon-7 based Oberon System.
+The root repository directory is for modules that are portable between POSIX Oberon-07 compiler implementations and portable to an Oberon-07 based Oberon System.
 </p>
 <p>
 The <strong>obncdocs</strong> directory contains documentation of the module definitions for the common modules in the root directory.
@@ -73,7 +73,7 @@ The <strong>obnc</strong> directory contains modules that target specific featur
 The <strong>oxford</strong> directory contains modules that target the Oxford Oberon Compiler, aka Obc-3. This is primarily integration with C based libraries and services. These aren’t portable between compilers but should work across POSIX systems where Obc-3 is available.
 </p>
 <p>
-The <strong>ports</strong> directory contains sub directories of code ported from a historic Oberon System, usually the original code was implemented in Oberon-2. The code in the <strong>ports</strong> directory are subject to their own copyright and licenses. <strong>ports</strong> is focused on “porting” code from S3 (Native Oberon) and V4 (Linz Oberon) to Oberon-7 as an exploration of Oberon-7 language and with an eye to eventually porting to the Oberon System that evolved from Project Oberon 2013.
+The <strong>ports</strong> directory contains sub directories of code ported from a historic Oberon System, usually the original code was implemented in Oberon-2. The code in the <strong>ports</strong> directory are subject to their own copyright and licenses. <strong>ports</strong> is focused on “porting” code from S3 (Native Oberon) and V4 (Linz Oberon) to Oberon-07 as an exploration of Oberon-07 language and with an eye to eventually porting to the Oberon System that evolved from Project Oberon 2013.
 </p>
 <h2 id="new-modules">
 New Modules
@@ -82,13 +82,13 @@ New Modules
 <a href="Chars.Mod">Chars</a> is a module for working with CHAR and ARRAY OF CHAR. It is inspired by the Oakwood Strings module. It goes beyond the Oakwood minimum. It can function as a drop in replacement for the Oakwood Strings module.
 </p>
 <p>
-<a href="DStrings.Mod">DStrings</a> provides a dynamic string implementation for Oberon-7. The procedures signatures are often compatible with the Chars module. It leverages the Rider concept borrowed from Files and Texts in the Oberon System.
+<a href="DStrings.Mod">DStrings</a> provides a dynamic string implementation for Oberon-07. The procedures signatures are often compatible with the Chars module. It leverages the Rider concept borrowed from Files and Texts in the Oberon System.
 </p>
 <p>
 <a href="Tests.Mod">Tests</a> is a minimal test library used to implement module tests in Artemis. It tries to honor the advice of “simple but no simpler”.
 </p>
 <p>
-<a href="Obn2.Mod">Obn2</a> is a module provides compatibilty for some built-in Oberon-2 procedures that were dropped in the evolution to Oberon-7.
+<a href="Obn2.Mod">Obn2</a> is a module provides compatibilty for some built-in Oberon-2 procedures that were dropped in the evolution to Oberon-07.
 </p>
 <h2 id="obnc-specific-modules">
 OBNC specific modules
@@ -146,7 +146,7 @@ Oxford Specific Modules
 Project approach to portability
 </h2>
 <p>
-Artemis is made up of several categories of Oberon-7 modules. Modules in the root should be portable across POSIX Oberon-7 compilers and portable to Oberon Systems with an Oberon-7 compiler (e.g. on Project Oberon 2013). A second category are modules written for specific POSIX based Oberon-7 compilers. The third category is code ported from historic Oberon Systems such as S3 (aka Native Oberon) and V4 (aka Linz Oberon).
+Artemis is made up of several categories of Oberon-07 modules. Modules in the root should be portable across POSIX Oberon-07 compilers and portable to Oberon Systems with an Oberon-07 compiler (e.g. on Project Oberon 2013). A second category are modules written for specific POSIX based Oberon-07 compilers. The third category is code ported from historic Oberon Systems such as S3 (aka Native Oberon) and V4 (aka Linz Oberon).
 </p>
 <ul>
 <li>
@@ -160,7 +160,7 @@ Ported modules in the “ports” sub directory
 </li>
 </ul>
 <p>
-In the POSIX environment Oberon-7 compilers have not converged (2021-06-16). This is true for Oakwood module implementations and and particularly true for how C code is integrated. The later is the important divergence as integration with legacy C libraries and services is likely to be required for some time into the future.
+In the POSIX environment Oberon-07 compilers have not converged (2021-06-16). This is true for Oakwood module implementations and and particularly true for how C code is integrated. The later is the important divergence as integration with legacy C libraries and services is likely to be required for some time into the future.
 </p>
 <h2 id="putting-it-all-together">
 Putting it all together
