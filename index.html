@@ -176,7 +176,10 @@ obnc -o clocktest ClockTest.obn</code></pre>
 <p>
 With Obc-3 you can just provide the full path to the module you want to include. Compiling the implementation of <strong>clocktest</strong> in the <strong>oxford</strong> directory looks like —
 </p>
-<pre><code>obc -07 -o clocktest Clock.m ../Tests.Mod extEnv.m ClockTest.m</code></pre>
+<pre><code>obc -07 -o clocktest Clock.m ../Tests.m extEnv.m ClockTest.m</code></pre>
+<p>
+NOTE (2021-06-16): Not sure why yet but I found it necessary to rename Tests.Mod to Tests.m to get compilation with obc. It might be because the other files I am compiling use the ‘.m’ extension. Need to check with Mike.
+</p>
 </section>
 <nav>
 <ul>
