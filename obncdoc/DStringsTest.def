@@ -1,9 +1,0 @@
-(* DStringTest.Mod implements tests for the DStrings Module.
-
-Copyright (C) 2021 R. S. Doiel
-
-Released under The 3-Clause BSD License.
-See https://opensource.org/licenses/BSD-3-Clause
-*)
-DEFINITION DStringsTest;
-END DStringsTest.

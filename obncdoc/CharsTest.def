@@ -1,9 +1,0 @@
-(* CharsTest.Mod - test procedure the Chars.Mod.
-
-Copyright (C) 2021 R. S. Doiel
-
-Released under The 3-Clause BSD License.
-See https://opensource.org/licenses/BSD-3-Clause
-*)
-DEFINITION CharsTest;
-END CharsTest.

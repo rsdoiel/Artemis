@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>…</title>
+    
+    <link rel="stylesheet" type="text/css"  href="/printfonts/print.css" media="print" />
+  <link rel="stylesheet" type="text/css"  href="/webfonts/fonts.css" media="screen" />
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="oberon-2-to-oberon-07">
+Oberon-2 to Oberon-07
+</h1>
+<p>
+In approaching bringing the full range of historic Oberon-2 modules to Oberon-07 I found it useful to have a rather systematic approach.
+</p>
+<h2 id="steps">
+Steps
+</h2>
+<ol type="1">
+<li>
+Review Oberon-2 code and flag (via comments)
+<ol type="a">
+<li>
+LOOP/EXIT replaced with WHILE, WHILE/ELSE, REPEAT/UNTIL, FOR/DO
+</li>
+<li>
+Convert RETURN to a single RETURN at end of functional procedure
+</li>
+<li>
+Refactor CASE is not used as a type guard
+</li>
+<li>
+Refactor any forward references
+</li>
+</ol>
+</li>
+<li>
+Refactor LOOP
+</li>
+<li>
+Refactor CASE statement
+</li>
+<li>
+Refactor RETURN clauses
+</li>
+<li>
+Refactor any forward references
+</li>
+<li>
+Review and replace use of LONGINT, SHORTINT, LONGREAL
+</li>
+<li>
+Update IMPORT, replace missing built-in with Obn2 equivalent
+</li>
+</ol>
+<h2 id="review-code-and-flag-issues">
+Review code and flag issues
+</h2>
+<h2 id="refactor-loops">
+Refactor LOOPS
+</h2>
+<p>
+Oberon-07 does away with LOOP while it does allow a WHILE with an ELSE. REPEAT/UNTIL and FOR are also available.
+</p>
+<h2 id="refactor-case">
+Refactor CASE
+</h2>
+<h2 id="refactor-return">
+Refactor RETURN
+</h2>
+<h2 id="refactor-forward-references">
+Refactor forward references
+</h2>
+<h2 id="update-import">
+Update IMPORT
+</h2>
+<p>
+Add <code>Obn2</code> to IMPORT line. Replace missing Oberon-2 built-ins with the <code>Obn2</code> equivallent.
+</p>
+<h2 id="update-shortint-longint-longreal">
+Update SHORTINT, LONGINT, LONGREAL
+</h2>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="../">README</a>
+</li>
+<li>
+<a href="../license.html">LICENSE</a>
+</li>
+<li>
+<a href="../install.html">INSTALL</a>
+</li>
+<li>
+<a href="./">Ports</a>
+</li>
+<li>
+<a href="../obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="../oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>
