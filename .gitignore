@@ -6,4 +6,6 @@ a.out
 *.o
 *.so
 *test
+helloworld
 .obnc
+Tests.m
