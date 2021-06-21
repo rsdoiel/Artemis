@@ -1,0 +1,23 @@
+2021-06-04, RSD
+
+Hello everyone,
+
+This is probably a bit of a novice question and I apologize but
+it has me puzzled.  In the Oberon-7 language report's
+SYSTEM.BIT() is described as using "n" to address a specific bit.
+On first reading I assumed "n" zero would be the LSB and "n"
+thirty one would be MSB where the compiler deals with the local
+implementation of bit ordering. Is that the correct reading
+of the report?
+
+I was planning on implementing a procedure like Native Oberon's
+Reals.IntL() but then started having doubts about my reading of the
+Oberon-7 report. Have I made too simple a set of assumptions about
+how I should expect SYSTEM.BIT() to work under Oberon-7
+implementations?
+
+All the best,
+
+Robert Doiel
+
+
