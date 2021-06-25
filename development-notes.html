@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>…</title>
+    
+    <link rel="stylesheet" type="text/css"  href="/printfonts/print.css" media="print" />
+  <link rel="stylesheet" type="text/css"  href="/webfonts/fonts.css" media="screen" />
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="development-notes">
+Development Notes
+</h1>
+<h2 id="display-fonts">
+Display &amp; Fonts
+</h2>
+<p>
+Two module that are used by Texts.Mod are Display and Fonts. In the Oberon System these are standard modules. In the POSIX environment they are not. The closest is the XYPlane module from the Oakwood Guidelines.
+</p>
+<p>
+There are two approaches for replicating Display and Fonts in a POSIX setting. They could be made headless, meaning they would never attach to a real viewer or they could be integrate into the GUI of the host system. I am currently exploring SDL2 as an option for integrating them into a host environment.
+</p>
+<p>
+It is possible that copilation options could be chosen (e.g. the module search path) to pick which approach was appropriate for compiling in a POSIX environment. As an example a command line tool which is using Texts for compatibility with Oberon Texts but not for displaying them might be better off with a headless implementation. On the otherhand if you wanted to recreate the Oberon Edit command then headless doesn’t do much for you.
+</p>
+<p>
+The primary difference between a headless Texts and a displayable one is how it is hooked in to the actual rendering process. So a Display0.Mod could be the headless one while Display.Mod extended Display0 to provide real GUI rendering via a portable framework like SDL2.
+</p>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="./">README</a>
+</li>
+<li>
+<a href="license.html">LICENSE</a>
+</li>
+<li>
+<a href="install.html">INSTALL</a>
+</li>
+<li>
+<a href="./ports/">Ports</a>
+</li>
+<li>
+<a href="./obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="./oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="./development-notes.html">development notes</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>
