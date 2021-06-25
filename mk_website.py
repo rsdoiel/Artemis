@@ -6,9 +6,9 @@ import json
 from subprocess import Popen, PIPE, run
 
 custom_page_map = { 
-        "README.md" : "index.html",
-        "INSTALL.md": "install.html",
-        "LICENSE": "license.html"
+        "README.md" : {"name": "index.html", "title": "Project Artemis"},
+        "INSTALL.md": {"name": "install.html", "title": "Installation" },
+        "LICENSE": {"name": "license.html", "title": "License" }
 }
 
 #
@@ -90,17 +90,22 @@ def main(args):
         for filename in files:
             in_name = ""
             out_name = ""
+            title = ""
             nav_name = os.path.join(path, "nav.md")
             if filename in custom_page_map:
                 in_name = os.path.join(path, filename)
-                out_name = os.path.join(path, custom_page_map[filename])
+                title = custom_page_map[filename]['title']
+                out_name = os.path.join(path, custom_page_map[filename]['name'])
             elif filename.endswith(".md") and not filename == "nav.md":
                 basename, ext = os.path.splitext(filename)
                 in_name = os.path.join(path, filename)
                 out_name = os.path.join(path, basename + ".html")
             if in_name != "" and out_name != "":
                 print("Ingesting {}".format(in_name))
-                metadata = json.dumps(frontmatter(in_name))
+                fm = frontmatter(in_name)
+                if title != '':
+                    fm = {'title': title}
+                metadata = json.dumps(fm)
                 #NOTE: Processing metadata should happen here.
                 page_data = []
                 if len(metadata):

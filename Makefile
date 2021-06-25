@@ -74,6 +74,7 @@ test: Tests.Mod $(TEST_NAMES)
 
 docs: .FORCE
 	obncdoc
+	git add obncdoc
 
 clean: .FORCE
 	@if [ -d obncdoc ]; then rm -fR obncdoc; fi
