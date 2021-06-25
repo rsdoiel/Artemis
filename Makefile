@@ -111,11 +111,13 @@ status:
 
 website: web_clean README.md page.tmpl css/site.css
 	obncdoc
+	git add obncdoc
 	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 
 publish: web_clean clean
 	obncdoc
+	git add obncdoc
 	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 	./publish.bash
