@@ -1,8 +1,12 @@
+---
+title: Development notes
+---
+
 Development Notes
 =================
 
-Display & Fonts
----------------
+Display & Fonts Modules
+-----------------------
 
 Two module that are used by Texts.Mod are Display and Fonts. In the
 Oberon System these are standard modules. In the POSIX environment they
