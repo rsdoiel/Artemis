@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION DStrings</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(* DStrings.Mod implements a dynamic string with Rider support in Oberon-7.
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+*)</span>
+DEFINITION <em>DStrings</em>;
+
+IMPORT Chars;
+
+CONST
+  <span class='comment'>(* Constants describing special characters *)</span>
+  EOT = Chars.EOT;
+  TAB = Chars.TAB;
+  LF  = Chars.LF;
+  FF  = Chars.FF;
+  CR  = Chars.CR;
+
+  <span class='comment'>(* Constants commonly used characters to quote things.  *)</span>
+  QUOT   = Chars.QUOT;
+  AMP    = Chars.AMP;
+  APOS   = Chars.APOS;
+  LPAR   = Chars.LPAR;
+  RPAR   = Chars.RPAR;
+  AST    = Chars.AST;
+  LT     = Chars.LT;
+  EQUALS = Chars.EQUALS;
+  GT     = Chars.GT;
+  LBRACK = Chars.LBRACK;
+  RBRACK = Chars.RBRACK;
+  LBRACE = Chars.LBRACE;
+  RBRACE = Chars.RBRACE;
+
+TYPE
+  <span class='comment'>(* String, StringDesc implements a data structure to provide
+      dynamic string in Oberon-7 type. NOTE: In memory the
+      implentation is currently a private linked list of CHAR. *)</span>
+  String     = POINTER TO StringDesc;
+  StringDesc = RECORD END;
+
+  <span class='comment'>(* Rider when combined with a String gives you a char buffer 
+      with a File like interface.
+
+      NOTE: The Rider has two public attributes. Rider.eot and
+      Rider.pos. Use the pos attribute to get the position of the
+      rider in a string. The procedure Pos is used to mimic the
+      Oakwood Pos procedure in Strings module operating on array of
+      char. *)</span>
+  Rider = RECORD
+             pos : INTEGER;
+             eot : BOOLEAN 
+           END;
+
+<span class='comment'>(* Init takes an ARRAY OF CHAR and a String copying the values from
+    the ARRAY OF CHAR into String. Init is destructive and will
+    overwrite or allocate memory for each element as needed.
+
+    If you initialize a long String then Initialize to a shorter
+    one the element with the 0X will indicate the end of the string.
+    The procedure Prune can be used to unlink the first element after
+    the initial 0X. *)</span>
+PROCEDURE <em>Init</em>(str : ARRAY OF CHAR; VAR s : String);
+
+<span class='comment'>(* Set takes a Rider, a String and a pos and initializes a Rider
+    to that position. *)</span>
+PROCEDURE <em>Set</em>(VAR r : Rider; s : String; pos : INTEGER);
+
+<span class='comment'>(* Base returns the string the Rider operates on *)</span>
+PROCEDURE <em>Base</em>( r : Rider ) : String;
+
+<span class='comment'>(* Peek takes a Rider RETURN CHAR value without moving the rider. *)</span>
+PROCEDURE <em>Peek</em>(r : Rider) : CHAR;
+
+<span class='comment'>(* Get returns a CHAR found at the pos or 0X. It advances the
+    current position of the Rider. NOTE the rider has a public
+    attribute eot which becomes TRUE if 0X is encountered, remains
+    FALSE otherwise. *)</span>
+PROCEDURE <em>Get</em>(VAR r : Rider) : CHAR;
+
+<span class='comment'>(* Put sets the value of what the rider is pointing at 
+    then moves the rider to the next element. It will
+    allocate new elements as needed ans ensure the last
+    element remains an 0X. *)</span>
+PROCEDURE <em>Put</em>(VAR r : Rider; c : CHAR);
+
+<span class='comment'>(* Copy duplicates the contents into another. It will
+    initialize the destination if needed. *)</span>
+PROCEDURE <em>Copy</em>(source : String; VAR dest : String);
+
+<span class='comment'>(* CopyChars copies an ARRAY OF CHAR into a String initalizing
+    destination String if necessary *)</span>
+PROCEDURE <em>CopyChars</em>(source : ARRAY OF CHAR; VAR dest : String);
+
+<span class='comment'>(* Clear sets all element of a DString to 0X. NOTE this not
+    free memory allocated by NEW. *)</span>
+PROCEDURE <em>Clear</em>(VAR dest : String);
+
+<span class='comment'>(* Prune removes trailing String elements after the first 0X,
+    The removed elements should then be able to be garbage
+    collected. *)</span>
+PROCEDURE <em>Prune</em>(VAR s : String);
+
+<span class='comment'>(* ToChars copies the contents from a String into an ARRAY OF CHARs
+    return the number of chars trunctated and terminating the
+    ARRAY OF CHAR with an 0X *)</span>
+PROCEDURE <em>ToChars</em>(s : String; VAR str: ARRAY OF CHAR; VAR res : INTEGER);
+
+<span class='comment'>(* String procedures that implement Oakword Strings functionality but for the String type instread of ARRAY OF CHAR *)</span>
+
+<span class='comment'>(* Length is the number of CHAR before 0X is encountered. *)</span>
+PROCEDURE <em>Length</em>( s : String ) : INTEGER;
+
+<span class='comment'>(* Insert *)</span>
+PROCEDURE <em>Insert</em>(source : String; pos : INTEGER; VAR dest : String);
+
+<span class='comment'>(* Append *)</span>
+PROCEDURE <em>Append</em>(extra : String; VAR dest: String);
+
+<span class='comment'>(* Delete *)</span>
+PROCEDURE <em>Delete</em>(VAR s : String; pos, n : INTEGER);
+
+<span class='comment'>(* Replace replace the contents of dest with source starting at
+    pos. *)</span>
+PROCEDURE <em>Replace</em>(source : String; pos : INTEGER; VAR dest : String);
+
+<span class='comment'>(* Extract *)</span>
+PROCEDURE <em>Extract</em>(source : String; pos, n : INTEGER; VAR dest : String);
+
+<span class='comment'>(* Pos return the position of the first occurrance of pattern in
+    source starting at pos. If pattern not found return -1.
+    pos must be less than length of s. *)</span> 
+PROCEDURE <em>Pos</em>(pattern, source : String; pos : INTEGER) : INTEGER;
+
+<span class='comment'>(* Cap replace lower case 'a' to 'z' with uppercase 'A' to 'Z' *)</span>
+PROCEDURE <em>Cap</em>(VAR s : String);
+
+<span class='comment'>(* Beyond Oakwood, the follows the procedure signatures of Chars.Mod *)</span>
+
+<span class='comment'>(* Equal - compares two string and returns TRUE if all elements
+    match through to the terminating 0X *)</span>    
+PROCEDURE <em>Equal</em>( s1, s2 : String) : BOOLEAN;
+
+<span class='comment'>(* StartsWith compares a prefix String with a source string,
+    returns TRUE if prefix matches, FALSE otherwise. *)</span>
+PROCEDURE <em>StartsWith</em>(prefix, source : String) : BOOLEAN;
+
+<span class='comment'>(* EndsWith compares a suffix with source String. Returns
+    TRUE if suffix is found, FALSE otherwise. *)</span>
+PROCEDURE <em>EndsWith</em>(suffix, source : String) : BOOLEAN;
+
+PROCEDURE <em>TrimPrefix</em>(prefix : String; VAR source : String);
+
+PROCEDURE <em>TrimSuffix</em>(suffix : String; VAR source : String);
+
+<span class='comment'>(* TrimString removes cutString from beginning and end of a string *)</span>
+PROCEDURE <em>TrimString</em>(cutString : String; VAR source : String);
+
+<span class='comment'>(* TrimLeft removes any of the characters in cutset (an
+    ARRAY OF CHAR) from left end of String *)</span>
+PROCEDURE <em>TrimLeft</em>(cutset : ARRAY OF CHAR; VAR source : String);
+
+<span class='comment'>(* TrimRight removes any of the characters in cutset (an
+    ARRAY OF CHAR) from right end of String *)</span>
+PROCEDURE <em>TrimRight</em>(cutset: ARRAY OF CHAR; VAR source : String);
+
+<span class='comment'>(* TrimCutset removes any of the characters in cutset (an 
+    ARRAY OF CHAR) from left or right side of String *)</span>
+PROCEDURE <em>Trim</em>(cutset : ARRAY OF CHAR; VAR source : String);
+
+<span class='comment'>(* TrimSpaceLeft removes leading space characters from beginning
+    of String. *)</span>
+PROCEDURE <em>TrimSpaceLeft</em>(VAR source : String);
+
+<span class='comment'>(* TrimSpaceRight removes trailing space characters from end of
+    String *)</span>
+PROCEDURE <em>TrimSpaceRight</em>(VAR source : String);
+
+<span class='comment'>(* TrimSpace removes leading and trailing space characters from String *)</span>
+PROCEDURE <em>TrimSpace</em>(VAR source : String);
+
+<span class='comment'>(* Quote add leading and trailing CHAR to a string. This
+    makes it easy to add double single or any specific 
+    characters to a string.
+
+    Example: Adding double quotes around a string.
+
+        String.Init("this string needs quotes", source);
+        String.QuoteString(QUOT, QUOT, source);
+
+  *)</span>
+PROCEDURE <em>Quote</em>(leftQuote, rightQuote : CHAR; VAR source : String);
+
+<span class='comment'>(* 
+  * The following procedures work using Riders treating a String 
+  * as a buffer. Combining a Rider and a String Provides a powerful
+  * approach for working with plain text in memory. 
+  *
+  * The procedures are based Files procedure signatures.
+  *)</span>
+
+<span class='comment'>(* Read takes a Rider and reads the next CHAR from a DString, 
+    setting the value of b (a BYTE). It similar to Get but
+    is a proper procedure instead of a function. *)</span>
+PROCEDURE <em>Read</em>(VAR r : Rider; VAR value : BYTE);
+
+<span class='comment'>(* ReadChar takes a Rider and returns the next CHAR from a 
+    It is like Get but implemented as a proper procedure instead of
+    a function. *)</span>
+PROCEDURE <em>ReadChar</em>(VAR r : Rider; VAR value : CHAR);
+
+<span class='comment'>(* ReadInt reads an integer from Rider. *)</span>
+PROCEDURE <em>ReadInt</em>(VAR r : Rider; VAR value : INTEGER);
+
+<span class='comment'>(* ReadReal reads a real from Rider in decimal notation *)</span>
+PROCEDURE <em>ReadReal</em>(VAR r : Rider; VAR value : REAL);
+
+<span class='comment'>(* ReadString takes a Rider and extracts through Rider.eot content
+    saving results in dest ARRAY OF CHAR *)</span>
+PROCEDURE <em>ReadString</em>(VAR r : Rider; VAR dest : ARRAY OF CHAR);
+
+<span class='comment'>(* ReadDString takes a Rider and extracts through Rider.eot content
+    saving the results in dest String. *)</span>
+PROCEDURE <em>ReadDString</em>(VAR r : Rider; VAR dest : String);
+
+<span class='comment'>(* ReadBool reads a boolean representation from Rider.
+    Recognized values are 1, 0, t, f, true, false including
+    upper and lower case variations. *)</span>
+PROCEDURE <em>ReadBool</em>(VAR r : Rider; VAR value : BOOLEAN);
+
+<span class='comment'>(* ReadBytes reads an ARRAY OF BYTE from a Rider *)</span>
+PROCEDURE <em>ReadBytes</em>(VAR r : Rider; VAR buf : ARRAY OF BYTE; n : INTEGER);
+
+<span class='comment'>(* ReadSet reads a set from a Rider *)</span>
+PROCEDURE <em>ReadSet</em>(VAR r : Rider; VAR value : SET);
+
+<span class='comment'>(*ReadFixed reads a real value with fixed decimal notation.
+   E.g. s holds "3.145" read with ReadRealFixed(r, pi, 2) would
+   Set pi to 3.14 but advance the rider beyond the value read *)</span>
+PROCEDURE <em>ReadFixed</em>(VAR r : Rider; VAR value : REAL; n : INTEGER);
+
+<span class='comment'>(* Write takes a Rider and writes a BYTE advancing the Rider *)</span>
+PROCEDURE <em>Write</em>(VAR r : Rider; value : BYTE);
+
+<span class='comment'>(* WriteChar takes a Rider and a char and writes it to a String *)</span>
+PROCEDURE <em>WriteChar</em>(VAR r : Rider; value : CHAR);
+
+<span class='comment'>(* WriteString takes a Rider and writes an ARRAY OF CHAR to String *)</span>
+PROCEDURE <em>WriteString</em>(VAR r: Rider; value : ARRAY OF CHAR);
+
+<span class='comment'>(* WriteDString takes a Rider and a String writes the content into a 
+    String until terminating 0X is encountered *)</span>
+PROCEDURE <em>WriteDString</em>(VAR r : Rider; source : String);
+
+<span class='comment'>(* WriteInt takes a Rider, String, integer and padding count and writes
+    the value i to the string *)</span>
+PROCEDURE <em>WriteInt</em>(VAR r : Rider; value : INTEGER);
+
+<span class='comment'>(* WriteReal takes a Rider, String and Real value and writes it into
+    the String *)</span>
+PROCEDURE <em>WriteReal</em>(VAR r: Rider; value : REAL);
+
+<span class='comment'>(* WriteBool takes a Rider, String and Boolean converting the boolean
+    into "true" or "false" *)</span>
+PROCEDURE <em>WriteBool</em>(VAR r : Rider; value : BOOLEAN);
+
+<span class='comment'>(* WriteBytes takes a Rider and writes an ARRAY OF BYTE to a String *)</span>
+PROCEDURE <em>WriteBytes</em>(VAR r : Rider; buf : ARRAY OF BYTE; n : INTEGER);
+
+<span class='comment'>(* WriteSet reads a set from a Rider *)</span>
+PROCEDURE <em>WriteSet</em>(VAR r : Rider; value : SET);
+
+<span class='comment'>(*WriteFixed writes a renumber with a fixed number of decimal places
+   to a string. E.g. write out dollar ammounts as 1.32 rather then E
+   notation *)</span>
+PROCEDURE <em>WriteFixed</em>(VAR r : Rider; value : REAL; n : INTEGER);
+
+END DStrings.
+</pre>
+	</body>
+</html>

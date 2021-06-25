@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>…</title>
+    
+    <link rel="stylesheet" type="text/css"  href="/printfonts/print.css" media="print" />
+  <link rel="stylesheet" type="text/css"  href="/webfonts/fonts.css" media="screen" />
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="action-items">
+Action Items
+</h1>
+<h2 id="next">
+Next
+</h2>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" checked="" /> Clock.Mod should wrap host system clock for use by a more general purpose DateTime.Mod.
+</li>
+<li>
+<input type="checkbox" disabled="" checked="" /> Refactor CharsTest.Mod to test Strings compatible procedures
+</li>
+<li>
+<input type="checkbox" disabled="" checked="" /> Tests module for easily writing tests of modules
+</li>
+<li>
+<input type="checkbox" disabled="" /> Reals.Mod should provide easy conversion to/from String for Real with exponential or fixed notations without reliance on extConvert.
+</li>
+<li>
+<input type="checkbox" disabled="" checked="" /> Chars should provide a more modern approach to text processing that the Oakwood Strings module
+</li>
+<li>
+<input type="checkbox" disabled="" checked="" /> Chars module should work as a drop in replacement for Oakwood Strings
+</li>
+<li>
+<input type="checkbox" disabled="" checked="" /> DStrings module for dynamic strings, compatible with Chars and Strings where it makes sense, it should include Rider suppport since we lack index notation for working in the string object
+</li>
+<li>
+<input type="checkbox" disabled="" /> JSON module for working with JSON data
+</li>
+<li>
+<input type="checkbox" disabled="" /> Document coding conventions on when to use snake, camel case in variables and procedure names.
+</li>
+</ul>
+<h2 id="requested-ports-from-native-oberon">
+Requested Ports from Native Oberon
+</h2>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" /> Files.Mod (Confirm Can I use OBNC’s implementation, confirm PO 2013 Files.Mod works as replacement)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Objects.Mod (Port needed for POSIX, port needed for PO 2013)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Display.Mod (Port needed for POSIX, confirm PO 2013 Display.Mod works as replacement)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Fonts.Mod (Port needed for POSIX, confirm PO 2013 Fonts.Mod works as replacement)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Reals.Mod (Port needed for POSIX and for PO 2013)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Texts.Mod, see https://en.wikibooks.org/wiki/Oberon/ETH_Oberon/2003-01-05/Texts.Mod
+<ul>
+<li>
+Depends on: Files, Objects, Display, Fonts, and Reals
+</li>
+</ul>
+</li>
+<li>
+<input type="checkbox" disabled="" /> Figure out if the other Native Oberon modules like Kernel, Modules, Displays.Display.Mod, etc. need to be ported or we can use PO 2013 modules
+</li>
+</ul>
+<h2 id="someday-maybe">
+Someday, maybe
+</h2>
+<ul class="task-list">
+<li>
+<input type="checkbox" disabled="" /> Reals.Mod
+</li>
+<li>
+<input type="checkbox" disabled="" /> EBNF.Mod and ebnfc.Mod
+</li>
+<li>
+<input type="checkbox" disabled="" /> Scanner.Mod implementing a Texts like Scanner
+</li>
+<li>
+<input type="checkbox" disabled="" /> RISC5 emulator (based on Compiler Construction RISC0 emulator)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Create a Ofront/V4 like dev environment with direct access to host file system
+</li>
+<li>
+<input type="checkbox" disabled="" /> Re-implement Fonts.Mod so Oberon System can use ADA friendly fonts like Open Dyslexia and Atikson Hyperledgable
+</li>
+<li>
+<input type="checkbox" disabled="" /> Rename String.Init() to something that both suggests both initialization AND assignment. NOTE: Set/Get/Put are taken by the Rider procedures to remain signature compatible with Files.Rider
+</li>
+<li>
+<input type="checkbox" disabled="" /> Refactor StringDesc record for holding CHAR to hold INTEGER to allow support for difference character sets (e.g. UTF-8/UTF-32)
+</li>
+<li>
+<input type="checkbox" disabled="" /> Portable Convert module, look at V4 and OBNC implementations as well as Oxford compiler and VOC
+</li>
+<li>
+<input type="checkbox" disabled="" /> RegExp module is needed
+</li>
+<li>
+<input type="checkbox" disabled="" /> CSV module for working with CSV data
+</li>
+<li>
+<input type="checkbox" disabled="" /> XML module for working with XML data
+</li>
+<li>
+<input type="checkbox" disabled="" /> HTML review A2 and Native Oberon-7, evaluate a port to Oberon-7
+</li>
+<li>
+<input type="checkbox" disabled="" /> OBNC ext modules used need to be re-implemented as pure Oberon-7 to allow Artemis to be Oberon-7 compiler agnostic.
+</li>
+<li>
+<input type="checkbox" disabled="" /> Need to test under Oberon Project 2013 in DeWachter’s emulator as well as Extended Oberon and IO Core
+</li>
+<li>
+<input type="checkbox" disabled="" /> Cli modules (e.g. OCat) need to be clearly marked as non-portable between Oberon Systems and POSIX
+</li>
+<li>
+<input type="checkbox" disabled="" /> Makefile needs to handle compile Cli modules to sensible lowercase names based on Oberon-7 compiler used
+</li>
+</ul>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="./">README</a>
+</li>
+<li>
+<a href="license.html">LICENSE</a>
+</li>
+<li>
+<a href="install.html">INSTALL</a>
+</li>
+<li>
+<a href="./ports/">Ports</a>
+</li>
+<li>
+<a href="./obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="./oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="./development-notes.html">development notes</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>

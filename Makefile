@@ -76,6 +76,7 @@ docs: .FORCE
 	obncdoc
 
 clean: .FORCE
+	@if [ -d obncdoc ]; then rm -fR obncdoc; fi
 	@if [ -d dist ]; then rm -fR dist; fi
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
