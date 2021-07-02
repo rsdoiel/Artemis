@@ -1,7 +1,7 @@
 {
     "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
     "@type": "SoftwareSourceCode",
-    "description": "Artemis is a collection of Oberon-7 modules for use on Oberon-7 compilers are available.",
+    "description": "Artemis is a collection of Oberon-07 modules for use on Oberon-07 compilers are available.",
     "name": "Artemis",
     "codeRepository": "https://github.com/rsdoiel/Artemis",
     "issueTracker": "https://github.com/rsdoiel/Artemis/issues",
@@ -18,12 +18,12 @@
     ],
     "developmentStatus": "Concept",
     "keywords": [
-        "Oberon-7",
+        "Oberon-07",
         "portable",
         "Oberon-System"
     ],
     "maintainer": "https://orcid.org/0000-0003-0900-6903",
     "programmingLanguage": [
-        "Oberon-7"
+        "Oberon-07"
     ]
 }

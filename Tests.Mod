@@ -107,29 +107,53 @@ BEGIN
     Out.String("Expected '");Out.Char(expected); Out.String("', got '");
     Out.Char(got); Out.String("' ");
     Out.String(msg);
-    Out.Ln();
+    Out.Ln;
   END;
 END ExpectedChar;
 
 (** ExpectedBool compare to BOOLEAN values, set test to FALSE if they
     don't match and display message *)
 PROCEDURE ExpectedBool*(expected, got : BOOLEAN; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+  PROCEDURE displayBool( val : BOOLEAN);
+  BEGIN 
+    IF val THEN
+      Out.String("TRUE");
+    ELSE
+      Out.String("FALSE");
+    END;
+  END displayBool;
+
 BEGIN
-  IF expected # got THEN
-     Out.String("Expected ");
-     IF expected THEN
-       Out.String("TRUE");
-     ELSE
-       Out.String("FALSE");
-     END;
-     Out.String(", got ");
-     IF got THEN
-       Out.String("TRUE");
-     ELSE
-       Out.String("FALSE");
-     END;
-     Out.String(" "); Out.String(msg); Out.Ln();
-     test := FALSE;
+  (* NOTE: Odd behavior. I would expect to that the following should NOT display
+  output when both "expected" and "got" are TRUE. Compiler is OBNC 0.16.1.
+
+    IF expected # got THEN
+      ...
+
+  This also exhibits the same behavior.
+
+    IF (expected # got) THEN
+    ...
+
+    IF (expected # got) = TRUE THEN
+    ...
+
+  However checking explicitly for value of "expected" and "got" and making explicit
+  tests does work.
+
+    IF ((expected = TRUE) & (got = FALSE)) & ((expected = FALSE) & (got = TRUE)) THEN
+    ...
+
+  Is this a subtitly in the translation of Oberon-07 to C combined with lang-1000.11.45.5
+  on Darin 17.7.0?
+ *)
+  IF ((expected = TRUE) & (got = FALSE)) OR ((expected = FALSE) & (got = TRUE)) THEN
+      Out.String("Expected ");
+      displayBool(expected);
+      Out.String(", got ");
+      displayBool(got);
+      Out.String(" "); Out.String(msg); Out.Ln;
+      test := FALSE;
   END;
 END ExpectedBool;
 

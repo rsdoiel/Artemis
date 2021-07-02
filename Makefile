@@ -3,10 +3,10 @@
 # Set the list of executables in PROG_NAMES. The rest can probably
 # stay as is if all modules are in the same directory. 
 #
-VERSION = $(shell if [ -f VERSION ]; then cat VERSION; else echo "0.0.0"; fi)
+VERSION = $(shell grep '"version":' codemeta.json | cut -d \" -f 4)
 BUILD_NAME = Artemis-Modules
 PROG_NAMES =
-TEST_NAMES = CharsTest DStringsTest Obn2Test
+TEST_NAMES = CharsTest DStringsTest Obn2Test PathTest PathListsTest
 MODULES = $(shell ls *.Mod)
 DOCS= README.md LICENSE INSTALL.txt
 
@@ -74,10 +74,8 @@ test: Tests.Mod $(TEST_NAMES)
 
 docs: .FORCE
 	obncdoc
-	git add obncdoc
 
 clean: .FORCE
-	@if [ -d obncdoc ]; then rm -fR obncdoc; fi
 	@if [ -d dist ]; then rm -fR dist; fi
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
@@ -111,13 +109,11 @@ status:
 
 website: web_clean README.md page.tmpl css/site.css
 	obncdoc
-	git add obncdoc
 	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 
 publish: web_clean clean
 	obncdoc
-	git add obncdoc
 	cp -vp css/site.css obncdoc/style.css
 	./mk_website.py
 	./publish.bash

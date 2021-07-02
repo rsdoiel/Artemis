@@ -37,6 +37,8 @@ CONST
   FF*  = 11X; (* form feed *)
   CR*  = 13X; (* carriage return *)
   SPACE* = " "; (* space *)
+  SLASH* = "/"; (* slash *)
+  BSLASH* = 92X; (* back slash *)
   DASH*  = "-"; (* dash *)
   LODASH* = "_"; (* underscore or low dash *)
   CARET* = "^"; (* caret *)
@@ -447,7 +449,7 @@ BEGIN
 END AppendChar;
 
 (** StartsWith - check to see of a prefix starts an ARRAY OF CHAR *)
-PROCEDURE StartsWith*(prefix : ARRAY OF CHAR; VAR source : ARRAY OF CHAR) : BOOLEAN;
+PROCEDURE StartsWith*(prefix, source : ARRAY OF CHAR) : BOOLEAN;
 VAR startsWith : BOOLEAN; i: INTEGER;
 BEGIN
     startsWith := FALSE;
@@ -466,7 +468,7 @@ END StartsWith;
 
 
 (** EndsWith - check to see of a prefix starts an ARRAY OF CHAR *)
-PROCEDURE EndsWith*(suffix : ARRAY OF CHAR; VAR source : ARRAY OF CHAR) : BOOLEAN;
+PROCEDURE EndsWith*(suffix, source : ARRAY OF CHAR) : BOOLEAN;
 VAR endsWith : BOOLEAN; i, j : INTEGER;
 BEGIN
     endsWith := FALSE;
