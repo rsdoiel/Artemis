@@ -65,7 +65,7 @@ ifneq ($(bindir),)
   BINDIR = $(bindir)
 endif
 
-build: $(PROG_NAMES)
+build: $(TEST_NAMES) test # $(PROG_NAMES)
 
 $(PROG_NAMES): $(MODULES)
 	@mkdir -p bin
