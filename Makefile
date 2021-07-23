@@ -3,12 +3,13 @@
 # Set the list of executables in PROG_NAMES. The rest can probably
 # stay as is if all modules are in the same directory. 
 #
-VERSION = $(shell grep '"version":' codemeta.json | cut -d \" -f 4)
+VERSION = $(shell jq .version codemeta.json | cut -d \" -f 2)
 BUILD_NAME = Artemis-Modules
-PROG_NAMES =
-TEST_NAMES = CharsTest DStringsTest Obn2Test PathTest PathListsTest
-MODULES = $(shell ls *.Mod)
-DOCS= README.md LICENSE INSTALL.txt
+PROG_NAMES = #$(shell ls -1 *CmdLn.Mod | sed -E 's/CmdLn\.Mod')
+TEST_NAMES = $(shell ls -1 *Test.Mod | sed -E 's/\.Mod//g' )
+MODULES = $(shell ls -1 *.Mod)
+DOCS= codemeta.json CITATION.cff README.md LICENSE INSTALL.txt
+HTML_FILES=$(shell find . -type f | grep -E '.html')
 
 #OC = env OBNC_IMPORT_PATH="." obnc
 # Defaults
@@ -23,54 +24,60 @@ BINDIR = $(PREFIX)/bin
 BRANCH = $(shell git branch | grep '* ' | cut -d\  -f 2)
 MSG = Quick Save
 ifneq ($(msg),)
-MSG = $(msg)
+	MSG = $(msg)
 endif
 
 # Overrides
 oc =
-ifneq ($(oc), )
-  OC = $(oc)
+ifneq ($(oc),)
+	OC = $(oc)
 endif
 
 os =
-ifneq ($(os), )
-  OS = $(os)
+ifneq ($(os),)
+	OS = $(os)
+endif
+
+EXT =
+ifeq ($(OS),Windows)
+	EXT = .exe
 endif
 
 arch =
-ifneq ($(arch), )
-  ARCH = $(arch)
+ifneq ($(arch),)
+	ARCH = $(arch)
 endif
 
 prefix =
-ifneq ($(prefix), )
-  PREFIX = $(prefix)
-  LIBDIR = $(prefix)/lib
-  BINDIR = $(prefix)/bin
+ifneq ($(prefix),)
+	PREFIX = $(prefix)
+	LIBDIR = $(prefix)/lib
+	BINDIR = $(prefix)/bin
 endif
 
 libdir =
-ifneq ($(libdir), )
+ifneq ($(libdir),)
   LIBDIR = $(libdir)
 endif
 
 bindir =
-ifneq ($(bindir), )
+ifneq ($(bindir),)
   BINDIR = $(bindir)
 endif
 
-all: $(PROG_NAMES)
+build: $(PROG_NAMES)
 
 $(PROG_NAMES): $(MODULES)
-	$(OC) -o $@ $@.Mod
+	@mkdir -p bin
+	$(OC) -o "bin/$@$(EXT)" "$@.Mod"
 
-$(TEST_NAMES): $(MODULE)
-	$(OC) -o $@ $@.Mod
+$(TEST_NAMES): .FORCE
+	$(OC) -o "$@$(EXT)" "$@.Mod"
 
 full_test: .FORCE clean test
 
 test: Tests.Mod $(TEST_NAMES)
-	@for FNAME in $(TEST_NAMES); do env OS=$(OS) ARCH=$(ARCH) ./$$FNAME; done
+	@for FNAME in $(TEST_NAMES); do env OS=$(OS) ARCH=$(ARCH) "./$${FNAME}"; done
 
 docs: .FORCE
 	obncdoc
@@ -78,18 +85,18 @@ docs: .FORCE
 clean: .FORCE
 	@if [ -d dist ]; then rm -fR dist; fi
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
-	@for FNAME in $(PROG_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
-	@for FNAME in $(TEST_NAMES); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
+	@for FNAME in $(PROG_NAMES); do if [ -f "bin/$${FNAME}$(EXT)" ]; then rm -v "bin/$${FNAME}"; fi; done
+	@for FNAME in $(TEST_NAMES); do if [ -f "$${FNAME}$(EXT)" ]; then rm -v "$${FNAME}"; fi; done
 
 web_clean:
-	@for FNAME in $(shell find . -type f | grep -E '.html'); do if [ -f $$FNAME ]; then rm $$FNAME; fi; done
+	@for FNAME in $(HTML_FILES) ; do if [ -f "$${FNAME}" ]; then rm -v "$${FNAME}"; fi; done
 
 install: $(PROG_NAMES)
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
-	@for FNAME in $(PROG_NAMES); do cp $$FNAME $(BINDIR)/; done
+	@for FNAME in $(PROG_NAMES); do cp -v "bin/$${FNAME}$(EXT)" $(BINDIR)/; done
 
 uninstall: .FORCE
-	@for FNAME in $(PROG_NAMES); do if [ -f "$(BINDIR)/$$FNAME" ]; then rm "$(BINDIR)/$$FNAME"; fi; done
+	@for FNAME in $(PROG_NAMES); do if [ -f "$(BINDIR)/$${FNAME}$(EXT)" ]; then rm "$(BINDIR)/$${FNAME}$(EXT)"; fi; done
 
 dist: $(PROG_NAMES) 
 	@if [ ! -d dist/$(BUILD_NAME) ]; then mkdir -p dist/$(BUILD_NAME); fi
