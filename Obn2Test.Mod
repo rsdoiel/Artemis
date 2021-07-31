@@ -8,14 +8,20 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE Obn2Test;
 
-IMPORT T := Tests;
+IMPORT T := Tests, Obn2;
 
 VAR ts : T.TestSet;
 
 PROCEDURE TestMinMax() : BOOLEAN;
-  VAR test : BOOLEAN;
+  VAR test : BOOLEAN; x, y, got, expected : INTEGER;
 BEGIN test := TRUE;
-  T.ExpectedBool(TRUE, FALSE, "TestMinMax() not implemented.", test);
+  x := 11; y := 12;
+  expected := x;
+  got := Obn2.MIN(x,y);
+  T.ExpectedInt(expected, got, "Test Min(x,y)", test);
+  expected := y;
+  got := Obn2.MAX(x, y);
+  T.ExpectedInt(expected, got, "Test Mac(x,y)", test);
   RETURN test
 END TestMinMax;
 

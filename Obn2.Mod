@@ -23,10 +23,10 @@ BEGIN
 END ASH;
 
 (** MAX returns the maximum of two integers *)
-PROCEDURE MAX*(x, y : INGTEGER) : INTEGER;
+PROCEDURE MAX*(x, y : INTEGER) : INTEGER; 
   VAR res : INTEGER;
 BEGIN
-  IF x > n THEN
+  IF x > y THEN
     res := x;
   ELSE
     res := y;
@@ -35,7 +35,7 @@ BEGIN
 END MAX;
 
 (** MIN provides the minimum of two integers *)
-PROCEDURE MIN(x, y : INTEGER);
+PROCEDURE MIN*(x, y : INTEGER) : INTEGER;
   VAR res : INTEGER;
 BEGIN
   IF x < y THEN
@@ -48,22 +48,22 @@ END MIN;
 
 (** ENTIER is a wrapper around FLOOR, you should really just use
     FLOOR. *)
-PROCEDURE ENTIER(r : REAL) : INTEGER;
+PROCEDURE ENTIER*(r : REAL) : INTEGER;
 BEGIN
   RETURN FLOOR(r)
 END ENTIER;
 
 (** HALT is a wrapper around ASSERT(FALSE), you should just replace
     ASSERT(FALSE) *) 
-PROCEDURE HALT();
+PROCEDURE HALT*();
 BEGIN
   ASSERT(FALSE);
 END HALT;
 
 (** ROT is a wrapper around ROR, you should just replace ROT with ROR *)
-PROCEDURE ROT(VAR x, n : INTEGER);
+PROCEDURE ROT*(x, n : INTEGER) : INTEGER;
 BEGIN
-  ROR(x, n);
+  RETURN ROR(x, n)
 END ROT;
 
 END Obn2.
