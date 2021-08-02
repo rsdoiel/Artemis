@@ -1,0 +1,15 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Math__oh
+#define Math__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+__EXTERN SHORTREAL power (SHORTREAL x, SHORTREAL y);
+#define Math__init()
+
+
+#endif

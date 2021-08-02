@@ -1,0 +1,14 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef CharsTest__oh
+#define CharsTest__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import void *CharsTest__init (void);
+
+
+#endif

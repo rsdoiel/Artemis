@@ -1,0 +1,16 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Obn2__oh
+#define Obn2__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import INTEGER Obn2_ASH (INTEGER x, INTEGER n);
+import INTEGER Obn2_MAX (INTEGER x, INTEGER y);
+import void *Obn2__init (void);
+
+
+#endif

@@ -1,0 +1,32 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef PathLists__oh
+#define PathLists__oh
+
+#include "SYSTEM.oh"
+
+typedef
+	struct PathLists_PathListDesc *PathLists_PathList;
+
+typedef
+	struct PathLists_PathListDesc {
+		INTEGER _prvt0;
+		char _prvt1[1024];
+	} PathLists_PathListDesc;
+
+
+
+import SYSTEM_ADRINT *PathLists_PathListDesc__typ;
+
+import void PathLists_Append (CHAR *path, INTEGER path__len, PathLists_PathList *pathList, BOOLEAN *success);
+import BOOLEAN PathLists_Apply (CHAR *path, INTEGER path__len, INTEGER operation, CHAR *pathListString, INTEGER pathListString__len);
+import void PathLists_Cut (CHAR *path, INTEGER path__len, PathLists_PathList *pathList, BOOLEAN *success);
+import void PathLists_Decode (CHAR *pathListString, INTEGER pathListString__len, PathLists_PathList *pathList, BOOLEAN success);
+import void PathLists_Encode (PathLists_PathList pathList, CHAR delimiter, CHAR *pathListString, INTEGER pathListString__len, BOOLEAN *success);
+import INTEGER PathLists_Find (CHAR *path, INTEGER path__len, PathLists_PathList pathList);
+import INTEGER PathLists_Length (PathLists_PathList pathList);
+import void PathLists_Prepend (CHAR *path, INTEGER path__len, PathLists_PathList *pathList, BOOLEAN *success);
+import void *PathLists__init (void);
+
+
+#endif

@@ -1,0 +1,84 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef DStrings__oh
+#define DStrings__oh
+
+#include "SYSTEM.oh"
+
+typedef
+	struct DStrings_Rider {
+		char _prvt0[8];
+		INTEGER pos;
+		BOOLEAN eot;
+	} DStrings_Rider;
+
+typedef
+	struct DStrings_StringDesc *DStrings_String;
+
+typedef
+	struct DStrings_StringDesc {
+		INTEGER _prvt0;
+		char _prvt1[4];
+	} DStrings_StringDesc;
+
+
+
+import SYSTEM_ADRINT *DStrings_StringDesc__typ;
+import SYSTEM_ADRINT *DStrings_Rider__typ;
+
+import void DStrings_Append (DStrings_String extra, DStrings_String *dest);
+import DStrings_String DStrings_Base (DStrings_Rider *r, SYSTEM_ADRINT *r__typ);
+import void DStrings_Cap (DStrings_String *s);
+import void DStrings_Clear (DStrings_String *dest);
+import void DStrings_Copy (DStrings_String source, DStrings_String *dest);
+import void DStrings_CopyChars (CHAR *source, INTEGER source__len, DStrings_String *dest);
+import void DStrings_Delete (DStrings_String *s, INTEGER pos, INTEGER n);
+import BOOLEAN DStrings_EndsWith (DStrings_String suffix, DStrings_String source);
+import BOOLEAN DStrings_Equal (DStrings_String s1, DStrings_String s2);
+import void DStrings_Extract (DStrings_String source, INTEGER pos, INTEGER n, DStrings_String *dest);
+import CHAR DStrings_Get (DStrings_Rider *r, SYSTEM_ADRINT *r__typ);
+import void DStrings_Init (CHAR *str, INTEGER str__len, DStrings_String *s);
+import void DStrings_Insert (DStrings_String source, INTEGER pos, DStrings_String *dest);
+import INTEGER DStrings_Length (DStrings_String s);
+import CHAR DStrings_Peek (DStrings_Rider *r, SYSTEM_ADRINT *r__typ);
+import INTEGER DStrings_Pos (DStrings_String pattern, DStrings_String source, INTEGER pos);
+import void DStrings_Prune (DStrings_String *s);
+import void DStrings_Put (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR c);
+import void DStrings_Quote (CHAR leftQuote, CHAR rightQuote, DStrings_String *source);
+import void DStrings_Read (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR *value);
+import void DStrings_ReadBool (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, BOOLEAN *value);
+import void DStrings_ReadBytes (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR *buf, INTEGER buf__len, INTEGER n);
+import void DStrings_ReadChar (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR *value);
+import void DStrings_ReadDString (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, DStrings_String *dest);
+import void DStrings_ReadFixed (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, SHORTREAL *value, INTEGER n);
+import void DStrings_ReadInt (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, INTEGER *value);
+import void DStrings_ReadReal (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, SHORTREAL *value);
+import void DStrings_ReadSet (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, SET *value);
+import void DStrings_ReadString (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR *dest, INTEGER dest__len);
+import void DStrings_Replace (DStrings_String source, INTEGER pos, DStrings_String *dest);
+import void DStrings_Set (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, DStrings_String s, INTEGER pos);
+import BOOLEAN DStrings_StartsWith (DStrings_String prefix, DStrings_String source);
+import void DStrings_ToChars (DStrings_String s, CHAR *str, INTEGER str__len, INTEGER *res);
+import void DStrings_Trim (CHAR *cutset, INTEGER cutset__len, DStrings_String *source);
+import void DStrings_TrimLeft (CHAR *cutset, INTEGER cutset__len, DStrings_String *source);
+import void DStrings_TrimPrefix (DStrings_String prefix, DStrings_String *source);
+import void DStrings_TrimRight (CHAR *cutset, INTEGER cutset__len, DStrings_String *source);
+import void DStrings_TrimSpace (DStrings_String *source);
+import void DStrings_TrimSpaceLeft (DStrings_String *source);
+import void DStrings_TrimSpaceRight (DStrings_String *source);
+import void DStrings_TrimString (DStrings_String cutString, DStrings_String *source);
+import void DStrings_TrimSuffix (DStrings_String suffix, DStrings_String *source);
+import void DStrings_Write (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR value);
+import void DStrings_WriteBool (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, BOOLEAN value);
+import void DStrings_WriteBytes (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR *buf, INTEGER buf__len, INTEGER n);
+import void DStrings_WriteChar (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR value);
+import void DStrings_WriteDString (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, DStrings_String source);
+import void DStrings_WriteFixed (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, SHORTREAL value, INTEGER n);
+import void DStrings_WriteInt (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, INTEGER value);
+import void DStrings_WriteReal (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, SHORTREAL value);
+import void DStrings_WriteSet (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, SET value);
+import void DStrings_WriteString (DStrings_Rider *r, SYSTEM_ADRINT *r__typ, CHAR *value, INTEGER value__len);
+import void *DStrings__init (void);
+
+
+#endif

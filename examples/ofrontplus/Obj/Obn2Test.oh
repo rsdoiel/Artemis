@@ -1,0 +1,14 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Obn2Test__oh
+#define Obn2Test__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import void *Obn2Test__init (void);
+
+
+#endif

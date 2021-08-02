@@ -1,0 +1,42 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Tests__oh
+#define Tests__oh
+
+#include "SYSTEM.oh"
+
+typedef
+	BOOLEAN (*Tests_TestProc)(void);
+
+typedef
+	struct Tests_TestSetDesc *Tests_TestSet;
+
+typedef
+	struct Tests_TestSetDesc {
+		CHAR title[1024];
+		Tests_TestProc fn;
+		Tests_TestSet next;
+	} Tests_TestSetDesc;
+
+
+
+import SYSTEM_ADRINT *Tests_TestSetDesc__typ;
+
+import void Tests_Add (Tests_TestSet *ts, Tests_TestProc fn);
+import void Tests_DisplayString (CHAR *msg, INTEGER msg__len, CHAR *source, INTEGER source__len);
+import void Tests_ExpectedBool (BOOLEAN expected, BOOLEAN got, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_ExpectedBytes (CHAR *expected, INTEGER expected__len, CHAR *got, INTEGER got__len, INTEGER n, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_ExpectedChar (CHAR expected, CHAR got, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_ExpectedInt (INTEGER expected, INTEGER got, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_ExpectedReal (SHORTREAL expected, SHORTREAL got, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_ExpectedSet (SET expected, SET got, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_ExpectedString (CHAR *s1, INTEGER s1__len, CHAR *s2, INTEGER s2__len, CHAR *msg, INTEGER msg__len, BOOLEAN *test);
+import void Tests_Init (Tests_TestSet *ts, CHAR *title, INTEGER title__len);
+import BOOLEAN Tests_Run (Tests_TestSet ts);
+import void Tests_ShowTitle (CHAR *s, INTEGER s__len);
+import void Tests_Summarize (CHAR *title, INTEGER title__len, INTEGER successes, INTEGER errors);
+import void Tests_Test (Tests_TestProc fn, INTEGER *success, INTEGER *errors);
+import void *Tests__init (void);
+
+
+#endif

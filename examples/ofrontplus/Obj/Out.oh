@@ -1,0 +1,19 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Out__oh
+#define Out__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+__EXTERN void Char (CHAR ch);
+__EXTERN void Int (INTEGER i, INTEGER n);
+__EXTERN void Ln (void);
+__EXTERN void Real (SHORTREAL r, INTEGER n);
+__EXTERN void String (CHAR *s, INTEGER s__len);
+#define Out__init()
+
+
+#endif

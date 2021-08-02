@@ -1,0 +1,9 @@
+MODULE [foreign] Out;
+
+PROCEDURE Char (ch: CHAR);
+PROCEDURE Int (i, n: INTEGER);
+PROCEDURE Ln;
+PROCEDURE Real (r: REAL; n: INTEGER);
+PROCEDURE String (s: ARRAY OF CHAR);
+
+END Out.

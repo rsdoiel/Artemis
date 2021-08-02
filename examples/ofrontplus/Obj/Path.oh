@@ -1,0 +1,19 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Path__oh
+#define Path__oh
+
+#include "SYSTEM.oh"
+
+
+import CHAR Path_delimiter;
+
+
+import void Path_Append (CHAR *suffix, INTEGER suffix__len, CHAR *path, INTEGER path__len, BOOLEAN *success);
+import void Path_Basename (CHAR *source, INTEGER source__len, CHAR *dest, INTEGER dest__len, BOOLEAN success);
+import void Path_Prepend (CHAR *prefix, INTEGER prefix__len, CHAR *path, INTEGER path__len, BOOLEAN *success);
+import void Path_SetDelimiter (CHAR c);
+import void *Path__init (void);
+
+
+#endif

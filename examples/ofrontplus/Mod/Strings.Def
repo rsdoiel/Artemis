@@ -1,0 +1,5 @@
+MODULE [foreign] Strings;
+
+PROCEDURE Length* (s: ARRAY OF CHAR) : INTEGER;
+
+END Strings.

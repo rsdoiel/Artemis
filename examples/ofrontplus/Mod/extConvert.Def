@@ -1,0 +1,6 @@
+MODULE [foreign] extConvert;
+
+PROCEDURE StringToInt (s: ARRAY OF CHAR; VAR res: INTEGER; VAR done: BOOLEAN);
+PROCEDURE StringToReal (s: ARRAY OF CHAR; VAR res: REAL; VAR done: BOOLEAN);
+
+END extConvert.

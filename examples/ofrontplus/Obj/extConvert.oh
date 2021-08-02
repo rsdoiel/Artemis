@@ -1,0 +1,16 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef extConvert__oh
+#define extConvert__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+__EXTERN void StringToInt (CHAR *s, INTEGER s__len, INTEGER *res, BOOLEAN *done);
+__EXTERN void StringToReal (CHAR *s, INTEGER s__len, SHORTREAL *res, BOOLEAN *done);
+#define extConvert__init()
+
+
+#endif

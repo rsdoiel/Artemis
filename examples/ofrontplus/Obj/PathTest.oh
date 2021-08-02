@@ -1,0 +1,14 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef PathTest__oh
+#define PathTest__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+import void *PathTest__init (void);
+
+
+#endif

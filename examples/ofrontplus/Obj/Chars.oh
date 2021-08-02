@@ -1,0 +1,62 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Chars__oh
+#define Chars__oh
+
+#include "SYSTEM.oh"
+
+
+import CHAR Chars_spaces[6];
+import CHAR Chars_punctuation[33];
+
+
+import void Chars_Append (CHAR *source, INTEGER source__len, CHAR *dest, INTEGER dest__len);
+import void Chars_AppendChar (CHAR c, CHAR *dest, INTEGER dest__len);
+import void Chars_BoolToString (BOOLEAN val, CHAR *dest, INTEGER dest__len);
+import void Chars_Cap (CHAR *source, INTEGER source__len);
+import CHAR Chars_CapChar (CHAR source);
+import void Chars_Clear (CHAR *a, INTEGER a__len);
+import void Chars_Copy (CHAR *source, INTEGER source__len, CHAR *dest, INTEGER dest__len);
+import void Chars_Delete (CHAR *source, INTEGER source__len, INTEGER pos, INTEGER n);
+import BOOLEAN Chars_EndsWith (CHAR *suffix, INTEGER suffix__len, CHAR *source, INTEGER source__len);
+import BOOLEAN Chars_Equal (CHAR *a, INTEGER a__len, CHAR *b, INTEGER b__len);
+import void Chars_Extract (CHAR *source, INTEGER source__len, INTEGER pos, INTEGER n, CHAR *dest, INTEGER dest__len);
+import void Chars_FixedToString (SHORTREAL value, INTEGER n, CHAR *dest, INTEGER dest__len, BOOLEAN *ok);
+import BOOLEAN Chars_InCharList (CHAR c, CHAR *list, INTEGER list__len);
+import BOOLEAN Chars_InRange (CHAR c, CHAR lower, CHAR upper);
+import void Chars_Insert (CHAR *source, INTEGER source__len, INTEGER pos, CHAR *dest, INTEGER dest__len);
+import void Chars_InsertChar (CHAR c, INTEGER pos, CHAR *dest, INTEGER dest__len);
+import void Chars_IntToString (INTEGER value, CHAR *dest, INTEGER dest__len, BOOLEAN *ok);
+import BOOLEAN Chars_IsAlpha (CHAR c);
+import BOOLEAN Chars_IsAlphaNum (CHAR c);
+import BOOLEAN Chars_IsDigit (CHAR c);
+import BOOLEAN Chars_IsLower (CHAR c);
+import BOOLEAN Chars_IsPrintable (CHAR c);
+import BOOLEAN Chars_IsPunctuation (CHAR c);
+import BOOLEAN Chars_IsSpace (CHAR c);
+import BOOLEAN Chars_IsUpper (CHAR c);
+import void Chars_LeftPad (CHAR pad, INTEGER width, CHAR *dest, INTEGER dest__len);
+import INTEGER Chars_Length (CHAR *source, INTEGER source__len);
+import void Chars_Pad (CHAR pad, INTEGER width, CHAR *dest, INTEGER dest__len);
+import CHAR Chars_Pop (CHAR *source, INTEGER source__len);
+import INTEGER Chars_Pos (CHAR *pattern, INTEGER pattern__len, CHAR *source, INTEGER source__len, INTEGER pos);
+import void Chars_Quote (CHAR leftQuote, CHAR rightQuote, CHAR *dest, INTEGER dest__len);
+import void Chars_RealToString (SHORTREAL r, CHAR *dest, INTEGER dest__len, BOOLEAN *ok);
+import void Chars_Replace (CHAR *source, INTEGER source__len, INTEGER pos, CHAR *dest, INTEGER dest__len);
+import void Chars_RightPad (CHAR pad, INTEGER width, CHAR *dest, INTEGER dest__len);
+import void Chars_SetToString (SET set, CHAR *dest, INTEGER dest__len);
+import CHAR Chars_Shift (CHAR *source, INTEGER source__len);
+import BOOLEAN Chars_StartsWith (CHAR *prefix, INTEGER prefix__len, CHAR *source, INTEGER source__len);
+import void Chars_Trim (CHAR *cutset, INTEGER cutset__len, CHAR *source, INTEGER source__len);
+import void Chars_TrimLeft (CHAR *cutset, INTEGER cutset__len, CHAR *source, INTEGER source__len);
+import void Chars_TrimLeftSpace (CHAR *source, INTEGER source__len);
+import void Chars_TrimPrefix (CHAR *prefix, INTEGER prefix__len, CHAR *source, INTEGER source__len);
+import void Chars_TrimRight (CHAR *cutset, INTEGER cutset__len, CHAR *source, INTEGER source__len);
+import void Chars_TrimRightSpace (CHAR *source, INTEGER source__len);
+import void Chars_TrimSpace (CHAR *source, INTEGER source__len);
+import void Chars_TrimString (CHAR *cutString, INTEGER cutString__len, CHAR *source, INTEGER source__len);
+import void Chars_TrimSuffix (CHAR *suffix, INTEGER suffix__len, CHAR *source, INTEGER source__len);
+import void *Chars__init (void);
+
+
+#endif

@@ -1,0 +1,15 @@
+/* Ofront+ 1.0 -s7 -48 */
+
+#ifndef Strings__oh
+#define Strings__oh
+
+#include "SYSTEM.oh"
+
+
+
+
+__EXTERN INTEGER Length (CHAR *s, INTEGER s__len);
+#define Strings__init()
+
+
+#endif
