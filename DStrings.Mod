@@ -7,10 +7,10 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE DStrings;
 
-IMPORT Chars, Convert := extConvert, Strings, Out;
+IMPORT Chars, Convert := extConvert, Strings, Out, Constants;
 
 CONST
-  MAXSET = 32; (* Oberon-7 doesn't have a MAX(T) for set, assuming 32 *)
+  MAXSET = Constants.MAXSET; (* Oberon-7 doesn't have a MAX(T) for set, assuming 32 *)
   (** Constants describing special characters *)
   EOT* = Chars.EOT;
   TAB* = Chars.TAB;
