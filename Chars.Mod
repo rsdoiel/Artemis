@@ -7,7 +7,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE Chars; (** portable expect for splitReal *)
 
-IMPORT Math, Constants; (* , Out ; ( * DEBUG *)
+IMPORT Artemis, Math; (* , Out ; ( * DEBUG *)
 
 (**
 Chars.Mod provides a modern set of procedures for working with CHAR and
@@ -27,9 +27,11 @@ CONST
   SMALLSTR* = 128;
   MEDIUMSTR* = 256;
   LARGESTR* = 512;
-  MAXSTR* = Constants.MAXSTR;
-  MAXSET = Constants.MAXSET; (* MAX(SET) not available in Oberon-7, SET holds nothing or bit positions 0 through 31 *)
-
+  MAXSTR* = Artemis.MAXSTR;
+  (* MAX(SET) not available in Oberon-7,
+     SET holds nothing or bit positions 0 through 31 *)
+  MAXSET = Artemis.MAXSET;
+  
   (** Character constants *)
   EOT* = 0X; (* end of text *)
   TAB* = 9X; (* tab *)

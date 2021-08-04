@@ -7,11 +7,11 @@ See https://opensource.org/licenses/BSD-3-Clause
 
 *)
 MODULE Tests; (** portable *)
-IMPORT Constants, Out;
+IMPORT Artemis, Out;
 
 CONST
-  MAXSET = Constants.MAXSET; (* Oberon-7 doesn't have MAX(SET), use 0 to 31 *)
-  MAXSTR = Constants.MAXSTR;  (* Maximum string length used in tests *)
+  MAXSET = Artemis.MAXSET; (* Oberon-7 doesn't have MAX(SET), use 0 to 31 *)
+  MAXSTR* = Artemis.MAXSTR;  (* Maximum string length used in tests *)
 
 TYPE
     (** TestProc is the signature of a test procedure. It is simple.
