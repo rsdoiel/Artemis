@@ -18,8 +18,9 @@ implemented in Oberon-07 or providing an Oberon-07 compiler.
 That is the scope of Artemis project for now.
 
 Initial development is being done in a POSIX environment and
-relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler
-and Mike Spivey's [Obc-3](https://github.com/Spivoxity/obc-3).
+relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler,
+Mike Spivey's [Obc-3](https://github.com/Spivoxity/obc-3) and Oleg N. Cher's
+[OfrontPlus](https://github.com/Oleg-N-Cher/OfrontPlus) compiler.
 
 Artemis draws inspiration from Wirth and Reed's Project Oberon 2013,
 Joseph Templ's [Ofront](https://github.com/jtempl/ofront) with V4.
@@ -38,16 +39,38 @@ Project layout
 --------------
 
 - root
-    - obncdocs
-    - obnc (not portable)
-    - oxford (not portable)
-    - ports
-        - s3
-        - v4
+  - obncdocs
+  - obnc (not portable)
+  - oxford (not portable)
+  - ofrontplus (not portable)
+
+The subdirecties named for their compilers will implement modules
+providing a common definition but specificly written to that compiler.
+This typically will be modules that rely on an underlieing C library
+or behavior. The plan is for commonly defined modules targetting
+a specific compiler to use the "art" prefix. This will give room to 
+the compiler developer to either adopt or create their own compatible
+implementations. E.g. current I've implemented a Unix and Clock modules
+for the OBNC and Oxford compilers. These will be renamed artUnix and
+artClock.  Likewise the implementations of extArgs, extEnv I made for
+the Oxford compiler will be renamed artArgs and artEnv so that it is clear
+these are not the original OBNC modules extensions written by Karl.
+
+I also have a set of "ports" of Oberon System modules or modules from
+historic object projects. Each port will include it's own.
+
+- root
+  - ports
+      - s3
+      - v4
+
+### descriptions of the structures
 
 The root repository directory is for modules that are
 portable between POSIX Oberon-07 compiler implementations
-and portable to an Oberon-07 based Oberon System. 
+and portable to an Oberon-07 based Oberon System. Where I've
+provided non-canonical implementations I plan to use the "art" prefix
+in the module name.
 
 The __obncdocs__ directory contains documentation of the
 module definitions for the common modules in the root directory.
@@ -64,6 +87,12 @@ integration with C based libraries and services. These aren't
 portable between compilers but should work across POSIX systems
 where Obc-3 is available.
 
+The __ofrontplus__ directory contains modules that target the
+OfrontPlus compiler. This is parimarily integration with C based
+libraries. These modules are not portable between compilers but
+should work across POSIX systems where OfrontPlus is avialable.
+
+
 The __ports__ directory contains sub directories of code ported
 from a historic Oberon System, usually the original code was
 implemented in Oberon-2. The code in the __ports__ directory
@@ -72,6 +101,14 @@ is focused on "porting" code from S3 (Native Oberon) and
 V4 (Linz Oberon) to Oberon-07 as an exploration of Oberon-07 language
 and with an eye to eventually porting to the Oberon System
 that evolved from Project Oberon 2013.
+
+Module naming
+-------------
+
+Any modules which are not canonical to Artemis or are specific to a compiler
+implementation must be prefixed with "art". This will allow for better re-use
+in other projects (e.g. OfrontPlus) and avoid name collisions. Current Artemis
+modules need to be renamed to conform to this project policy before next release.
 
 
 New Modules
@@ -99,12 +136,11 @@ to Oberon-07.
 OBNC specific modules
 ---------------------
 
-The [following modules](np/README.md) are not portable to Project Oberon.
-They even require use of the OBNC compiler so are not portable for use
-with other POSIX compilers. This is due to dependency on OBNC extension
-modules or because they are derived from C code and use C libraries. 
+The following modules are not portable to Project Oberon are implemented
+specifically for a targetted compiler. They will eventually be renamed
+to include the "art" prefix.
 
-[Unix](obnc/Unix.Mod) provides access to some Unix/C facilities.
+[Unix](obnc/Unix.obn) (will be renamed to artUnix) provides access to some Unix/C facilities.
 
 - `Exit(exitCode : INTEGER);` will cause a program to exist with the given
    POSIX exit code.
@@ -114,20 +150,19 @@ modules or because they are derived from C code and use C libraries.
   populate the `dest` with the name of the host architectures, e.g. x86_64,
   armv7.
 
-[Clock](obnc/Clock.Mod) is an abstraction layer for system clock built.
-It uses the C `clock_gettime()` and `clock_settime()`.
+[Clock](obnc/Clock.obn) (will be renamed artClock) provides an abstraction layer working with the system clock. The implementation uses the C `clock_gettime()` and `clock_settime()`.
 
 
 Oxford Specific Modules
 -----------------------
 
-[extArgs](oxford/extArgs.m) provides an OBNC compatible Env module
+[extArgs](oxford/extArgs.m) (will be renamed artArgs) provides an OBNC compatible Args module
 
-[extEnv](oxford/extEnv.m) provides an OBNC compatible Env module
+[extEnv](oxford/extEnv.m) (will be renamed artEnv) provides an OBNC compatible Env module
 
-[extConvert](oxford/extConvert.m) provides an OBNC compatible Convert module
+[extConvert](oxford/extConvert.m) (will be renamed artConvert) provides an OBNC compatible Convert module
 
-[Unix](oxford/Unix.m) provides access to some Unix/C facilities.
+[Unix](oxford/Unix.m) (will be renamed artUnix) provides access to some Unix/C facilities.
 
 - `Exit(exitCode : INTEGER);` will cause a program to exist with the given
    POSIX exit code.
@@ -137,8 +172,31 @@ Oxford Specific Modules
   populate the `dest` with the name of the host architectures, e.g. x86_64,
   armv7.
 
-[Clock](oxford/Clock.m) is an abstraction layer for system clock built.
-It uses the C `clock_gettime()` and `clock_settime()`.
+[Clock](oxford/Clock.m) (will be renamed artClock) is an abstraction layer for working with the system clock. It uses the C `clock_gettime()` and `clock_settime()`.
+
+OfrontPlus Specific Modules
+---------------------------
+
+NOTE: These modules are in the planning stages and hopefully included in the next release of Artemis.
+
+[artArgs](ofronplus/artArgs.Mod) provides an OBNC compatible Args module
+
+[artEnv](ofrontplus/artEnv.Mod) provides an OBNC compatible Env module
+
+[artConvert](ofrontplus/artConvert.Mod) provides an OBNC compatible Convert module
+
+[artUnix](ofrontplus/artUnix.Mod) provides access to some Unix/C facilities.
+
+- `Exit(exitCode : INTEGER);` will cause a program to exist with the given
+   POSIX exit code.
+- `KernelName(dest : ARRAY OF CHAR)` uses the POSIX command `uname` to populate
+  `dest` with the name of the host OS kernel if known
+- `Architecture(dest : ARRAY OF CHAR)` uses the POSIX command `uname` to
+  populate the `dest` with the name of the host architectures, e.g. x86_64,
+  armv7.
+
+[artClock](ofrontplus/Clock.Mod) is an abstraction layer for working with the system clock. It uses the C `clock_gettime()` and `clock_settime()`.
+
 
 
 Project approach to portability
@@ -170,6 +228,8 @@ Both non-portable and portable modules can be used together in
 a project. This requires knowing the compiler you're using and
 targeting it's way of managing where to find modules.
 
+FIXME: The next paragraph needs to include references for OfrontPlus.
+
 An example is using [Tests.Mod](Tests.Mod) for the **clocktest**
 implementations in both __obnc__ and __oxford__ directories.
 With OBNC you need to set some environment variables to let the
@@ -195,6 +255,7 @@ rename Tests.Mod to Tests.m to get compilation with obc. It might
 be because the other files I am compiling use the '.m' extension.
 Need to check with Mike.
 
+FIXME: Document using compiling and handling import paths with OfrontPlus compiler.
 
 
 
