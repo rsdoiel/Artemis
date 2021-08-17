@@ -8,7 +8,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE ClockTest;
 
-IMPORT T := Tests, Env := extEnv, Clock, Out, Strings;
+IMPORT T := Tests, Env := extEnv, Clock := artClock, Out, Strings;
 
 VAR ts : T.TestSet;
 

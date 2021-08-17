@@ -8,18 +8,18 @@
  *
  */
 
-#include ".obnc/Clock.h"
+#include ".obnc/artClock.h"
 #include <obnc/OBNC.h>
 #include <stdio.h>
 #include <time.h>
 
-#define OBERON_SOURCE_FILENAME "Clock.Mod"
+#define OBERON_SOURCE_FILENAME "artClock.obn"
 
-const int Clock__ClockDesc_id;
-const int *const Clock__ClockDesc_ids[1] = {&Clock__ClockDesc_id};
-const OBNC_Td Clock__ClockDesc_td = {Clock__ClockDesc_ids, 1};
+const int artClock__ClockDesc_id;
+const int *const artClock__ClockDesc_ids[1] = {&artClock__ClockDesc_id};
+const OBNC_Td artClock__ClockDesc_td = {artClock__ClockDesc_ids, 1};
 
-Clock__Clock_ Clock__clock_;
+artClock__Clock_ artClock__clock_;
 
 static int clockError_;
 
@@ -50,7 +50,6 @@ static void GetRtcTime_(OBNC_INTEGER *second_, OBNC_INTEGER *minute_, OBNC_INTEG
 }
 
 
-
 static void SetRtcTime_(OBNC_INTEGER second_, OBNC_INTEGER minute_, OBNC_INTEGER hour_, OBNC_INTEGER day_, OBNC_INTEGER month_, OBNC_INTEGER year_, OBNC_INTEGER wDay_, OBNC_INTEGER yDay_, OBNC_INTEGER isDST_, OBNC_INTEGER utcOffset_, int *ok_)
 {
   struct timespec nt;
@@ -79,8 +78,7 @@ static void SetRtcTime_(OBNC_INTEGER second_, OBNC_INTEGER minute_, OBNC_INTEGER
 }
 
 
-
-void Clock__Copy_(Clock__Clock_ source_, Clock__Clock_ *dest_)
+void artClock__Copy_(artClock__Clock_ source_, artClock__Clock_ *dest_)
 {
 
 	(*OBNC_PT((*dest_), 76)).seconds_ = (*OBNC_PT(source_, 76)).seconds_;
@@ -98,60 +96,60 @@ void Clock__Copy_(Clock__Clock_ source_, Clock__Clock_ *dest_)
 }
 
 
-void Clock__Update_(void)
+void artClock__Update_(void)
 {
 	OBNC_INTEGER second_, minute_, hour_, day_, month_, year_, wDay_, yDay_, isDST_, utcOffset_, seconds_, nanoSeconds_;
 	int ok_;
 
 	GetRtcTime_(&second_, &minute_, &hour_, &day_, &month_, &year_, &wDay_, &yDay_, &isDST_, &utcOffset_, &seconds_, &nanoSeconds_, &ok_);
-	if (Clock__clock_ == 0) {
-		OBNC_NEW(Clock__clock_, &Clock__ClockDesc_td, struct Clock__ClockDesc_Heap, OBNC_ATOMIC_NOINIT_ALLOC);
+	if (artClock__clock_ == 0) {
+		OBNC_NEW(artClock__clock_, &artClock__ClockDesc_td, struct artClock__ClockDesc_Heap, OBNC_ATOMIC_NOINIT_ALLOC);
 	}
 	clockError_ = ! ok_;
 	if (ok_) {
-		(*OBNC_PT(Clock__clock_, 107)).seconds_ = seconds_;
-		(*OBNC_PT(Clock__clock_, 108)).nanoSeconds_ = nanoSeconds_;
-		(*OBNC_PT(Clock__clock_, 109)).year_ = year_;
-		(*OBNC_PT(Clock__clock_, 110)).month_ = month_;
-		(*OBNC_PT(Clock__clock_, 111)).day_ = day_;
-		(*OBNC_PT(Clock__clock_, 112)).hour_ = hour_;
-		(*OBNC_PT(Clock__clock_, 113)).minute_ = minute_;
-		(*OBNC_PT(Clock__clock_, 114)).second_ = second_;
-		(*OBNC_PT(Clock__clock_, 115)).wDay_ = wDay_;
-		(*OBNC_PT(Clock__clock_, 116)).yDay_ = yDay_;
-		(*OBNC_PT(Clock__clock_, 117)).isDST_ = isDST_;
-		(*OBNC_PT(Clock__clock_, 118)).utcOffset_ = utcOffset_;
+		(*OBNC_PT(artClock__clock_, 107)).seconds_ = seconds_;
+		(*OBNC_PT(artClock__clock_, 108)).nanoSeconds_ = nanoSeconds_;
+		(*OBNC_PT(artClock__clock_, 109)).year_ = year_;
+		(*OBNC_PT(artClock__clock_, 110)).month_ = month_;
+		(*OBNC_PT(artClock__clock_, 111)).day_ = day_;
+		(*OBNC_PT(artClock__clock_, 112)).hour_ = hour_;
+		(*OBNC_PT(artClock__clock_, 113)).minute_ = minute_;
+		(*OBNC_PT(artClock__clock_, 114)).second_ = second_;
+		(*OBNC_PT(artClock__clock_, 115)).wDay_ = wDay_;
+		(*OBNC_PT(artClock__clock_, 116)).yDay_ = yDay_;
+		(*OBNC_PT(artClock__clock_, 117)).isDST_ = isDST_;
+		(*OBNC_PT(artClock__clock_, 118)).utcOffset_ = utcOffset_;
 	}
 }
 
 
-void Clock__Get_(Clock__Clock_ *c_)
+void artClock__Get_(artClock__Clock_ *c_)
 {
 
-	Clock__Update_();
+	artClock__Update_();
 	if ((*c_) == 0) {
-		OBNC_NEW((*c_), &Clock__ClockDesc_td, struct Clock__ClockDesc_Heap, OBNC_ATOMIC_NOINIT_ALLOC);
+		OBNC_NEW((*c_), &artClock__ClockDesc_td, struct artClock__ClockDesc_Heap, OBNC_ATOMIC_NOINIT_ALLOC);
 	}
-	Clock__Copy_(Clock__clock_, &(*c_));
+	artClock__Copy_(artClock__clock_, &(*c_));
 }
 
 
-void Clock__Set_(Clock__Clock_ c_, int *ok_)
+void artClock__Set_(artClock__Clock_ c_, int *ok_)
 {
 
 	SetRtcTime_((*OBNC_PT(c_, 147)).second_, (*OBNC_PT(c_, 147)).minute_, (*OBNC_PT(c_, 147)).hour_, (*OBNC_PT(c_, 147)).day_, (*OBNC_PT(c_, 147)).month_, (*OBNC_PT(c_, 147)).year_, (*OBNC_PT(c_, 147)).wDay_, (*OBNC_PT(c_, 147)).yDay_, (*OBNC_PT(c_, 147)).isDST_, (*OBNC_PT(c_, 147)).utcOffset_, &(*ok_));
 	if ((*ok_)) {
-		Clock__Copy_(c_, &Clock__clock_);
+		artClock__Copy_(c_, &artClock__clock_);
 	}
 }
 
 
-void Clock__Init(void)
+void artClock__Init(void)
 {
 	static int initialized = 0;
 
 	if (! initialized) {
-		Clock__Update_();
+		artClock__Update_();
 		initialized = 1;
 	}
 }
