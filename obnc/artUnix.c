@@ -8,16 +8,15 @@
  *
  */
 
-#include ".obnc/Unix.h"
+#include ".obnc/artUnix.h"
 #include <obnc/OBNC.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define OBERON_SOURCE_FILENAME "Unix.Mod"
+#define OBERON_SOURCE_FILENAME "artUnix.obn"
 
 static char kernel_[24], architecture_[24];
-
 
 static void uname_(char opt_, char dest_[], OBNC_INTEGER dest_len)
 {
@@ -51,11 +50,10 @@ static void uname_(char opt_, char dest_[], OBNC_INTEGER dest_len)
 }
 
 
-void Unix__Exit_(OBNC_INTEGER exitCode_)
+void artUnix__Exit_(OBNC_INTEGER exitCode_)
 {
   exit(exitCode_);
 }
-
 
 
 static OBNC_INTEGER minimum_(OBNC_INTEGER a_, OBNC_INTEGER b_)
@@ -81,20 +79,20 @@ static void copyChars_(const char source_[], OBNC_INTEGER source_len, char dest_
 		l_ = 0;
 	}
 	i_ = 0;
-	dest_[OBNC_IT(i_, dest_len, 41)] = '\x00';
-	while ((i_ < l_) && (source_[OBNC_IT(i_, source_len, 42)] != '\x00')) {
-		dest_[OBNC_IT(i_, dest_len, 43)] = source_[OBNC_IT(i_, source_len, 43)];
+	dest_[OBNC_IT(i_, dest_len, 49)] = '\x00';
+	while ((i_ < l_) && (source_[OBNC_IT(i_, source_len, 50)] != '\x00')) {
+		dest_[OBNC_IT(i_, dest_len, 51)] = source_[OBNC_IT(i_, source_len, 51)];
 		OBNC_INC(i_);
 	}
-	dest_[OBNC_IT(i_, dest_len, 46)] = '\x00';
+	dest_[OBNC_IT(i_, dest_len, 54)] = '\x00';
 	OBNC_DEC(i_);
-	if ((dest_[OBNC_IT(i_, dest_len, 47)] == '\x10') || (dest_[OBNC_IT(i_, dest_len, 47)] == '\x13')) {
-		dest_[OBNC_IT(i_, dest_len, 48)] = '\x00';
+	if ((dest_[OBNC_IT(i_, dest_len, 55)] == '\x10') || (dest_[OBNC_IT(i_, dest_len, 55)] == '\x13')) {
+		dest_[OBNC_IT(i_, dest_len, 56)] = '\x00';
 	}
 }
 
 
-void Unix__KernelName_(char dest_[], OBNC_INTEGER dest_len)
+void artUnix__KernelName_(char dest_[], OBNC_INTEGER dest_len)
 {
 
 	if (kernel_[0] == '\x00') {
@@ -104,7 +102,7 @@ void Unix__KernelName_(char dest_[], OBNC_INTEGER dest_len)
 }
 
 
-void Unix__Architecture_(char dest_[], OBNC_INTEGER dest_len)
+void artUnix__Architecture_(char dest_[], OBNC_INTEGER dest_len)
 {
 
 	if (architecture_[0] == '\x00') {
@@ -114,7 +112,7 @@ void Unix__Architecture_(char dest_[], OBNC_INTEGER dest_len)
 }
 
 
-void Unix__Init(void)
+void artUnix__Init(void)
 {
 	static int initialized = 0;
 

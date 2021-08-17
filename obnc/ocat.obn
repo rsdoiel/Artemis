@@ -5,7 +5,7 @@ MODULE ocat;
 
 (** NOTE: OCat is a POSIX command line program. *)
     
-IMPORT Args := extArgs, Out, Files, Texts := TextsCmdLn, Chars, Convert := extConvert, Err := extErr;
+IMPORT Args := extArgs, Out, Files, Texts := artTextsCmdLn, Chars, Convert := extConvert, Err := extErr;
 
 CONST
   TAB = 9X;

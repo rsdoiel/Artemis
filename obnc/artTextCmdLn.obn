@@ -1,5 +1,5 @@
 (* TextsCmdLn is a port of Project Oberon's Texts for POSIX shell. RSD 2021-05-11 *)
-MODULE TextsCmdLn; (*JG 21.11.90 / NW 11.7.90 / 24.12.95 / 22.11.10 / 18.11.2014 / 10.1.2019*)
+MODULE artTextsCmdLn; (*JG 21.11.90 / NW 11.7.90 / 24.12.95 / 22.11.10 / 18.11.2014 / 10.1.2019*)
   IMPORT Files, Strings;
 
   CONST (*scanner symbol classes*)
@@ -572,5 +572,5 @@ MODULE TextsCmdLn; (*JG 21.11.90 / NW 11.7.90 / 24.12.95 / 22.11.10 / 18.11.2014
   END WriteClock;
 
 BEGIN TrailerFile := Files.New("")
-END TextsCmdLn.
+END artTextsCmdLn.
 
