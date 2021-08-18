@@ -14,16 +14,20 @@ DEFINITION Obn2;
 PROCEDURE ASH(x, n : INTEGER) : INTEGER;
 
 (* MAX returns the maximum of two integers *)
-PROCEDURE MAX(x, y : INGTEGER) : INTEGER;
+PROCEDURE MAX(x, y : INTEGER) : INTEGER; 
 
 (* MIN provides the minimum of two integers *)
+PROCEDURE MIN(x, y : INTEGER) : INTEGER;
 
 (* ENTIER is a wrapper around FLOOR, you should really just use
     FLOOR. *)
+PROCEDURE ENTIER(r : REAL) : INTEGER;
 
 (* HALT is a wrapper around ASSERT(FALSE), you should just replace
     ASSERT(FALSE) *) 
+PROCEDURE HALT();
 
 (* ROT is a wrapper around ROR, you should just replace ROT with ROR *)
+PROCEDURE ROT(x, n : INTEGER) : INTEGER;
 
 END Obn2.

@@ -7,6 +7,9 @@ See https://opensource.org/licenses/BSD-3-Clause
 
 *)
 DEFINITION Tests; (* portable *)
+CONST
+  MAXSTR = 1024;
+
 TYPE
     (* TestProc is the signature of a test procedure. It is simple.
         if a test successeds it returns true, otherwise it returns false.
