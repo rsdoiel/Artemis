@@ -1,4 +1,4 @@
-(** Clock.m module provides access to the system clock.
+(** artClock.m module provides access to the system clock.
 
 Copyright (C) 2021 R. S. Doiel
 
@@ -6,9 +6,9 @@ Released under The 3-Clause BSD License.
 See https://opensource.org/licenses/BSD-3-Clause
 
 *)
-MODULE Clock; (** NOT PORTABLE, Assumes Obc-3 rel 3.1.2 compiler *)
+MODULE artClock; (** NOT PORTABLE, Assumes Obc-3 rel 3.1.2 compiler *)
 
-IMPORT SYSTEM;
+(* IMPORT SYSTEM; *)
 
 TYPE
   (** Clock and ClockDesc types holds a normalized presentation
@@ -154,7 +154,7 @@ BEGIN
 END Set;
 
 BEGIN 
-  SYSTEM.LOADLIB("./Clock.so");
+  (* SYSTEM.LOADLIB("./artClock.so"); *)
   Update();
-END Clock.
+END artClock.
 

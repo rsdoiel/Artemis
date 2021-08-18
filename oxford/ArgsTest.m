@@ -1,4 +1,4 @@
-(** ArgsTest.m modules provides test coverage for extArgs.m
+(** ArgsTest.m modules provides test coverage for artArgs.m
 
 Copyright (C) 2021 R. S. Doiel
 
@@ -8,7 +8,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE ArgsTest;
 
-IMPORT T := Tests, Args := extArgs, Out;
+IMPORT T := Tests, Args := artArgs, Out;
 
 VAR ts : T.TestSet;
 

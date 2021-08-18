@@ -1,5 +1,5 @@
 /*
- * Clock.c provides an interface to C libraries used to implement Clock.m.
+ * artClock.c provides an interface to C libraries used to implement artClock.m.
  *
  * Copyright (C) 2021 R. S. Doiel
  *
