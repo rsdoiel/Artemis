@@ -7,11 +7,11 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE DStrings;
 
-IMPORT Artemis, Chars, Convert := extConvert, Strings, Out;
+IMPORT Chars, Convert := extConvert, Strings, Out;
 
 CONST
   (* Oberon-7 doesn't have a MAX(T) for set, assuming 32 total, 0 to 31 *)
-  MAXSET = Artemis.MAXSET;
+  MAXSET = 31;
   (** Constants describing special characters *)
   EOT* = Chars.EOT;
   TAB* = Chars.TAB;
