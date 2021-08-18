@@ -1,0 +1,38 @@
+(* PathLists is a module for working with a delimited list of paths. *)
+DEFINITION PathLists;
+    (* Merge operations *)
+TYPE
+    PathList = POINTER TO PathListDesc;
+    PathListDesc = RECORD END;
+
+(* Length returns the length of the PathList *)
+PROCEDURE Length(pathList : PathList) : INTEGER;
+
+(* Find takes a path and searches a path list return -1 if not found
+or the position where it was found (zero indexed) *)
+PROCEDURE Find(path : ARRAY OF CHAR; pathList : PathList) : INTEGER;
+
+(* Prepend takes a path and a path list and prepends path to path list updating
+  path list. *)
+PROCEDURE Prepend(path : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+(* Append takes a path and path list and adds the path to the end of path list *)
+PROCEDURE Append(path: ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+(* Cut takes a path and a path list and removes the path element from path list. *)
+PROCEDURE Cut(path : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+(* SetDelimiter sets the delimiter to be used for encoding and decoding paths *)
+
+(* Encode takes a PathList and encodes it into pathListString using the delimiter provided *)
+PROCEDURE Encode(pathList : PathList; delimiter: CHAR; VAR pathListString : ARRAY OF CHAR; VAR success : BOOLEAN);
+
+(* Decode takes a path list string and decodes it into a PathList data structure *)
+PROCEDURE Decode(pathListString : ARRAY OF CHAR; VAR pathList : PathList; success : BOOLEAN);
+
+(* Apply takes a path, an operation and a path list string. It applies the operation
+    using the path and pathList updating pathList. Return TRUE of successful,
+    FALSE otherwise. *)
+PROCEDURE Apply(path: ARRAY OF CHAR; operation: INTEGER; VAR pathListString: ARRAY OF CHAR): BOOLEAN;
+
+END PathLists.

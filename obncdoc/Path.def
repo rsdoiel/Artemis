@@ -1,0 +1,30 @@
+DEFINITION Path;
+
+CONST
+    (* Maximum path length *)
+    MAXLENGTH = 1024;
+
+VAR
+    delimiter : CHAR;
+
+(* SetDelimiter used for parsing paths *)
+PROCEDURE SetDelimiter(c : CHAR);
+
+(* Prepend insert the path fragement into the path adding
+the delimiter appropriately.
+
+NOTE: Prepend is limited by the temporary path used in assembling data.
+If the length of the prefix and path is too long then success will be
+set to FALSE and path will remain unchanged. *)
+PROCEDURE Prepend(prefix : ARRAY OF CHAR; VAR path : ARRAY OF CHAR; VAR success : BOOLEAN);
+
+(* Append appends the path fragment onto the path adding a delimiter appropriately.
+
+NOTE: The size of path limits how long the suffix can be. If it is too long then
+path remains unchanged and success is set to FALSE. *)
+PROCEDURE Append(suffix : ARRAY OF CHAR; VAR path : ARRAY OF CHAR; VAR success : BOOLEAN);
+
+(* Basename scans source and writes the last path segment to dest based on the path delimiter set *)
+PROCEDURE Basename(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR; success : BOOLEAN);
+
+END Path.
