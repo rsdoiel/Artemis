@@ -5,8 +5,8 @@
 + [INSTALL](../install.html)
 + [Ports](../ports/)
 + [OBNC Modules](../obnc/)
-+ [Obc-3 Modules](./)
-+ [Ofront+ Modules](../ofrontplus/)
++ [Obc-3 Modules](../oxford/)
++ [Ofront+ Modules](./)
 + [development notes](../development-notes.html)
 + [Github](https://github.com/rsdoiel/Artemis)
 

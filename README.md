@@ -2,8 +2,12 @@
 title: Project Artemis
 ---
 
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+
 Artemis
 =======
+
+
 
 Artemis is an Oberon-07 module collection. My hope is
 to encourage continued use and development of the Oberon-07
