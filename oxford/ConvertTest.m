@@ -8,7 +8,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE ConvertTest;
 
-IMPORT T := Tests, Convert := extConvert;
+IMPORT T := Tests, Convert := artConvert;
 
 VAR ts : T.TestSet;
 
@@ -53,7 +53,7 @@ BEGIN test := TRUE;
 END TestRealConvs;
 
 BEGIN
-  T.Init(ts, "extConvert");
+  T.Init(ts, "artConvert");
   T.Add(ts, TestIntConvs);
   T.Add(ts, TestRealConvs);
   ASSERT(T.Run(ts));

@@ -8,7 +8,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE EnvTest;
 
-IMPORT T := Tests, Env := extEnv, Out;
+IMPORT T := Tests, Env := artEnv, Out;
 
 VAR ts : T.TestSet;
 

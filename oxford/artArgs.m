@@ -1,4 +1,4 @@
-(** extArgs.m provides access to POSIX system arguments. It is based
+(** artArgs.m provides access to POSIX system arguments. It is based
     on the definition found in OBNC's extended library extArgs.Mod. 
 
 Copyright (C) 2021 R. S. Doiel
@@ -7,7 +7,7 @@ Released under The 3-Clause BSD License.
 See https://opensource.org/licenses/BSD-3-Clause
 
 *)
-MODULE extArgs;
+MODULE artArgs;
 
 IMPORT Args;
 
@@ -18,7 +18,7 @@ VAR
 The parameters are n:th command line argument (0 <= n < count). 
 
 The parameter res is provided for compatibilty with OBNC
-extArgs. It is ignored. *)
+artArgs. It is ignored. *)
 PROCEDURE Get*(n: INTEGER; VAR arg: ARRAY OF CHAR; VAR res: INTEGER);
 BEGIN
   (* The zero's arg need to be the first parameter from the command line *)
@@ -27,5 +27,5 @@ END Get;
 
 BEGIN
   count := Args.argc - 1;
-END extArgs.
+END artArgs.
 

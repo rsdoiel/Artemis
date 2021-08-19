@@ -27,4 +27,11 @@ Pre-requisites
   git clone git@github.com:Spivoxity/obc-3
 ~~~
 
+NOTE: Unresolved issues on macOS
+--------------------------------
+
+I am currently running into issues compiling these modules on macOS.
+Not sure if this is specific to my Mac (it is rather vintage) or due
+to problems with compiler flags. I suspect my Makefile is not calling
+the right options for macOS compilation.
 

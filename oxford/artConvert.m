@@ -1,4 +1,4 @@
-(** extConvert.m provides procedures to convert between numbers and
+(** artConvert.m provides procedures to convert between numbers and
     strings. It is based on the definition found in OBNC's 
     extended library extConvert.Mod. 
 
@@ -8,9 +8,9 @@ Released under The 3-Clause BSD License.
 See https://opensource.org/licenses/BSD-3-Clause
 
 *)
-MODULE extConvert;
+MODULE artConvert;
 
-IMPORT SYSTEM;
+(* IMPORT SYSTEM; *)
 
 (** Conversions between numbers and strings
 
@@ -67,6 +67,6 @@ END StringToReal;
 PROCEDURE StringToReal0(s: ARRAY OF CHAR; VAR x : REAL) IS "conv_string_to_real";
 
 BEGIN
-  SYSTEM.LOADLIB("./extConvert.so");
-END extConvert.
+  (* SYSTEM.LOADLIB("./artConvert.so"); *)
+END artConvert.
 
