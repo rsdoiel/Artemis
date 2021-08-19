@@ -5,11 +5,14 @@ SUDO_USER = $$SUDO_USER
 
 SHARE_LIBS =
 
+#FIXME: Compiling under macOS is failing right now. This is true for
+# both static and dynamic compilations.
+#
 # Per https://spivey.oriel.ox.ac.uk/corner/How_to_add_primitives_to_OBC
-GCC_SO_OPT = -m32 -fPIC -shared -I /usr/local/lib/obc
-ifeq ($(OS),Darwin)
-  GCC_SO_OPT = -m32 -fPIC -bundle -undefined dynamic_lookup -I /usr/local/lib/obc
-endif
+#GCC_SO_OPT = -m32 -fPIC -shared -I /usr/local/lib/obc
+#ifeq ($(OS),Darwin)
+#  GCC_SO_OPT = -m32 -fPIC -bundle -undefined dynamic_lookup -I /usr/local/lib/obc
+#endif
 
 PROGRAMS = helloworld clocktest converttest argstest envtest
 
