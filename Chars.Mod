@@ -40,6 +40,7 @@ CONST
   CR*  = 13X; (* carriage return *)
   SPACE* = " "; (* space *)
   SLASH* = "/"; (* slash *)
+  PERIOD* = "."; (* A period *)
   BSLASH* = 92X; (* back slash *)
   DASH*  = "-"; (* dash *)
   LODASH* = "_"; (* underscore or low dash *)

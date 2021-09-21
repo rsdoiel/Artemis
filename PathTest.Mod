@@ -69,16 +69,24 @@ BEGIN test := TRUE;
 END TestBasename;
 
 PROCEDURE TestDirname() : BOOLEAN;
-    VAR test : BOOLEAN;
+    VAR test, ok : BOOLEAN; a, expected, got : ARRAY Path.MAXLENGTH OF CHAR;
 BEGIN test := TRUE;
-    T.ExpectedBool(TRUE, FALSE, "TestDirname() not implemented.", test);
+    a := "/home/me/.profile";
+    expected := "/home/me";
+    Path.Dirname(a, got, ok);
+    T.ExpectedBool(TRUE, ok, "Dirname(a, got, ok) ok -> ?", test);
+    T.ExpectedString(expected, got, "Path.Dirname(a, got, ok)", test);
     RETURN test
 END TestDirname;
 
 PROCEDURE TestExt() : BOOLEAN;
-    VAR test : BOOLEAN;
+    VAR test, ok : BOOLEAN; a, expected, got : ARRAY Path.MAXLENGTH OF CHAR;
 BEGIN test := TRUE;
-    T.ExpectedBool(TRUE, FALSE, "TestExt() not implemented.", test);
+    a := "/home/me/README.txt";
+    expected := ".txt";
+    Path.Ext(a, got, ok);
+    T.ExpectedBool(TRUE, ok, "Ext(a, got, ok) ok -> ?", test);
+    T.ExpectedString(expected, got, "Path.Ext(a, got, ok)", test);
     RETURN test
 END TestExt;
 
