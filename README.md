@@ -117,6 +117,9 @@ advice of "simple but no simpler".
 built-in Oberon-2 procedures that were dropped in the evolution
 to Oberon-07.
 
+[Path](Path.Mod) is a module for working with POSIX style paths and file extensions. It does not directly interact with the OS. It does provided a means of working with path strings in a uniform way. By default it assumes the paths are delimited with the '/' character and '.' for file extensions. This is configurable by the Path module's `SetDelimiter()` and `SetExtDelimiter()` procedures.
+
+
 
 OBNC specific modules
 ---------------------
