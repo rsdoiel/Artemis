@@ -15,7 +15,7 @@ Modules naming
 --------------
 
 Where modules are not canonical to Artemis the modules names have
-a prefix of "art" (e.g. Clock.Mod is named artClock.Mod). Where 
+a prefix of "art" (e.g. the Clock module is named artClock.Mod). Where 
 they are canonical to Artemis (e.g. Chars.Mod in the project root)
 they do not have a prefix.
 

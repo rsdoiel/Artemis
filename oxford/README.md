@@ -5,9 +5,9 @@ title: Obc-3 modules
 Oxford - Not portable
 =====================
 
-DRAFT: skectch of untested code.
+DRAFT: sketch of untested code.
 
-FIXME: I have gotten the current Obc-3 to compile under Darwin (macOS).
+FIXME: I have not gotten the current Obc-3 to compile under Darwin (macOS).
 
 Modules in this directory are being ported to the Obc-3 compiler
 and should be compiled with the `-07` option.
