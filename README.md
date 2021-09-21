@@ -7,12 +7,11 @@ title: Project Artemis
 Artemis
 =======
 
-
-
 Artemis is an Oberon-07 module collection. My hope is
 to encourage continued use and development of the Oberon-07
 language and encourage convergence towards compatibility
-in implementations of Oberon-07 compilers. 
+in implementations of Oberon-07 compilers.  My focus in this project
+is using Oberon-07 on POSIX systems.
 
 This project started as a re-imagining of the efforts that
 began at the Oakwood Hotel in the 1992. As at Oakwood I hope
@@ -60,14 +59,6 @@ artClock.  Likewise the implementations of extArgs, extEnv I made for
 the Oxford compiler will be renamed artArgs and artEnv so that it is clear
 these are not the original OBNC modules extensions written by Karl.
 
-I also have a set of "ports" of Oberon System modules or modules from
-historic object projects. Each port will include it's own.
-
-- root
-  - ports
-      - s3
-      - v4
-
 ### descriptions of the structures
 
 The root repository directory is for modules that are
@@ -96,27 +87,17 @@ OfrontPlus compiler. This is parimarily integration with C based
 libraries. These modules are not portable between compilers but
 should work across POSIX systems where OfrontPlus is avialable.
 
-
-The __ports__ directory contains sub directories of code ported
-from a historic Oberon System, usually the original code was
-implemented in Oberon-2. The code in the __ports__ directory
-are subject to their own copyright and licenses. __ports__
-is focused on "porting" code from S3 (Native Oberon) and 
-V4 (Linz Oberon) to Oberon-07 as an exploration of Oberon-07 language
-and with an eye to eventually porting to the Oberon System
-that evolved from Project Oberon 2013.
-
 Module naming
 -------------
 
-Any modules which are not canonical to Artemis or are specific to a compiler
-implementation must be prefixed with "art". This will allow for better re-use
-in other projects (e.g. OfrontPlus) and avoids name collisions. Current Artemis
-modules need to be renamed to conform to this project policy before next release.
+Any modules which are not canonical to Artemis or are specific to a
+compiler implementation must be prefixed with "art". This will allow
+for better re-use in other projects (e.g. OfrontPlus) and avoids name
+collisions.
 
 
-New Modules
------------
+Artemis Modules
+---------------
 
 [Chars](Chars.Mod) is a module for working with CHAR and
 ARRAY OF CHAR.  It is inspired by the Oakwood Strings 
@@ -205,20 +186,17 @@ NOTE: These modules are in the planning stages and hopefully included in the nex
 Project approach to portability
 ------------------------------
 
-Artemis is made up of several categories of Oberon-07 modules.
+Artemis is made up of two categories of Oberon-07 modules.
 Modules in the root should be portable across POSIX Oberon-07
 compilers and portable to Oberon Systems with an Oberon-07 compiler
-(e.g.  on Project Oberon 2013). A second category are modules
-written for specific POSIX based Oberon-07 compilers. The third
-category is code ported from historic Oberon Systems such as 
-S3 (aka Native Oberon) and V4 (aka Linz Oberon).
+(e.g. on Project Oberon 2013). A second category are modules
+written for specific POSIX based Oberon-07 compilers.
 
 - Portable modules are in "root" project directory
-- Compiler specific modules their own sub directories (e.g. "obnc", "oxford")
-- Ported modules in the "ports" sub directory
+- Compiler specific modules their own sub directories (e.g. "obnc", "oxford"and "ofrontplus")
 
 In the POSIX environment Oberon-07 compilers have not
-converged (2021-06-16).  This is true for Oakwood module
+converged (2021-09-21).  This is true for Oakwood module
 implementations and and particularly true for
 how C code is integrated. The later is the important
 divergence as integration with legacy C libraries and services
@@ -259,7 +237,4 @@ be because the other files I am compiling use the '.m' extension.
 Need to check with Mike.
 
 FIXME: Document using compiling and handling import paths with OfrontPlus compiler.
-
-
-
 
