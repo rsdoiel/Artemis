@@ -23,6 +23,7 @@ CONST
   CR  = 13X;
   SPACE = " ";
   SLASH = "/";
+  PERIOD = ".";
   BSLASH = 92X;
   DASH  = "-";
   LODASH = "_";

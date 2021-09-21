@@ -103,7 +103,7 @@ The <strong>ports</strong> directory contains sub directories of code ported fro
 Module naming
 </h2>
 <p>
-Any modules which are not canonical to Artemis or are specific to a compiler implementation must be prefixed with “art”. This will allow for better re-use in other projects (e.g. OfrontPlus) and avoid name collisions. Current Artemis modules need to be renamed to conform to this project policy before next release.
+Any modules which are not canonical to Artemis or are specific to a compiler implementation must be prefixed with “art”. This will allow for better re-use in other projects (e.g. OfrontPlus) and avoids name collisions. Current Artemis modules need to be renamed to conform to this project policy before next release.
 </p>
 <h2 id="new-modules">
 New Modules
@@ -124,10 +124,10 @@ New Modules
 OBNC specific modules
 </h2>
 <p>
-The following modules are not portable to Project Oberon are implemented specifically for a targetted compiler. They will eventually be renamed to include the “art” prefix.
+The following modules are not portable to Project Oberon are implemented specifically for a targetted compiler.
 </p>
 <p>
-<a href="obnc/Unix.obn">Unix</a> (will be renamed to artUnix) provides access to some Unix/C facilities.
+<a href="obnc/artUnix.obn">artUnix</a> provides access to some Unix/C facilities.
 </p>
 <ul>
 <li>
@@ -141,22 +141,22 @@ The following modules are not portable to Project Oberon are implemented specifi
 </li>
 </ul>
 <p>
-<a href="obnc/Clock.obn">Clock</a> (will be renamed artClock) provides an abstraction layer working with the system clock. The implementation uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
+<a href="obnc/artClock.obn">artClock</a> provides an abstraction layer working with the system clock. The implementation uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
 </p>
 <h2 id="oxford-specific-modules">
 Oxford Specific Modules
 </h2>
 <p>
-<a href="oxford/extArgs.m">extArgs</a> (will be renamed artArgs) provides an OBNC compatible Args module
+<a href="oxford/artArgs.m">artArgs</a> provides an OBNC compatible Args module
 </p>
 <p>
-<a href="oxford/extEnv.m">extEnv</a> (will be renamed artEnv) provides an OBNC compatible Env module
+<a href="oxford/artEnv.m">artEnv</a> provides an OBNC compatible Env module
 </p>
 <p>
-<a href="oxford/extConvert.m">extConvert</a> (will be renamed artConvert) provides an OBNC compatible Convert module
+<a href="oxford/artConvert.m">artConvert</a> provides an OBNC compatible Convert module
 </p>
 <p>
-<a href="oxford/Unix.m">Unix</a> (will be renamed artUnix) provides access to some Unix/C facilities.
+<a href="oxford/artUnix.m">artUnix</a> provides access to some Unix/C facilities.
 </p>
 <ul>
 <li>
@@ -170,7 +170,7 @@ Oxford Specific Modules
 </li>
 </ul>
 <p>
-<a href="oxford/Clock.m">Clock</a> (will be renamed artClock) is an abstraction layer for working with the system clock. It uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
+<a href="oxford/artClock.m">artClock</a> is an abstraction layer for working with the system clock. It uses the C <code>clock_gettime()</code> and <code>clock_settime()</code>.
 </p>
 <h2 id="ofrontplus-specific-modules">
 OfrontPlus Specific Modules

@@ -6,9 +6,13 @@ CONST
 
 VAR
     delimiter : CHAR;
+    extDelimiter : CHAR;
 
 (* SetDelimiter used for parsing paths *)
 PROCEDURE SetDelimiter(c : CHAR);
+
+(* SetExtDelimiter used for delimiting a filename extension, e.g. .txt *)
+PROCEDURE SetExtDelimiter(c : CHAR);
 
 (* Prepend insert the path fragement into the path adding
 the delimiter appropriately.
@@ -26,5 +30,11 @@ PROCEDURE Append(suffix : ARRAY OF CHAR; VAR path : ARRAY OF CHAR; VAR success :
 
 (* Basename scans source and writes the last path segment to dest based on the path delimiter set *)
 PROCEDURE Basename(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR; success : BOOLEAN);
+
+(* Dirname scans source and writes the all but the last path segment to dest based on the path delimiter set *)
+PROCEDURE Dirname(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR; success : BOOLEAN);
+
+(* Ext scans source and writes the file extension to dest based on the extDelimiter set *)
+PROCEDURE Ext(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR; success : BOOLEAN);
 
 END Path.

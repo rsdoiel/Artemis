@@ -111,7 +111,7 @@ Module naming
 
 Any modules which are not canonical to Artemis or are specific to a compiler
 implementation must be prefixed with "art". This will allow for better re-use
-in other projects (e.g. OfrontPlus) and avoid name collisions. Current Artemis
+in other projects (e.g. OfrontPlus) and avoids name collisions. Current Artemis
 modules need to be renamed to conform to this project policy before next release.
 
 
@@ -141,10 +141,9 @@ OBNC specific modules
 ---------------------
 
 The following modules are not portable to Project Oberon are implemented
-specifically for a targetted compiler. They will eventually be renamed
-to include the "art" prefix.
+specifically for a targetted compiler. 
 
-[Unix](obnc/Unix.obn) (will be renamed to artUnix) provides access to some Unix/C facilities.
+[artUnix](obnc/artUnix.obn) provides access to some Unix/C facilities.
 
 - `Exit(exitCode : INTEGER);` will cause a program to exist with the given
    POSIX exit code.
@@ -154,19 +153,19 @@ to include the "art" prefix.
   populate the `dest` with the name of the host architectures, e.g. x86_64,
   armv7.
 
-[Clock](obnc/Clock.obn) (will be renamed artClock) provides an abstraction layer working with the system clock. The implementation uses the C `clock_gettime()` and `clock_settime()`.
+[artClock](obnc/artClock.obn) provides an abstraction layer working with the system clock. The implementation uses the C `clock_gettime()` and `clock_settime()`.
 
 
 Oxford Specific Modules
 -----------------------
 
-[extArgs](oxford/extArgs.m) (will be renamed artArgs) provides an OBNC compatible Args module
+[artArgs](oxford/artArgs.m) provides an OBNC compatible Args module
 
-[extEnv](oxford/extEnv.m) (will be renamed artEnv) provides an OBNC compatible Env module
+[artEnv](oxford/artEnv.m) provides an OBNC compatible Env module
 
-[extConvert](oxford/extConvert.m) (will be renamed artConvert) provides an OBNC compatible Convert module
+[artConvert](oxford/artConvert.m) provides an OBNC compatible Convert module
 
-[Unix](oxford/Unix.m) (will be renamed artUnix) provides access to some Unix/C facilities.
+[artUnix](oxford/artUnix.m) provides access to some Unix/C facilities.
 
 - `Exit(exitCode : INTEGER);` will cause a program to exist with the given
    POSIX exit code.
@@ -176,7 +175,7 @@ Oxford Specific Modules
   populate the `dest` with the name of the host architectures, e.g. x86_64,
   armv7.
 
-[Clock](oxford/Clock.m) (will be renamed artClock) is an abstraction layer for working with the system clock. It uses the C `clock_gettime()` and `clock_settime()`.
+[artClock](oxford/artClock.m) is an abstraction layer for working with the system clock. It uses the C `clock_gettime()` and `clock_settime()`.
 
 OfrontPlus Specific Modules
 ---------------------------
