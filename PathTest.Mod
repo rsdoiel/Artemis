@@ -64,7 +64,7 @@ BEGIN test := TRUE;
     expected := ".profile";
     Path.Basename(a, got, ok);
     T.ExpectedBool(TRUE, ok, "Basename(a, got, ok) ok -> ?", test);
-    T.ExpectedString(".profile", got, "Path.Basename(a, got, ok)", test);
+    T.ExpectedString(expected, got, "Path.Basename(a, got, ok)", test);
     RETURN test
 END TestBasename;
 

@@ -65,12 +65,12 @@ END Append;
 (** Basename scans source and writes the last path segment to dest based on the path delimiter set *)
 PROCEDURE Basename*(source : ARRAY OF CHAR; VAR dest : ARRAY OF CHAR; success : BOOLEAN);
     VAR offset, l, i : INTEGER; c : CHAR; 
-BEGIN l := Chars.Length(source);
+BEGIN l := Chars.Length(source); 
     success := l < LEN(dest);
     IF success THEN
-        dest[0] := 0X;
-        offset := -1;
+        dest[0] := 0X; offset := -1; i := l - 1;
         WHILE (i > 0) & (offset = -1) DO
+            c := source[i];
             IF c = delimiter THEN
                 offset := i + 1;
             END;
@@ -87,7 +87,6 @@ BEGIN l := Chars.Length(source);
             Chars.Copy(source, dest);
         END;
     END;
-
 END Basename;
 
 BEGIN SetDelimiter(Chars.SLASH);
