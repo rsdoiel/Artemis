@@ -1,6 +1,6 @@
 MODULE Path;
 
-IMPORT Chars, Out;
+IMPORT Chars;
 
 CONST
     (** Maximum path length *)
