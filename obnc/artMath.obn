@@ -1,0 +1,6 @@
+(** artMath.obn implements the Math module based on the Oakwood Guidelines
+levaraging C libraries.
+*)
+MODULE artMath;
+
+END artMath.

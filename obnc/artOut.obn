@@ -1,0 +1,4 @@
+(** artOut.obn this module implements the Out module from the Oakwood Guildlines leveraging C level libraries *)
+MODULE artOut;
+
+END artOut.
