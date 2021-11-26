@@ -25,6 +25,7 @@ TYPE
     TestSetDesc* = RECORD
                     title* : ARRAY MAXSTR OF CHAR;
                     fn* : TestProc;
+		    label* : ARRAY 128 OF CHAR;
                     next* : TestSet
                   END;
 
@@ -226,15 +227,23 @@ BEGIN l := Length(s) - 1;
   Out.Ln();
 END ShowTitle;
 
-(** Test -- run the test method and update the success and error variables
+(** Test -- run a test set method and update the success and error variables
 provided. *)
-PROCEDURE Test*(fn : TestProc; VAR success : INTEGER; VAR errors : INTEGER);
+PROCEDURE Test*(ts : TestSet; VAR success : INTEGER; VAR errors : INTEGER; VAR ok : BOOLEAN);
 BEGIN
-    IF fn() THEN
-        success := success + 1;
+  IF ts.fn # NIL THEN
+    IF ts.fn() THEN
+      success := success + 1;
     ELSE
-        errors := errors + 1;
-    END
+      Out.String(ts.label); Out.String(" failed");Out.Ln;
+      errors := errors + 1;
+      ok := FALSE;
+    END;
+  ELSE
+    Out.String(ts.label); Out.String(" test not defined");Out.Ln;
+    errors := errors + 1;
+    ok := FALSE;
+  END;
 END Test;
 
 (** Summarize -- sumarize the results using the test title, success
@@ -243,10 +252,10 @@ PROCEDURE Summarize*(title : ARRAY OF CHAR; successes, errors : INTEGER);
 BEGIN
   IF errors > 0 THEN
     Out.Ln();
-    Out.String("Success: ");Out.Int(successes, 5);Out.Ln();
-    Out.String(" Errors: ");Out.Int(errors, 5);Out.Ln();
-    Out.String("-------------------------------------------");Out.Ln();
-    Out.String("  Total: ");Out.Int(successes + errors, 5);Out.Ln();
+    Out.String("Successful tests: ");Out.Int(successes, 5);Out.Ln();
+    Out.String("    Failed tests: ");Out.Int(errors, 5);Out.Ln();
+    Out.String("-----------------------------------------------------------");Out.Ln();
+    Out.String("           Total: ");Out.Int(successes + errors, 5);Out.Ln();
     Out.Ln();
     Out.String(title);Out.String(" failed.");Out.Ln();
     ASSERT(FALSE);
@@ -263,10 +272,11 @@ BEGIN
   END;
   ts.title := title;
   ts.fn := NIL;
+  ts.label := "";
   ts.next := NIL;
 END Init;
 
-PROCEDURE Add*(VAR ts : TestSet; fn : TestProc);
+PROCEDURE Add*(VAR ts : TestSet; fn : TestProc; label : ARRAY OF CHAR);
   VAR cur : TestSet;
 BEGIN
    cur := ts;
@@ -277,29 +287,23 @@ BEGIN
      cur := cur.next;
    END;
    cur.fn := fn;
+   cur.label := label;
    cur.next := NIL;
 END Add;
 
 PROCEDURE Run*(ts : TestSet) : BOOLEAN;
   VAR title : ARRAY MAXSTR OF CHAR;
       i, successes, errors : INTEGER;
-      ok, result : BOOLEAN;
-BEGIN 
+      ok, test : BOOLEAN;
+BEGIN test := TRUE;
   successes := 0; errors := 0;
   FOR i := 0 TO LEN(ts.title) - 1 DO
     title[i] := ts.title[i];
   END;
-  ok := TRUE; 
-  WHILE ts # NIL DO
-    IF ts.fn # NIL THEN
-      result := ts.fn();
-      IF result THEN
-        INC(successes);
-      ELSE
-        INC(errors);
-        ok := FALSE;
-      END;
-    END;
+  ok := TRUE;
+  WHILE (ts # NIL) DO
+    Test(ts, successes, errors, ok);
+    test := test & ok;
     ts := ts.next;
   END;
   IF ok THEN
@@ -308,7 +312,7 @@ BEGIN
     ShowTitle(title);
     Summarize(title, successes, errors);
   END;
-  RETURN ok
+  RETURN test
 END Run;
 
 END Tests.

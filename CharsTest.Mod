@@ -403,29 +403,29 @@ BEGIN
     T.Init(ts, "Test Chars");
 
     (* Test Oakwood module compatibility *)
-    T.Add(ts, TestLength);
-    T.Add(ts, TestInsert);
-    T.Add(ts, TestAppend);
-    T.Add(ts, TestDelete);
-    T.Add(ts, TestReplace);
-    T.Add(ts, TestExtract);
-    T.Add(ts, TestCap);
+    T.Add(ts, TestLength, "TestLength");
+    T.Add(ts, TestInsert, "TestInsert");
+    T.Add(ts, TestAppend, "TestAppend");
+    T.Add(ts, TestDelete, "TestDelete");
+    T.Add(ts, TestReplace, "TestReplace");
+    T.Add(ts, TestExtract, "TestExtract");
+    T.Add(ts, TestCap, "TestCap");
 
     (* Test Extended Chars module compatibility *)
-    T.Add(ts, TestEqual);
-    T.Add(ts, TestAppendChar);
-    T.Add(ts, TestInsertChar);
-    T.Add(ts, TestWith);
-    T.Add(ts, TestTrim);
-    T.Add(ts, TestIsX);
-    T.Add(ts, TestPadding);
+    T.Add(ts, TestEqual, "TestEqual");
+    T.Add(ts, TestAppendChar, "TestAppendChar");
+    T.Add(ts, TestInsertChar, "TestInsertChar");
+    T.Add(ts, TestWith, "TestWith");
+    T.Add(ts, TestTrim, "TestTrim");
+    T.Add(ts, TestIsX, "TestIsX");
+    T.Add(ts, TestPadding, "TestPadding");
 
     (* Converts to String *)
-    T.Add(ts, TestIntToString);
-    T.Add(ts, TestRealToString);
-    T.Add(ts, TestFixedToString);
-    T.Add(ts, TestSetToString);
-    T.Add(ts, TestBoolToString);
+    T.Add(ts, TestIntToString, "TestIntToString");
+    T.Add(ts, TestRealToString, "TestRealToString");
+    T.Add(ts, TestFixedToString, "TestFixedToString");
+    T.Add(ts, TestSetToString, "TestSetToString");
+    T.Add(ts, TestBoolToString, "TestBoolToString");
 
     (* Run our test set *)
     ASSERT(T.Run(ts));

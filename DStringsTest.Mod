@@ -521,24 +521,24 @@ END TestWriteProcs;
 
 BEGIN
   T.Init(ts, "Test DStrings");
-  T.Add(ts,TestInit);
-  T.Add(ts,TestToChars);
-  T.Add(ts,TestRider);
-  T.Add(ts,TestCopy);
+  T.Add(ts,TestInit, "TestInit");
+  T.Add(ts,TestToChars, "TestToChars");
+  T.Add(ts,TestRider, "TestRider");
+  T.Add(ts,TestCopy, "TestCopy");
 
   (* Test the Chars based procedures *)
-  T.Add(ts,TestInsert);
-  T.Add(ts,TestAppend);
-  T.Add(ts,TestDelete);
-  T.Add(ts,TestExtract);
-  T.Add(ts,TestPos);
-  T.Add(ts,TestReplace);
-  T.Add(ts,TestCap);
-  T.Add(ts,TestStartsWith);
+  T.Add(ts,TestInsert, "TestInsert");
+  T.Add(ts,TestAppend, "TestAppend");
+  T.Add(ts,TestDelete, "TestDelete");
+  T.Add(ts,TestExtract, "TestExtract");
+  T.Add(ts,TestPos, "TestPos");
+  T.Add(ts,TestReplace, "TestReplace");
+  T.Add(ts,TestCap, "TestCap");
+  T.Add(ts,TestStartsWith, "TestStartsWith");
 
   (* Test the Files base procedures *)
-  T.Add(ts,TestReadProcs);
-  T.Add(ts,TestWriteProcs);
+  T.Add(ts,TestReadProcs, "TestReadProcs");
+  T.Add(ts,TestWriteProcs, "TestWriteProcs");
 
   (* Run tests *)
   ASSERT(T.Run(ts));

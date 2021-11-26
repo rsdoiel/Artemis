@@ -48,11 +48,11 @@ END TestApply;
 
 BEGIN
     T.Init(ts, "Test PathLists");
-    T.Add(ts, TestEncodeDecode);
-    T.Add(ts, TestLengthSetDelimiterFind);
-    T.Add(ts, TestPrepend);
-    T.Add(ts, TestAppend);
-    T.Add(ts, TestCut);
-    T.Add(ts, TestApply);
+    T.Add(ts, TestEncodeDecode, "TestEncodeDecode");
+    T.Add(ts, TestLengthSetDelimiterFind, "TestLengthSetDelimiterFind");
+    T.Add(ts, TestPrepend, "TestPrepend");
+    T.Add(ts, TestAppend, "TestAppend");
+    T.Add(ts, TestCut, "TestCut");
+    T.Add(ts, TestApply, "TestApply");
     ASSERT(T.Run(ts));
 END PathListsTest.

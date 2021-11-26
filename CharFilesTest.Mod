@@ -72,56 +72,50 @@ PROCEDURE TestWrites() : BOOLEAN;
   VAR f : Files.File;
       r : Files.Rider;
       x : BYTE; c : CHAR; i : INTEGER; j : REAL; k : SET;
-      s : ARRAY MAXSTR OF CHAR; b : BOOL;
+      s : ARRAY MAXSTR OF CHAR; b : BOOLEAN;
       z : ARRAY 3 OF BYTE;
-      str : ARRAY MAXSTR OF CHAR;
       test : BOOLEAN;
 BEGIN test := TRUE;
   (* Create a file for writing to *)
   f := CF.New("Test.Write");
-  CF.Set(r, out, 0);
+  CF.Set(r, f, 0);
   CF.Register(f);
 
   (* Setup sample test data to write to a CHAR file *)
-  x := ORD('A'); (* 32 or ASCII 'A' *)
+  x := ORD("A"); (* 32 or ASCII "A" *)
   i := 101;
   c := "q";
   j := 3.145;
   k := {1,3,5};
   s := "Hello World";
   b := TRUE;
-  z[0] := ORD('A');
-  z[1] := ORD('B');
+  z[0] := ORD("A");
+  z[1] := ORD("B");
   z[2] := 0;
 
   (* Execute our write procedures, then we can read them back
      and check our results *)
-  CF.Write(r1, x); CF.Ln(r1);  (* write 'A' + LF *)
-  CF.WriteInt(r1, i); CF.Ln(r1); (* write "101" + LF *)
-  CF.WriteReal(r1, j); CF.Ln(r1); (* write "3.145" + LF *)
-  (* FIXME: CF.WriteNum(r1, i); CF.Ln(r1); *) (* FIXME: not use *)
-  CF.WriteChar(r1, c); CF.Ln(r1); (* write "q" + LF *)
-  CF.WriteString(r1, s); CF.Ln(r1);
-  CF.WriteSet(r1, k); CF.Ln(r1);
-  CF.WriteBool(r1, b); CF.Ln(r1);
-  CF.WriteBytes(r1, z); CF.Ln(r1);
-  CF.Close(out); (* force everything to be written to disk and close *)
+  CF.Write(r, x); CF.WriteLn(r);  (* write "A" + LF *)
+  CF.WriteInt(r, i); CF.WriteLn(r); (* write "101" + LF *)
+  CF.WriteReal(r, j); CF.WriteLn(r); (* write "3.145" + LF *)
+  (* FIXME: CF.WriteNum(r1, i); CF.WriteLn(r1); *) (* FIXME: not use *)
+  CF.WriteChar(r, c); CF.WriteLn(r); (* write "q" + LF *)
+  CF.WriteString(r, s); CF.WriteLn(r);
+  CF.WriteSet(r, k); CF.WriteLn(r);
+  CF.WriteBool(r, b); CF.WriteLn(r);
+  CF.WriteBytes(r, z, 3); CF.WriteLn(r);
+  CF.Close(f); (* force everything to be written to disk and close *)
 
   (* Get first line *)
-  f := Files.Open("Test.Write");
+  f := Files.Old("Test.Write");
   T.ExpectedBool(TRUE, (f # NIL), "Should have written Test.Write file", test);
   Files.Set(r, f, 0);
   Files.Read(r, x);
-  T.ExpectedBool(TRUE, (CHR(x) = 'A'), "Expected A to be written", test);
+  T.ExpectedBool(TRUE, (CHR(x) = "A"), "Expected A to be written", test);
   Files.Read(r, x);
   T.ExpectedBool(TRUE, (x = 10), "Expected newline", test);
   (* Now read out 101 *)
   Files.Read(r, x);
-
-
-
-
-
 
   Out.String("TestsWrites() not implemented");Out.Ln;
   RETURN FALSE
@@ -136,8 +130,8 @@ END TestReads;
 
 BEGIN
   T.Init(ts, "CharFiles Test");
-  T.Add(ts, TestBasics);
-  T.Add(ts, TestWrites);
-  T.Add(ts, TestReads);
+  T.Add(ts, TestBasics, "TestBasics");
+  T.Add(ts, TestWrites, "TestWrites");
+  T.Add(ts, TestReads, "TestReads");
   ASSERT(T.Run(ts));
 END CharFilesTest.

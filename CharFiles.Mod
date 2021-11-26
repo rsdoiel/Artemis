@@ -159,6 +159,11 @@ BEGIN
   Files.Write(r, x);
 END Write;
 
+PROCEDURE WriteChar*(VAR r: Files.Rider; ch : CHAR);
+BEGIN
+  Files.Write(r, ORD(ch));
+END WriteChar;
+
 PROCEDURE WriteInt* (VAR r: Files.Rider; i: INTEGER);
 BEGIN
   Files.WriteInt(r, i);
@@ -193,6 +198,11 @@ PROCEDURE WriteBytes* (VAR r: Files.Rider; VAR buf: ARRAY OF BYTE; n: INTEGER);
 BEGIN
   Files.WriteBytes(r, buf, n);
 END WriteBytes;
+
+PROCEDURE WriteLn*(VAR r: Files.Rider);
+BEGIN
+   WriteString(r, EOL);
+END WriteLn;  
 
 BEGIN
   (* Default to a Unix tyle EOL marker *)

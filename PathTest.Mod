@@ -92,12 +92,12 @@ END TestExt;
 
 BEGIN 
     T.Init(ts, "Test Path");
-    T.Add(ts, TestMaxPath);
-    T.Add(ts, TestSetDelimiter);
-    T.Add(ts, TestPrepend);
-    T.Add(ts, TestAppend);
-    T.Add(ts, TestDirname);
-    T.Add(ts, TestBasename);
-    T.Add(ts, TestExt);
+    T.Add(ts, TestMaxPath, "TestMaxPath");
+    T.Add(ts, TestSetDelimiter, "TestSetDelimiter");
+    T.Add(ts, TestPrepend, "TestPrepend");
+    T.Add(ts, TestAppend, "TestAppend");
+    T.Add(ts, TestDirname, "TestDirname");
+    T.Add(ts, TestBasename, "TestBasename");
+    T.Add(ts, TestExt, "TestExt");
     ASSERT(T.Run(ts));
 END PathTest.

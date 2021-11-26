@@ -34,7 +34,7 @@ END TestShifts;
 
 BEGIN
   T.Init(ts, "Obn2");
-  T.Add(ts, TestMinMax);
-  T.Add(ts, TestShifts);
+  T.Add(ts, TestMinMax, "TestMinMax");
+  T.Add(ts, TestShifts, "TestShifts");
   ASSERT(T.Run(ts));
 END Obn2Test.
