@@ -1,8 +1,8 @@
 MODULE Types;
 
-IMPORT Strings, Out;
+IMPORT Strings;
 
-CONST BUFSIZE = 256;
+CONST BUFSIZE* = 256;
 
 (* IsIntDigit checks if an INTEGER is in the range of 0 through 9 *)
 PROCEDURE IsIntDigit*(i : INTEGER) : BOOLEAN;
@@ -63,7 +63,7 @@ END IntShiftLeft;
    TRUE if value ARRAY OF CHAR holds the full integer, FALSE if
    value was too small to hold the integer value.  *)
 PROCEDURE Itoa*(x : INTEGER; VAR value : ARRAY OF CHAR; ok : BOOLEAN);
-  VAR i, j, k, l, minL : INTEGER; tmp : ARRAY 256 OF CHAR; isNeg : BOOLEAN;
+  VAR i, j, k, l, minL : INTEGER; tmp : ARRAY BUFSIZE OF CHAR; isNeg : BOOLEAN;
 BEGIN
   i := 0; j := 0; k := 0; l := LEN(value); isNeg := (x < 0);
   IF isNeg THEN
