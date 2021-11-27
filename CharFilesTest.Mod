@@ -77,7 +77,7 @@ PROCEDURE TestWrites() : BOOLEAN;
       test : BOOLEAN;
 BEGIN test := TRUE;
   (* Create a file for writing to *)
-  f := CF.New("Test.Write");
+  f := CF.New("TestWrite.txt");
   CF.Set(r, f, 0);
   CF.Register(f);
 
@@ -107,8 +107,8 @@ BEGIN test := TRUE;
   CF.Close(f); (* force everything to be written to disk and close *)
 
   (* Get first line *)
-  f := Files.Old("Test.Write");
-  T.ExpectedBool(TRUE, (f # NIL), "Should have written Test.Write file", test);
+  f := Files.Old("TestWrite.txt");
+  T.ExpectedBool(TRUE, (f # NIL), "Should have written TestWrite.txt file", test);
   Files.Set(r, f, 0);
   Files.Read(r, x);
   T.ExpectedBool(TRUE, (CHR(x) = "A"), "Expected A to be written", test);
@@ -117,8 +117,7 @@ BEGIN test := TRUE;
   (* Now read out 101 *)
   Files.Read(r, x);
 
-  Out.String("TestsWrites() not implemented");Out.Ln;
-  RETURN FALSE
+  RETURN test
 END TestWrites;
 
 (* TestReads test the read procedures in CharFiles module *)
