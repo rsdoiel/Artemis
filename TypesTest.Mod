@@ -226,6 +226,228 @@ BEGIN test := TRUE;
   RETURN test
 END TestAtoi;
 
+PROCEDURE TestSplitReal() : BOOLEAN;
+  VAR test, isNeg : BOOLEAN; w, f, m : INTEGER; r : REAL;
+BEGIN
+  r := 0.0;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(0, w, "w should be 0", test);
+  T.ExpectedInt(0, f, "f should be 0", test);
+  T.ExpectedInt(0, m, "m should be 0", test);
+  
+  r := 1.0;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(0, f, "f should be 0", test);
+  T.ExpectedInt(0, m, "m should be 0", test);
+
+  r := -1.0;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(0, f, "f should be 0", test);
+  T.ExpectedInt(0, m, "m should be 0", test);
+
+  r := 1.1;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(1, f, "f should be 1", test);
+  T.ExpectedInt(-1, m, "m should be -1", test);
+
+  r := -1.1;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(1, f, "f should be 1", test);
+  T.ExpectedInt(-1, m, "m should be -1", test);
+  
+  r := 1.2;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(2, f, "f should be 2", test);
+  T.ExpectedInt(-1, m, "m should be -1", test);
+
+(*
+  r := -1.2;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(2, f, "f should be 2", test);
+  T.ExpectedInt(-1, m, "m should be -1", test);
+
+  r := 1.23;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(23, f, "f should be 23", test);
+  T.ExpectedInt(-2, m, "m should be -2", test);
+
+  r := -1.23;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(23, f, "f should be 23", test);
+  T.ExpectedInt(-2, m, "m should be -2", test);
+
+  r := 1.234;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(234, f, "f should be 234", test);
+  T.ExpectedInt(-3, m, "m should be -3", test);
+
+  r := -1.234;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(234, f, "f should be 234", test);
+  T.ExpectedInt(-3, m, "m should be -3", test);
+
+  r := 12.34;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(12, w, "w should be 12", test);
+  T.ExpectedInt(34, f, "f should be 34", test);
+  T.ExpectedInt(-2, m, "m should be -2", test);
+
+  r := -12.34;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(12, w, "w should be 12", test);
+  T.ExpectedInt(34, f, "f should be 34", test);
+  T.ExpectedInt(-2, m, "m should be -2", test);
+
+  r := 12.034;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(12, w, "w should be 12", test);
+  T.ExpectedInt(34, f, "f should be 34", test);
+  T.ExpectedInt(-3, m, "m should be -3", test);
+
+  r := -12.034;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(12, w, "w should be 12", test);
+  T.ExpectedInt(34, f, "f should be 34", test);
+  T.ExpectedInt(-3, m, "m should be -3", test);
+
+  r := 1.00234;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(FALSE, isNeg, "r is not negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(234, f, "f should be 234", test);
+  T.ExpectedInt(-5, m, "m should be -5", test);
+
+  r := -1.00234;
+  Types.SplitReal(r, isNeg, w, f, m);
+  T.ExpectedBool(TRUE, isNeg, "r is negative", test);
+  T.ExpectedInt(1, w, "w should be 1", test);
+  T.ExpectedInt(234, f, "f should be 234", test);
+  T.ExpectedInt(-5, m, "m should be -5", test);
+*)  
+  RETURN test
+END TestSplitReal;
+
+PROCEDURE TestRtoa() : BOOLEAN;
+  VAR test, ok : BOOLEAN; expected, got : ARRAY 256 OF CHAR;
+    src : REAL;
+BEGIN test := TRUE;
+  src := 1.0;
+  expected := "1.0";
+  Types.Rtoa(src, got, ok);
+  T.ExpectedString(expected, got, "Rtoa(1.0, got, ok)", test);
+
+  src := -1.0;
+  expected := "-1.0";
+  Types.Rtoa(src, got, ok);
+  T.ExpectedString(expected, got, "Rtoa(-1.0, got, ok)", test);
+
+  src := 1.2;
+  expected := "1.2";
+  Types.Rtoa(src, got, ok);
+  T.ExpectedString(expected, got, "Rtoa(1.2, got, ok)", test);
+
+  src := -1.2;
+  expected := "-1.2";
+  Types.Rtoa(src, got, ok);
+  T.ExpectedString(expected, got, "Rtoa(-1.2, got, ok)", test);
+
+(*
+  T.ExpectedBool(TRUE, FALSE, "TestRtoa not implemented", test);
+*)
+  RETURN test
+END TestRtoa;
+
+PROCEDURE TestAtor() : BOOLEAN;
+  VAR test, ok : BOOLEAN; expected, got : REAL; src : ARRAY 256 OF CHAR;
+BEGIN test := TRUE;
+(*  
+  src := "1.0";
+  expected := 1.0;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`1.0`, got, ok)", test);
+
+  src := "+1.0";
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`+1.0`, got, ok)", test);
+
+  src := "-1.0";
+  expected := -1.0;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`-1.0`, got, ok)", test);
+
+  src := "1.2";
+  expected := 1.2;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`1.2`, got, ok)", test);
+
+  src := "+1.2";
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`1.2`, got, ok)", test);
+
+  src := "-1.2";
+  expected := -1.2;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`-1.2`, got, ok)", test);
+
+  src := "-12.34";
+  expected := -12.34;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`-12.34`, got, ok)", test);
+
+  src := "12345.67890";
+  expected := 12345.6789;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`12345.67890`, got, ok)", test);
+  T.ExpectedBool(TRUE, ok, "Ator(`12345.67890`, got, ok), ok = TRUE, expected no overflow", test);
+
+  src := "-1.234567890";
+  expected := -1.234567890;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`-1.234567890`, got,ok)", test);
+  T.ExpectedBool(TRUE, ok, "Ator(`-1.234567890`, got,ok), ok = TRUE, expected no overflow", test);
+
+  src := "214748364.7";
+  expected := 214748364.7;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`214748364.7`, got, ok)", test);
+  T.ExpectedBool(TRUE, ok, "Ator(`214748364.7`, got, ok) ok = TRUE, expected no overflow", test);
+
+  src := "-2147483647.0";
+  expected := -2147483647.0;
+  Types.Ator(src, got, ok);
+  T.ExpectedReal(expected, got, "Ator(`-2147483647.0`, got,ok)", test);
+  T.ExpectedBool(TRUE, ok, "Ator(`-2147483647.0`, got, ok) should not have detected overflow, ok = TRUE", test);
+*)
+  T.ExpectedBool(TRUE, FALSE, "Test Ator not implemented", test);
+
+  RETURN test
+END TestAtor;
+
 
 BEGIN
   T.Init(ts, "Test Types module");
@@ -234,5 +456,8 @@ BEGIN
   T.Add(ts, TestIntegerShifts, "Test Integer Shifts");
   T.Add(ts, TestItoa, "Test Itoa");
   T.Add(ts, TestAtoi, "Test Atoi");
+  T.Add(ts, TestSplitReal, "Test SplitReal");
+  T.Add(ts, TestRtoa, "Test Rtoa");
+  T.Add(ts, TestAtor, "Test Ator");
   ASSERT(T.Run(ts));
 END TypesTest.
