@@ -1,3 +1,10 @@
+(** Types.Mod - A module for type conversions and tests.
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+*)
 MODULE Types;
 
 IMPORT Strings;
@@ -181,7 +188,6 @@ END Atoi;
    123 and m would be -5 where (w + (f * 10^(-5)) would equal r. *)
 PROCEDURE SplitReal*(r : REAL; VAR isNeg: BOOLEAN; VAR w, f, m : INTEGER);
 BEGIN
-  Out.String("DEBUG r: ");Out.Real(r, 1); 
   isNeg := (r < 0.0); w := 0; f := 0; m := 0;
   r := ABS(r);
   w := FLOOR(r);
@@ -194,7 +200,6 @@ BEGIN
   IF m > 0 THEN
     m := m * (-1);
   END;
-  Out.String(", w: ");Out.Int(w, 1); Out.String(", f: ");Out.Int(f, 1); Out.String(", m: ");Out.Int(m, 1); Out.Ln; (* DEBUG *)
 END SplitReal;
 
 (* Rtoa converts a REAL to an ASCII string setting ok boolean to
