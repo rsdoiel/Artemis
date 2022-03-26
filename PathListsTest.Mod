@@ -5,14 +5,17 @@ IMPORT PathLists, T := Tests;
 VAR ts : T.TestSet;
 
 PROCEDURE TestEncodeDecode() : BOOLEAN;
-    VAR test : BOOLEAN;
+    VAR test, ok : BOOLEAN; src : ARRAY 1024 OF CHAR;
+        pl : PathLists.PathList;
 BEGIN test := TRUE;
-    T.ExpectedBool(TRUE, FALSE, "TestEncodeDecode() not implemented", test);
+    src := "/bin:/usr/bin:/usr/local/bin:/home/jane.doe/bin";
+    PathLists.Decode(src, pl, ok);
+    T.ExpectedBool(TRUE, ok, "Expected to decode src", test);
     RETURN test
 END TestEncodeDecode;
 
 PROCEDURE TestLengthSetDelimiterFind() : BOOLEAN;
-    VAR test : BOOLEAN;
+    VAR test : BOOLEAN; 
 BEGIN test := TRUE;
     T.ExpectedBool(TRUE, FALSE, "TestLengthSetDelimiterFind() not implemented.", test);
     RETURN test

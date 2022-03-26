@@ -21,9 +21,10 @@ implemented in Oberon-07 or providing an Oberon-07 compiler.
 That is the scope of Artemis project for now.
 
 Initial development is being done in a POSIX environment and
-relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler,
-Mike Spivey's [Obc-3](https://github.com/Spivoxity/obc-3) and Oleg N. Cher's
-[OfrontPlus](https://github.com/Oleg-N-Cher/OfrontPlus) compiler.
+relies on Karl Landström's [OBNC](https://miasap.se/obnc/) compiler.
+As time permits I am attempting to port the changes to other Oberon-07
+implementations including Mike Spivey's [Obc-3](https://github.com/Spivoxity/obc-3)
+ and Oleg N. Cher's [OfrontPlus](https://github.com/Oleg-N-Cher/OfrontPlus) compiler.
 
 Artemis draws inspiration from Wirth and Reed's Project Oberon 2013,
 Joseph Templ's [Ofront](https://github.com/jtempl/ofront) with V4.
@@ -33,9 +34,9 @@ It also draws inspiration from the discussions and community on the
 A big thank you goes to all the inspiring people who contributed to
 Oberon and Oberon Systems over the years particularly where their
 source code is publicly available or through published articles,
-presentations and who wrote books about the language and system.
-All have help me study path Prof. Wirth and Prof. Gutkneckt
-pioneered all the many years ago.
+presentations or books about the language and system.
+All have help me study the path Prof. Wirth and Prof. Gutkneckt
+pioneered all those many years ago.
 
 
 Project layout
@@ -47,10 +48,10 @@ Project layout
   - oxford (not portable)
   - ofrontplus (not portable)
 
-The subdirecties named for their compilers will implement modules
-providing a common definition but specificly written to that compiler.
-This typically will be modules that rely on an underlieing C library
-or behavior. The plan is for commonly defined modules targetting
+The directories named for their compilers will implement modules
+providing a common definition but specifically written to that compiler.
+This typically will be modules that rely on an underlying C library
+or behavior. The plan is for commonly defined modules targeting
 a specific compiler to use the "art" prefix. This will give room to 
 the compiler developer to either adopt or create their own compatible
 implementations. E.g. current I've implemented a Unix and Clock modules
@@ -83,9 +84,9 @@ portable between compilers but should work across POSIX systems
 where Obc-3 is available.
 
 The __ofrontplus__ directory contains modules that target the
-OfrontPlus compiler. This is parimarily integration with C based
+OfrontPlus compiler. This is primarily integration with C based
 libraries. These modules are not portable between compilers but
-should work across POSIX systems where OfrontPlus is avialable.
+should work across POSIX systems where OfrontPlus is available.
 
 Module naming
 -------------
@@ -113,7 +114,7 @@ concept borrowed from Files and Texts in the Oberon System.
 implement module tests in Artemis. It tries to honor the
 advice of "simple but no simpler".
 
-[Obn2](Obn2.Mod) is a module provides compatibilty for some
+[Obn2](Obn2.Mod) is a module provides compatibility for some
 built-in Oberon-2 procedures that were dropped in the evolution
 to Oberon-07.
 
@@ -125,7 +126,7 @@ OBNC specific modules
 ---------------------
 
 The following modules are not portable to Project Oberon are implemented
-specifically for a targetted compiler. 
+specifically for a targeted compiler. 
 
 [artUnix](obnc/artUnix.obn) provides access to some Unix/C facilities.
 
