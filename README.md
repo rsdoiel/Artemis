@@ -213,7 +213,6 @@ Both non-portable and portable modules can be used together in
 a project. This requires knowing the compiler you're using and
 targeting it's way of managing where to find modules.
 
-FIXME: The next paragraph needs to include references for OfrontPlus.
 
 An example is using [Tests.Mod](Tests.Mod) for the **clocktest**
 implementations in both __obnc__ and __oxford__ directories.
@@ -240,5 +239,5 @@ rename Tests.Mod to Tests.m to get compilation with obc. It might
 be because the other files I am compiling use the '.m' extension.
 Need to check with Mike.
 
-FIXME: Document using compiling and handling import paths with OfrontPlus compiler.
+FIXME: Document handling of imports and compiling OfrontPlus compiler.
 

@@ -121,10 +121,9 @@ def main(args):
                 else:
                     print("Wrote {}".format(out_name))
     
-    # Write out message showing version of mkpage, frontmatter
-    # and dataset used.
+    # Write out message showing version of mkpage and frontmatter used.
     print("Built using", end = " ")
-    for i, app_name in enumerate([ "mkpage", "frontmatter", "dataset" ]):
+    for i, app_name in enumerate([ "mkpage", "frontmatter" ]):
         version = mkpage_version_no(app_name).strip()
         if i == 2:
             print(" and", end = " ")
