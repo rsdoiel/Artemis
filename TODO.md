@@ -9,6 +9,7 @@ Action Items
 Next
 ----
 
+- [ ] Add Scanner.Mod implementing a simple text scanner supporting ARRAY OF CHAR and plain text files
 + [x] Clock.Mod should wrap host system clock for use by a more general purpose DateTime.Mod.
 + [x] Refactor CharsTest.Mod to test Strings compatible procedures
 + [x] Tests module for easily writing tests of modules
@@ -37,7 +38,7 @@ Someday, maybe
 
 + [ ] Reals.Mod
 + [ ] EBNF.Mod and ebnfc.Mod
-+ [ ] Scanner.Mod implementing a Texts like Scanner 
++ [ ] Scanner.Mod implementing a Texts like Scanner
 + [ ] RISC5 emulator (based on Compiler Construction RISC0 emulator)
 + [ ] Create a Ofront/V4 like dev environment with direct access to host file system
 + [ ] Re-implement Fonts.Mod so Oberon System can use ADA friendly fonts like Open Dyslexia and Atikson Hyperledgable
