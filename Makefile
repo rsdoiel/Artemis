@@ -57,12 +57,12 @@ endif
 
 libdir =
 ifneq ($(libdir),)
-  LIBDIR = $(libdir)
+	LIBDIR = $(libdir)
 endif
 
 bindir =
 ifneq ($(bindir),)
-  BINDIR = $(bindir)
+	BINDIR = $(bindir)
 endif
 
 build: $(TEST_NAMES) # $(PROG_NAMES)
@@ -104,7 +104,6 @@ dist: $(PROG_NAMES)
 	@for FNAME in $(PROG_NAMES); do cp -p $$FNAME dist/$(BUILD_NAME)/bin/; done
 	@for FNAME in $(MODULES) $(DOCS) Makefile; do cp -p $$FNAME dist/$(BUILD_NAME)/;done
 	@cd dist && zip -r $(BUILD_NAME)-$(OS)-$(ARCH).zip $(BUILD_NAME)/*
-
 
 
 save:
