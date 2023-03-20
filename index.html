@@ -12,7 +12,7 @@ Project Artemis
 </header>
 <section>
 <p>
-<a href="https://www.repostatus.org/#wip"><img src="https://www.repostatus.org/badges/latest/wip.svg" alt="Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public." /></a>
+<a href="https://www.repostatus.org/#concept"><img src="https://www.repostatus.org/badges/latest/concept.svg" alt="Project Status: Concept – Minimal or no implementation has been done yet, or the repository is only intended to be a limited example, demo, or proof-of-concept." /></a>
 </p>
 <h1 id="artemis">
 Artemis
@@ -24,13 +24,13 @@ Artemis is an Oberon-07 module collection. My hope is to encourage continued use
 This project started as a re-imagining of the efforts that began at the Oakwood Hotel in the 1992. As at Oakwood I hope to encourage convergence to help code become more portable. Unlike Oakwood my focus is only on Oberon-07 and systems implemented in Oberon-07 or providing an Oberon-07 compiler. That is the scope of Artemis project for now.
 </p>
 <p>
-Initial development is being done in a POSIX environment and relies on Karl Landström’s <a href="https://miasap.se/obnc/">OBNC</a> compiler, Mike Spivey’s <a href="https://github.com/Spivoxity/obc-3">Obc-3</a> and Oleg N. Cher’s <a href="https://github.com/Oleg-N-Cher/OfrontPlus">OfrontPlus</a> compiler.
+Initial development is being done in a POSIX environment and relies on Karl Landström’s <a href="https://miasap.se/obnc/">OBNC</a> compiler. As time permits I am attempting to port the changes to other Oberon-07 implementations including Mike Spivey’s <a href="https://github.com/Spivoxity/obc-3">Obc-3</a> and Oleg N. Cher’s <a href="https://github.com/Oleg-N-Cher/OfrontPlus">OfrontPlus</a> compiler.
 </p>
 <p>
 Artemis draws inspiration from Wirth and Reed’s Project Oberon 2013, Joseph Templ’s <a href="https://github.com/jtempl/ofront">Ofront</a> with V4. It also draws inspiration from the discussions and community on the <a href="https://lists.inf.ethz.ch/mailman/listinfo/oberon">Oberon List</a>.
 </p>
 <p>
-A big thank you goes to all the inspiring people who contributed to Oberon and Oberon Systems over the years particularly where their source code is publicly available or through published articles, presentations and who wrote books about the language and system. All have help me study path Prof. Wirth and Prof. Gutkneckt pioneered all the many years ago.
+A big thank you goes to all the inspiring people who contributed to Oberon and Oberon Systems over the years particularly where their source code is publicly available or through published articles, presentations or books about the language and system. All have help me study the path Prof. Wirth and Prof. Gutkneckt pioneered all those many years ago.
 </p>
 <h2 id="project-layout">
 Project layout
@@ -55,7 +55,7 @@ ofrontplus (not portable)
 </li>
 </ul>
 <p>
-The subdirecties named for their compilers will implement modules providing a common definition but specificly written to that compiler. This typically will be modules that rely on an underlieing C library or behavior. The plan is for commonly defined modules targetting a specific compiler to use the “art” prefix. This will give room to the compiler developer to either adopt or create their own compatible implementations. E.g. current I’ve implemented a Unix and Clock modules for the OBNC and Oxford compilers. These will be renamed artUnix and artClock. Likewise the implementations of extArgs, extEnv I made for the Oxford compiler will be renamed artArgs and artEnv so that it is clear these are not the original OBNC modules extensions written by Karl.
+The directories named for their compilers will implement modules providing a common definition but specifically written to that compiler. This typically will be modules that rely on an underlying C library or behavior. The plan is for commonly defined modules targeting a specific compiler to use the “art” prefix. This will give room to the compiler developer to either adopt or create their own compatible implementations. E.g. current I’ve implemented a Unix and Clock modules for the OBNC and Oxford compilers. These will be renamed artUnix and artClock. Likewise the implementations of extArgs, extEnv I made for the Oxford compiler will be renamed artArgs and artEnv so that it is clear these are not the original OBNC modules extensions written by Karl.
 </p>
 <h3 id="descriptions-of-the-structures">
 descriptions of the structures
@@ -73,7 +73,7 @@ The <strong>obnc</strong> directory contains modules that target specific featur
 The <strong>oxford</strong> directory contains modules that target the Oxford Oberon Compiler, aka Obc-3. This is primarily integration with C based libraries and services. These aren’t portable between compilers but should work across POSIX systems where Obc-3 is available.
 </p>
 <p>
-The <strong>ofrontplus</strong> directory contains modules that target the OfrontPlus compiler. This is parimarily integration with C based libraries. These modules are not portable between compilers but should work across POSIX systems where OfrontPlus is avialable.
+The <strong>ofrontplus</strong> directory contains modules that target the OfrontPlus compiler. This is primarily integration with C based libraries. These modules are not portable between compilers but should work across POSIX systems where OfrontPlus is available.
 </p>
 <h2 id="module-naming">
 Module naming
@@ -94,7 +94,7 @@ Artemis Modules
 <a href="Tests.Mod">Tests</a> is a minimal test library used to implement module tests in Artemis. It tries to honor the advice of “simple but no simpler”.
 </p>
 <p>
-<a href="Obn2.Mod">Obn2</a> is a module provides compatibilty for some built-in Oberon-2 procedures that were dropped in the evolution to Oberon-07.
+<a href="Obn2.Mod">Obn2</a> is a module provides compatibility for some built-in Oberon-2 procedures that were dropped in the evolution to Oberon-07.
 </p>
 <p>
 <a href="Path.Mod">Path</a> is a module for working with POSIX style paths and file extensions. It does not directly interact with the OS. It does provided a means of working with path strings in a uniform way. By default it assumes the paths are delimited with the ‘/’ character and ‘.’ for file extensions. This is configurable by the Path module’s <code>SetDelimiter()</code> and <code>SetExtDelimiter()</code> procedures.
@@ -103,7 +103,7 @@ Artemis Modules
 OBNC specific modules
 </h2>
 <p>
-The following modules are not portable to Project Oberon are implemented specifically for a targetted compiler.
+The following modules are not portable to Project Oberon are implemented specifically for a targeted compiler.
 </p>
 <p>
 <a href="obnc/artUnix.obn">artUnix</a> provides access to some Unix/C facilities.
@@ -207,9 +207,6 @@ Putting it all together
 Both non-portable and portable modules can be used together in a project. This requires knowing the compiler you’re using and targeting it’s way of managing where to find modules.
 </p>
 <p>
-FIXME: The next paragraph needs to include references for OfrontPlus.
-</p>
-<p>
 An example is using <a href="Tests.Mod">Tests.Mod</a> for the <strong>clocktest</strong> implementations in both <strong>obnc</strong> and <strong>oxford</strong> directories. With OBNC you need to set some environment variables to let the compiler known where to search for modules. Here’s what you can do to compile this implementation of <strong>clocktest</strong> in the <strong>obnc</strong> directory.
 </p>
 <pre><code>export OBNC_IMPORT_PATH=&quot;.:../&quot;
@@ -222,7 +219,7 @@ With Obc-3 you can just provide the full path to the module you want to include.
 NOTE (2021-06-16): Not sure why yet but I found it necessary to rename Tests.Mod to Tests.m to get compilation with obc. It might be because the other files I am compiling use the ‘.m’ extension. Need to check with Mike.
 </p>
 <p>
-FIXME: Document using compiling and handling import paths with OfrontPlus compiler.
+FIXME: Document handling of imports and compiling OfrontPlus compiler.
 </p>
 </section>
 <nav>

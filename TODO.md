@@ -9,16 +9,24 @@ Action Items
 Next
 ----
 
-+ [x] Clock.Mod should wrap host system clock for use by a more general purpose DateTime.Mod.
-+ [x] Refactor CharsTest.Mod to test Strings compatible procedures
-+ [x] Tests module for easily writing tests of modules
-+ [ ] Reals.Mod should provide easy conversion to/from String for Real with exponential or fixed notations without reliance on extConvert.
-+ [x] Chars should provide a more modern approach to text processing that the Oakwood Strings module
-+ [x] Chars module should work as a drop in replacement for Oakwood Strings
-+ [x] DStrings module for dynamic strings, compatible with Chars and Strings where it makes sense, it should include Rider suppport since we lack index notation for working in the string object
-+ [ ] JSON module for working with JSON data
-+ [ ] Document coding conventions on when to use snake, camel case in variables and procedure names.
-+ [ ] Use the `curl --libcurl` option to assemble a C module for handling HTTP/HTTPS and possibly other curl supported protocols
+- [ ] Need a module for working with UTF-8 encoded strings, Scanner need to support UTF-8 encoded files
+- [ ] Tests.Mod
+	- rename ExpectedString to ExpectedChars (for consistency in Artemis)
+	- Conform the const CHAR descriptions between Scanner.Mod and Chars.Mod
+- [ ] Chars.Mod
+	- QUOTE should be DQUOTE 34X
+	- Add SQUOTE 39X
+- [ ] Add Scanner.Mod implementing a simple text scanner supporting ARRAY OF CHAR and plain text files
+- [x] Clock.Mod should wrap host system clock for use by a more general purpose DateTime.Mod.
+- [x] Refactor CharsTest.Mod to test Strings compatible procedures
+- [x] Tests module for easily writing tests of modules
+- [ ] Reals.Mod should provide easy conversion to/from String for Real with exponential or fixed notations without reliance on extConvert.
+- [x] Chars should provide a more modern approach to text processing that the Oakwood Strings module
+- [x] Chars module should work as a drop in replacement for Oakwood Strings
+- [x] DStrings module for dynamic strings, compatible with Chars and Strings where it makes sense, it should include Rider suppport since we lack index notation for working in the string object
+- [ ] JSON module for working with JSON data
+- [ ] Document coding conventions on when to use snake, camel case in variables and procedure names.
+- [ ] Use the `curl --libcurl` option to assemble a C module for handling HTTP/HTTPS and possibly other curl supported protocols
 
 Requested Ports from Native Oberon
 ----------------------------------
@@ -38,7 +46,7 @@ Someday, maybe
 
 + [ ] Reals.Mod
 + [ ] EBNF.Mod and ebnfc.Mod
-+ [ ] Scanner.Mod implementing a Texts like Scanner 
++ [ ] Scanner.Mod implementing a Texts like Scanner
 + [ ] RISC5 emulator (based on Compiler Construction RISC0 emulator)
 + [ ] Create a Ofront/V4 like dev environment with direct access to host file system
 + [ ] Re-implement Fonts.Mod so Oberon System can use ADA friendly fonts like Open Dyslexia and Atikson Hyperledgable
