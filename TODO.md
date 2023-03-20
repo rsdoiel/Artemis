@@ -18,6 +18,7 @@ Next
 + [x] DStrings module for dynamic strings, compatible with Chars and Strings where it makes sense, it should include Rider suppport since we lack index notation for working in the string object
 + [ ] JSON module for working with JSON data
 + [ ] Document coding conventions on when to use snake, camel case in variables and procedure names.
++ [ ] Use the `curl --libcurl` option to assemble a C module for handling HTTP/HTTPS and possibly other curl supported protocols
 
 Requested Ports from Native Oberon
 ----------------------------------
