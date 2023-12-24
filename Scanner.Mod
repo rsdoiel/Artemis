@@ -5,11 +5,11 @@ CONST
 	ERROR* = 0;
 	(* OK scan successful, not at end of text, position in scan updated *)
 	OK* = 1;
-	(* EOT scan successful but at end of text, position in scan not updated *)
-	EOT* = 2;
+	(* EOS, end of scan, scan successful but at end of text, position in scan not updated *)
+	EOS* = 2;
 	
 	(* Common String Delimiters *)
-	EOT*    = 0X   (* end of text *)
+	EOT*    = 0X;   (* end of text *)
 	TAB*    = 9X;  (* tab *)
 	LF*     = 10X; (* line feed *)
 	FF*     = 11X; (* form feed *)
