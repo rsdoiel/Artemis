@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION JSON</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+DEFINITION <em>JSON</em>;
+
+CONST
+  NullType = 0;
+  BooleanType = 1;
+  NumberType = 2;
+  StringType = 3;
+  ArrayType = 4;
+  ObjectType = 5;
+
+TYPE
+   Self = RECORD  END;
+
+   Boolean = POINTER TO BooleanDesc;
+
+   Number = POINTER TO NumberDesc;
+   NumberDesc = RECORD (Self) END;
+
+  String = POINTER TO StringDesc;
+  StringDesc = RECORD (Self) END;
+
+  List = POINTER TO ListDesc;
+  ListDesc = RECORD (Self) END;
+
+  Object = POINTER TO ObjectDesc;
+  ObjectDesc = RECORD (Self) END;
+
+PROCEDURE <em>IsNull</em>(o : Self) : BOOLEAN;
+
+PROCEDURE <em>IsType</em>(o : Self; checkType : INTEGER) : BOOLEAN;
+
+PROCEDURE <em>TypeName</em>(o : Self; VAR typeName : ARRAY OF CHAR);
+
+END JSON.
+</pre>
+	</body>
+</html>
