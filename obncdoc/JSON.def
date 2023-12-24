@@ -1,0 +1,34 @@
+DEFINITION JSON;
+
+CONST
+  NullType = 0;
+  BooleanType = 1;
+  NumberType = 2;
+  StringType = 3;
+  ArrayType = 4;
+  ObjectType = 5;
+
+TYPE
+   Self = RECORD  END;
+
+   Boolean = POINTER TO BooleanDesc;
+
+   Number = POINTER TO NumberDesc;
+   NumberDesc = RECORD (Self) END;
+
+  String = POINTER TO StringDesc;
+  StringDesc = RECORD (Self) END;
+
+  List = POINTER TO ListDesc;
+  ListDesc = RECORD (Self) END;
+
+  Object = POINTER TO ObjectDesc;
+  ObjectDesc = RECORD (Self) END;
+
+PROCEDURE IsNull(o : Self) : BOOLEAN;
+
+PROCEDURE IsType(o : Self; checkType : INTEGER) : BOOLEAN;
+
+PROCEDURE TypeName(o : Self; VAR typeName : ARRAY OF CHAR);
+
+END JSON.
