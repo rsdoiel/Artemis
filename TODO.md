@@ -61,5 +61,6 @@ Someday, maybe
 + [ ] Need to test under Oberon Project 2013 in DeWachter's emulator as well as Extended Oberon and IO Core
 + [ ] Cli modules (e.g. OCat) need to be clearly marked as non-portable between Oberon Systems and POSIX
 + [ ] Makefile needs to handle compile Cli modules to sensible lowercase names based on Oberon-7 compiler used
+- [ ] Look at FLTK's Go bindings as well as Fyne's and see if there are some insights for a general purpose set of GUI bindings for Artemis
 
 
