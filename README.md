@@ -38,6 +38,22 @@ presentations or books about the language and system.
 All have help me study the path Prof. Wirth and Prof. Gutkneckt
 pioneered all those many years ago.
 
+Project Status 2023
+-------------------
+
+It's the end of 2023 and I haven't had time to work on this. Busy life.
+I still think this is a worth while effort as I head into three years of
+a lingering project on my todo list.  I like Oberon-07 very much as a
+language but can't really use it conveniently for my personal projects yet.
+Time is a bottle neck right now and feeling comfortable asserting some
+design choices is another. My guess is I need to have a specific project
+as a use case to really get this effort off the ground.  In 2023 the
+Oberon community is still active but is generally is small, dispersed and
+largely aging (as am I). Makes me feel a little like Don Quote. I have hope
+2024 may allow time for Artemis but I suspect I'll reach mid 2025 before I
+revisit it again. I remain hopeful but not expecting to much as I finish
+2023.
+
 
 Project layout
 --------------

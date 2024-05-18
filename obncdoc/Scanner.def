@@ -1,0 +1,35 @@
+DEFINITION Scanner;
+
+CONST
+	ERROR = 0;
+	OK = 1;
+	EOS = 2;
+
+	EOT    = 0X;
+	TAB    = 9X;
+	LF     = 10X;
+	FF     = 11X;
+	CR     = 13X;
+	SPACE  = 32X;
+	DQUOTE = 34X;
+	SQUOTE = 39X;
+	SLASH  = 47X;
+	BSLASH = 92X;
+
+  (* Character constants *)
+  DASH  = "-";
+  LODASH = "_";
+  CARET = "^";
+  TILDE = "~";
+
+TYPE
+	Scanner = POINTER TO ScannerDesc;
+	ScannerDesc = RECORD
+		Pos: INTEGER
+	END;
+
+PROCEDURE Init(VAR scanner: Scanner; delimiter: CHAR; startString: CHAR; endString: CHAR; Escape: CHAR);
+
+PROCEDURE ScanChars(VAR scanner: Scanner; src : ARRAY OF CHAR; VAR value: ARRAY OF CHAR; VAR OK: BOOLEAN);
+
+END Scanner.
