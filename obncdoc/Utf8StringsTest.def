@@ -1,0 +1,26 @@
+(* Utf8StringsTest.Mod - Tests for Utf8Strings.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION Utf8StringsTest;
+
+PROCEDURE TestLength(): BOOLEAN;
+
+PROCEDURE TestCopy(): BOOLEAN;
+
+PROCEDURE TestInsert(): BOOLEAN;
+
+PROCEDURE TestAppend(): BOOLEAN;
+
+PROCEDURE TestDelete(): BOOLEAN;
+
+PROCEDURE TestExtract(): BOOLEAN;
+
+PROCEDURE TestPos(): BOOLEAN;
+
+PROCEDURE TestReplace(): BOOLEAN;
+
+END Utf8StringsTest.

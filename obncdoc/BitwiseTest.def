@@ -1,0 +1,28 @@
+(* BitwiseTest.Mod - Tests for Bitwise.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION BitwiseTest;
+
+PROCEDURE TestAnd(): BOOLEAN;
+
+PROCEDURE TestOr(): BOOLEAN;
+
+PROCEDURE TestXor(): BOOLEAN;
+
+PROCEDURE TestNot(): BOOLEAN;
+
+PROCEDURE TestNot8(): BOOLEAN;
+
+PROCEDURE TestShiftLeft(): BOOLEAN;
+
+PROCEDURE TestShiftRight(): BOOLEAN;
+
+PROCEDURE TestRotateLeft(): BOOLEAN;
+
+PROCEDURE TestRotateRight(): BOOLEAN;
+
+END BitwiseTest.

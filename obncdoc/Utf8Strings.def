@@ -1,0 +1,32 @@
+DEFINITION Utf8Strings;
+
+(* 
+This module implements set of procedures for manipulating UTF-8 encoded strings. 
+It mostly follows the Oakwood Strings module interface, but omits the Cap
+function as capitalization rules are locale-dependent for UTF-8 strings. 
+*)
+
+PROCEDURE Length(s: ARRAY OF CHAR): INTEGER;
+
+(* Copies src into dest. Truncates if dest is too small. *)
+PROCEDURE Copy(src: ARRAY OF CHAR; VAR dest: ARRAY OF CHAR);
+
+(* Inserts substr into src at codepoint position pos, writes result to dest. *)
+PROCEDURE Insert(src: ARRAY OF CHAR; pos: INTEGER; substr: ARRAY OF CHAR; VAR dest: ARRAY OF CHAR);
+
+(* Appends substr to src, writes result to dest *)
+PROCEDURE Append(src, substr: ARRAY OF CHAR; VAR dest: ARRAY OF CHAR);
+
+(* Deletes count codepoints from src at codepoint position pos, writes result to dest *)
+PROCEDURE Delete(src: ARRAY OF CHAR; pos, count: INTEGER; VAR dest: ARRAY OF CHAR);
+
+(* Extracts count codepoints from src at codepoint position pos, writes result to dest *)
+PROCEDURE Extract(src: ARRAY OF CHAR; pos, count: INTEGER; VAR dest: ARRAY OF CHAR);
+
+(* Returns the codepoint position of the first occurrence of pattern in s at or after startPos, or -1 if not found *)
+PROCEDURE Pos(pattern, s: ARRAY OF CHAR; startPos: INTEGER): INTEGER;
+
+(* Replaces the substring at codepoint position pos in dest with source. *)
+PROCEDURE Replace(source: ARRAY OF CHAR; pos: INTEGER; VAR dest: ARRAY OF CHAR);
+
+END Utf8Strings.
