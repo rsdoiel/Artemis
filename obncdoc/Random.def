@@ -1,0 +1,18 @@
+DEFINITION Random;
+
+(* Lehmer multiplicative linear congruential generator (MLCG) for INTEGER and REAL random numbers. *)
+
+CONST
+    Modulus = 2147483647;
+    Multiplier = 48271;
+
+PROCEDURE Init(seed: INTEGER);
+(* Initialize the generator with a seed in 1..Modulus-1 *)
+
+PROCEDURE Next(): INTEGER;
+(* Return the next random integer in 1..Modulus-1 *)
+
+PROCEDURE NextReal(): REAL;
+(* Return the next random number in (0,1) *)
+
+END Random.

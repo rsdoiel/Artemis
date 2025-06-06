@@ -1,0 +1,16 @@
+(* RandomTest.Mod - Tests for Random.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+DEFINITION RandomTest;
+PROCEDURE TestInitAndNext(): BOOLEAN;
+
+PROCEDURE TestRepeatability(): BOOLEAN;
+
+PROCEDURE TestRange(): BOOLEAN;
+
+PROCEDURE TestNextReal(): BOOLEAN;
+
+END RandomTest.
