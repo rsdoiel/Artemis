@@ -1,0 +1,41 @@
+DEFINITION Utf8;
+
+(* This module implements UTF-8 encoding and utility procedures.
+    For direct string manipulation, use the Utf8String module.
+ *)
+
+(* Determine the length of a UTF-8 character based on the first byte 
+ Returns the number of bytes in a UTF-8 character starting with firstByte 
+ Returns 0 for an invalid byte sequence. *)
+PROCEDURE CharLen(firstByte: CHAR): INTEGER;
+
+(* Returns TRUE if buf[0..len-1] is valid UTF-8 *)
+PROCEDURE IsValid(buf: ARRAY OF CHAR; len: INTEGER): BOOLEAN;
+
+(* Returns TRUE if buf starts with a UTF-8 BOM (EF BB BF), otherwise returns FALSE. *)
+PROCEDURE HasBOM(buf: ARRAY OF CHAR; len: INTEGER): BOOLEAN;
+
+(* Converts a Unicode code point to UTF-8 and writes it to buf at buf[index].
+    Returns TRUE if successful, FALSE if the code point is invalid or buf is too small. *)
+PROCEDURE Encode(codePoint: INTEGER; VAR buf: ARRAY OF CHAR; index: INTEGER; VAR bytesWritten: INTEGER): BOOLEAN;
+
+(* Converts a byte array to an Unicode code point, starting the decode from buf[index]. 
+    Returns TRUE on success, false if the byte sequence is invalid, or if the buffer 
+    is too short to contain the potential data. *)
+PROCEDURE Decode(buf: ARRAY OF CHAR; index: INTEGER; VAR codePoint: INTEGER): BOOLEAN;
+
+(* Reads the next UTF-8 character (code point) from a byte array, advances the index, and returns the code point. 
+    Returns FALSE if the end of the array is reached or an invalid sequence is encountered. *)
+PROCEDURE NextChar(buf: ARRAY OF CHAR; VAR index: INTEGER; VAR codePoint: INTEGER): BOOLEAN;
+
+(* Reads the previous UTF-8 character (code point) from a byte array, retracts the index, and returns the code point. 
+    Returns FALSE if the start of the array is reached or an invalid sequence is encountered. *)
+PROCEDURE PrevChar(buf: ARRAY OF CHAR; VAR index: INTEGER; VAR codePoint: INTEGER): BOOLEAN;
+
+(* Copy a code point from src[srcIdx] to dst[destIdx]. *)
+PROCEDURE CopyChar(src: ARRAY OF CHAR; VAR srcIdx: INTEGER; VAR dest: ARRAY OF CHAR; VAR destIdx: INTEGER);
+
+(* Moves idx beyond the next codepoint in src. *)
+PROCEDURE SkipChar(src: ARRAY OF CHAR; VAR idx: INTEGER);
+
+END Utf8.

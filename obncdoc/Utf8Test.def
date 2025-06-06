@@ -1,0 +1,24 @@
+(* Utf8Test.Mod - Tests for Utf8.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION Utf8Test;
+
+PROCEDURE TestCharLen(): BOOLEAN;
+
+PROCEDURE TestHasBOM(): BOOLEAN;
+
+PROCEDURE TestIsValid(): BOOLEAN;
+
+PROCEDURE TestEncode(): BOOLEAN;
+
+PROCEDURE TestEncodeDecodeIntegration(): BOOLEAN;
+
+PROCEDURE TestNextChar(): BOOLEAN;
+
+PROCEDURE TestPrevChar(): BOOLEAN;
+
+END Utf8Test.

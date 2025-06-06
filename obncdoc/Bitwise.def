@@ -1,0 +1,53 @@
+DEFINITION Bitwise;
+
+(* This module implements bitwise operations for the INTEGER and BYTE types. *)
+
+PROCEDURE And8(a, b: BYTE): BYTE;
+(* Perform bitwise AND operation on two bytes. *)
+
+PROCEDURE And(a, b: INTEGER): INTEGER;
+(* Perform bitwise AND operation on two integers. *)
+
+PROCEDURE Or8(a, b: BYTE): BYTE;
+(* Perform bitwise OR operation on two bytes. *)
+
+PROCEDURE Or(a, b: INTEGER): INTEGER;
+(* Perform bitwise OR operation on two integers. *)
+
+PROCEDURE Xor8(a, b: BYTE): BYTE;
+(* Perform bitwise XOR operation on two bytes. *)
+
+PROCEDURE Xor(a, b: INTEGER): INTEGER;
+(* Perform bitwise XOR operation on two integers. *)
+
+PROCEDURE Not8(a: BYTE): BYTE;
+(* Perform bitwise NOT operation on a byte. *)
+
+(* Perform bitwise NOT operation on an integer. *)
+PROCEDURE Not(a: INTEGER): INTEGER;
+
+PROCEDURE ShiftLeft8(a: BYTE; n: BYTE): BYTE;
+(* Perform shift left operation on a byte. *)
+
+PROCEDURE ShiftRight8(a: BYTE; n: BYTE): BYTE;
+(* Perform signed shift right operation on a byte. *)
+
+PROCEDURE RotateLeft8(a: BYTE; n: BYTE): BYTE;
+(* Perform rotate left operation on a byte. *)
+
+PROCEDURE RotateRight8(a: BYTE; n: BYTE): BYTE;
+(* Perform rotate right operation on a byte. *)
+
+PROCEDURE ShiftLeft(a: INTEGER; n: INTEGER): INTEGER;
+(* Perform shift left operation on an integer. *)
+
+PROCEDURE ShiftRight(a: INTEGER; n: INTEGER): INTEGER;
+(* Perform signed shift right operation on an integer. *)
+
+PROCEDURE RotateLeft(a: INTEGER; n: INTEGER): INTEGER;
+(* Perform rotate left operation on an integer. *)
+
+PROCEDURE RotateRight(a: INTEGER; n: INTEGER): INTEGER;
+(* Perform rotate right operation on an integer. *)
+
+END Bitwise.
