@@ -1,0 +1,30 @@
+(* DUtf8StringsTest.Mod tests the DUtf8Strings module.
+
+Copyright (C) 2025 Artemis Project
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+*)
+DEFINITION DUtf8StringsTest;
+
+PROCEDURE TestStartsWith() : BOOLEAN;
+
+PROCEDURE TestEndsWith() : BOOLEAN;
+
+PROCEDURE TestCap() : BOOLEAN;
+
+PROCEDURE TestTrimSpaces() : BOOLEAN;
+
+PROCEDURE TestPut() : BOOLEAN;
+
+PROCEDURE TestLength() : BOOLEAN;
+
+PROCEDURE TestInsertAppendDelete() : BOOLEAN;
+
+PROCEDURE TestExtractReplace() : BOOLEAN;
+
+PROCEDURE TestPos() : BOOLEAN;
+
+PROCEDURE TestQuote() : BOOLEAN;
+
+END DUtf8StringsTest.
