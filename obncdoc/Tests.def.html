@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION Tests</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(* Tests.Mod - A module providing simple test support for Oberon-7.
+
+Copyright (C) 2021 R. S. Doiel
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)</span>
+DEFINITION <em>Tests</em>; <span class='comment'>(* portable *)</span>
+CONST
+  MAXSTR = 1024;
+
+TYPE
+    <span class='comment'>(* TestProc is the signature of a test procedure. It is simple.
+        if a test successeds it returns true, otherwise it returns false.
+        The procedure Test counts the number of test run and results
+        updating variable parameters of success and errors. In turn
+        these are passed to Summarize to return a summary report. *)</span>
+    TestProc = PROCEDURE () : BOOLEAN;
+
+    TestSet = POINTER TO TestSetDesc;
+    TestSetDesc = RECORD
+                    title : ARRAY MAXSTR OF CHAR;
+                    fn : TestProc;
+                    next : TestSet
+                  END;
+
+<span class='comment'>(* DisplayString display quoted ARRAY OF CHAR with prefixed by msg *)</span>
+PROCEDURE <em>DisplayString</em>(msg: ARRAY OF CHAR; source : ARRAY OF CHAR);
+
+<span class='comment'>(* ExpectedInt compares to int display msg on error and updates test to
+   FALSE if they don'y match *)</span>
+PROCEDURE <em>ExpectedInt</em>(expected, got : INTEGER; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+
+<span class='comment'>(* ExpectedReal compares to REAL display msg on error and updates test to
+   FALSE if they don'y match *)</span>
+PROCEDURE <em>ExpectedReal</em>(expected, got : REAL; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+
+<span class='comment'>(* ExpectedString compare two ARRAY OF CHAR, set test to FALSE
+    if they don't match and display msg *)</span>
+PROCEDURE <em>ExpectedString</em>(s1, s2, msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+
+<span class='comment'>(* ExpectedChar compare two CHAR, set test to FALSE if they don't
+    match and display msg *)</span>
+PROCEDURE <em>ExpectedChar</em>(expected, got : CHAR; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+
+<span class='comment'>(* ExpectedBool compare to BOOLEAN values, set test to FALSE if they
+    don't match and display message *)</span>
+PROCEDURE <em>ExpectedBool</em>(expected, got : BOOLEAN; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+
+<span class='comment'>(* ExpectedBytes compares the first N values to two array of byte *)</span>
+PROCEDURE <em>ExpectedBytes</em>(expected, got : ARRAY OF BYTE; n : INTEGER; msg : ARRAY OF CHAR; VAR test: BOOLEAN);
+
+<span class='comment'>(*ExpectedSet compares two sets, display message if they don't match and
+   set the value of test to FALSE *)</span>
+PROCEDURE <em>ExpectedSet</em>(expected, got : SET; msg : ARRAY OF CHAR; VAR test : BOOLEAN);
+
+<span class='comment'>(* ShowTitle displays the title in standard out and underlined with '=' *)</span>
+PROCEDURE <em>ShowTitle</em>(s : ARRAY OF CHAR);
+
+<span class='comment'>(* Test -- run the test method and update the success and error variables
+provided. *)</span>
+PROCEDURE <em>Test</em>(fn : TestProc; VAR success : INTEGER; VAR errors : INTEGER);
+
+<span class='comment'>(* Summarize -- sumarize the results using the test title, success
+and error counts. *)</span>
+PROCEDURE <em>Summarize</em>(title : ARRAY OF CHAR; successes, errors : INTEGER);
+
+<span class='comment'>(* New initializes a new TestSet with a title *)</span>
+PROCEDURE <em>Init</em>(VAR ts: TestSet; title : ARRAY OF CHAR);
+
+PROCEDURE <em>Add</em>(VAR ts : TestSet; fn : TestProc);
+
+PROCEDURE <em>Run</em>(ts : TestSet) : BOOLEAN;
+
+END Tests.
+</pre>
+	</body>
+</html>

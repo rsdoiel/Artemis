@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION CollectionKeys</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(* CollectionKeys.mod - Key types and operations for key-value collections.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)</span>
+
+DEFINITION <em>CollectionKeys</em>;
+
+IMPORT Collections;
+
+TYPE
+    <span class='comment'>(* Base type for all keys *)</span>
+    Key = RECORD(Collections.Item) END;
+    KeyPtr = POINTER TO Key;
+
+    <span class='comment'>(* Integer key implementation *)</span>
+    IntegerKey = RECORD(Key)
+        value: INTEGER
+    END;
+    IntegerKeyPtr = POINTER TO IntegerKey;
+
+    <span class='comment'>(* String key implementation *)</span>
+    StringKey = RECORD(Key)
+        value: ARRAY 256 OF CHAR
+    END;
+    StringKeyPtr = POINTER TO StringKey;
+
+    <span class='comment'>(* Key operations interface *)</span>
+    KeyOps = RECORD
+        hash: PROCEDURE(key: KeyPtr; size: INTEGER): INTEGER;
+        equals: PROCEDURE(key1, key2: KeyPtr): BOOLEAN
+    END;
+
+<span class='comment'>(* Create integer key *)</span>
+PROCEDURE <em>NewIntegerKey</em>(value: INTEGER): IntegerKeyPtr;
+
+<span class='comment'>(* Create string key *)</span>
+PROCEDURE <em>NewStringKey</em>(value: ARRAY OF CHAR): StringKeyPtr;
+
+<span class='comment'>(* Get integer key operations *)</span>
+PROCEDURE <em>IntegerKeyOps</em>(VAR ops: KeyOps);
+
+<span class='comment'>(* Get string key operations *)</span>
+PROCEDURE <em>StringKeyOps</em>(VAR ops: KeyOps);
+
+END CollectionKeys.
+</pre>
+	</body>
+</html>

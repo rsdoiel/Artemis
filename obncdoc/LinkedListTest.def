@@ -1,0 +1,10 @@
+(* LinkedListTest.Mod - Tests for LinkedList.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION LinkedListTest;
+
+END LinkedListTest.
