@@ -15,16 +15,14 @@
   - Use VAR in procedure parameters for mutable variables.
   - The CASE statement does not have a default case.
   - SYSTEM.VAL() does not allow procedure parameters, use a local variable to convert types.
-  - Language specification is available in `docs/md/Oberon.md`
-  - Collections documentation is available in `docs/md/Collections.md`
-  - Compiler tools description for obnc is available in `docs/md/obnc.md`
   **Best Practices**
   - Functions and procedures should be clear, concise, and well-structured.
-  - Use modules to encapsulate functionality. Use opaque pointers to expose necessary types. Hide implementation details.
   - Use helper functions to avoid code duplication.
+  - Use modules to encapsulate functionality. Use opaque pointers to expose necessary types. Hide implementation details.
+  - Export only what is necessary; keep the interface clean.
   - Use meaningful names for modules, procedures, and variables.
   - Use PascalCase for module names, constants and procedures and camelCase for variables.
-  - Export only what is necessary; keep the interface clean.
+
 
 ## Building
 
