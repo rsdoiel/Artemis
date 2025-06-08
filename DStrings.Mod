@@ -66,6 +66,32 @@ BEGIN
   RETURN res
 END minimum;
 
+
+(* Helper: AllocateIfNil allocates a new node if pointer is NIL *)
+PROCEDURE AllocateIfNil(VAR s : String);
+BEGIN
+  IF s = NIL THEN
+    NEW(s); s.next := NIL; s.c := 0X;
+  END;
+END AllocateIfNil;
+
+(* Helper: CopyString copies n chars from src to dest, allocates as needed *)
+PROCEDURE CopyString(src : String; n : INTEGER; VAR dest : String);
+  VAR i : INTEGER; d, prev : String;
+BEGIN
+  AllocateIfNil(dest);
+  d := dest; prev := NIL;
+  i := 0;
+  WHILE (i < n) & (src # NIL) DO
+    d.c := src.c;
+    IF d.next = NIL THEN NEW(d.next); d.next.next := NIL; END;
+    prev := d; d := d.next; src := src.next;
+    INC(i)
+  END;
+  IF prev # NIL THEN prev.next := NIL; END;
+  IF d # NIL THEN d.c := 0X; d.next := NIL; END
+END CopyString;
+
 (** Init takes an ARRAY OF CHAR and a String copying the values from
     the ARRAY OF CHAR into String. Init is destructive and will
     overwrite or allocate memory for each element as needed.
@@ -75,24 +101,45 @@ END minimum;
     The procedure Prune can be used to unlink the first element after
     the initial 0X. *)
 PROCEDURE Init*(str : ARRAY OF CHAR; VAR s : String);
+  VAR i, n : INTEGER; cur : String;
+BEGIN
+  n := 0;
+  WHILE (n < LEN(str)) & (str[n] # 0X) DO INC(n) END;
+  AllocateIfNil(s);
+  CopyString(NIL, 0, s); (* clear *)
+  cur := s;
+  FOR i := 0 TO n - 1 DO
+    cur.c := str[i];
+    IF cur.next = NIL THEN NEW(cur.next); cur.next.next := NIL; END;
+    cur := cur.next;
+  END;
+  cur.c := 0X; cur.next := NIL;
+END Init;
+
+(* Helper: AdvanceTo advances a String pointer by n nodes, returns the resulting node or NIL *)
+PROCEDURE AdvanceTo(s : String; n : INTEGER) : String;
   VAR i : INTEGER; cur : String;
 BEGIN
-  IF s = NIL THEN
-    NEW(s); s.next := NIL;
+  cur := s; i := 0;
+  WHILE (i < n) & (cur # NIL) DO
+    cur := cur.next; INC(i);
   END;
-  s.c := 0X; 
+  RETURN cur
+END AdvanceTo;
+
+(* Helper: LastNode returns the last node before 0X or NIL *)
+PROCEDURE LastNode(s : String) : String;
+  VAR cur : String;
+BEGIN
   cur := s;
-  i := 0;
-  WHILE (i < LEN(str)) & (str[i] # 0X)  DO
-    cur.c := str[i];
-    IF cur.next = NIL THEN
-      NEW(cur.next); cur.next.next := NIL; cur.next.c := 0X; 
-    ELSE
-      cur.next.c := 0X;
+  IF cur = NIL THEN
+    (* Do nothing *)
+  ELSE WHILE (cur.next # NIL) & (cur.next.c # 0X) DO
+    cur := cur.next;
     END;
-    INC(i); cur := cur.next;
   END;
-END Init;
+  RETURN cur
+END LastNode;
 
 (** Set takes a Rider, a String and a pos and initializes a Rider
     to that position. *)
@@ -258,7 +305,7 @@ BEGIN
 END ToChars;
 
 
-(** String procedures that implement Oakword Strings functionality but for the String type instread of ARRAY OF CHAR *)
+(** String procedures that implement Oakword Strings functionality but for the String type instead of ARRAY OF CHAR *)
 
 (** Length is the number of CHAR before 0X is encountered. *)
 PROCEDURE Length*( s : String ) : INTEGER;
@@ -271,58 +318,31 @@ END Length;
 
 (** Insert *)
 PROCEDURE Insert*(source : String; pos : INTEGER; VAR dest : String);
-  VAR src, prev, rest : String; w : Rider; c : CHAR;
-
-  PROCEDURE ptr(r : Rider) : String;
-  BEGIN
-    RETURN r.cursor
-  END ptr;
-
+  VAR src, prev, rest : String;
 BEGIN
-  (* make copy of the source string *)
   Copy(source, src);
-  (* point prev at src *)
   IF pos > 0 THEN
-    Set(w, dest, (pos - 1));
-    (* move to prev to before insert point *)
-    prev := ptr(w);
-    c := Get(w);
-    (* save rest of string to rest *)
-    rest := ptr(w);
+    prev := AdvanceTo(dest, pos - 1);
+    rest := prev.next;
     prev.next := src;
-    (* move to new end of prev *)
-    WHILE (prev.next # NIL) & (prev.next.c # 0X) DO
-      prev := prev.next;
-    END;
-    (* repoint end of prev to rest *)
+    prev := LastNode(src);
     prev.next := rest;
   ELSE
-    (* move to new end of prev *)
-    Set(w, dest, 0);
-    prev := src;
-    (* save rest of string to rest *)
-    rest := ptr(w);
     rest := dest;
     dest := src;
-    (* move to new end of prev *)
-    WHILE (prev.next # NIL) & (prev.next.c # 0X) DO
-      prev := prev.next;
-    END;
+    prev := LastNode(src);
     prev.next := rest;
   END;
 END Insert;
 
 (** Append *)
 PROCEDURE Append*(extra : String; VAR dest: String);
-  VAR src, cur : String;
+  VAR src, last : String;
 BEGIN
   Copy(extra, src);
-  cur := dest;
-  IF (cur # NIL) & (cur.c # 0X) THEN
-    WHILE (cur.next # NIL) & (cur.next.c # 0X) DO
-      cur := cur.next;
-    END;
-    cur.next := src;
+  IF (dest # NIL) & (dest.c # 0X) THEN
+    last := LastNode(dest);
+    last.next := src;
   ELSE
     dest := src;
   END;
@@ -355,7 +375,7 @@ BEGIN
   END;
 END Delete;
 
-(** Replace replace the contents of dest with source starting at
+(** Replace the contents of dest with source starting at
     pos. *)
 PROCEDURE Replace*(source : String; pos : INTEGER; VAR dest : String);
 BEGIN
@@ -365,29 +385,10 @@ END Replace;
 
 (** Extract *)
 PROCEDURE Extract*(source : String; pos, n : INTEGER; VAR dest : String);
-  VAR cur, copy : String; i : INTEGER;
+  VAR start : String;
 BEGIN
-  cur := source;
-  i := 0;
-  (* Move to start of copy *)
-  WHILE (i < pos) & (cur # NIL) DO
-    cur := cur.next; INC(i);
-  END;
-  (* Copy substring *)
-  i := 0;
-  IF dest = NIL THEN
-    NEW(dest); dest.next := NIL; dest.c := 0X;
-  END;
-  copy := dest;
-  copy.c := 0X;
-  WHILE  (i < n) & (cur # NIL) & (cur.c # 0X) DO
-    copy.c := cur.c;
-    IF (copy.next = NIL) THEN
-      NEW(copy.next); copy.next.next := NIL;
-    END;
-    copy.next.c := 0X;
-    cur := cur.next; copy := copy.next; INC(i);
-  END;
+  start := AdvanceTo(source, pos);
+  CopyString(start, n, dest);
 END Extract;
 
 (** Pos return the position of the first occurrance of pattern in
