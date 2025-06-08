@@ -7,7 +7,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 MODULE DStrings;
 
-IMPORT Chars, Convert := extConvert, Strings, Out;
+IMPORT Chars, Convert := extConvert, Strings, Out, Collections;
 
 CONST
   (* Oberon-7 doesn't have a MAX(T) for set, assuming 32 total, 0 to 31 *)
@@ -39,7 +39,7 @@ TYPE
       dynamic string in Oberon-7 type. NOTE: In memory the
       implentation is currently a private linked list of CHAR. *)
   String*     = POINTER TO StringDesc;
-  StringDesc* = RECORD
+  StringDesc* = RECORD (Collections.Item)
                   c: CHAR;
                   next : String
                 END;
