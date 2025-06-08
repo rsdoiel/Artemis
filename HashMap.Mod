@@ -348,4 +348,16 @@ BEGIN
     END
 END Foreach;
 
+(** Clear removes all key-value pairs from the hashmap. *)
+PROCEDURE Clear*(map: HashMap);
+VAR i: INTEGER;
+BEGIN
+    IF map # NIL THEN
+        FOR i := 0 TO map.size - 1 DO
+            LinkedList.Clear(map.buckets[i])
+        END;
+        map.count := 0
+    END
+END Clear;
+
 END HashMap.

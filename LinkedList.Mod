@@ -218,4 +218,12 @@ BEGIN
     RETURN success
 END RemoveAt;
 
+(** Clear removes all elements from the list. *)
+PROCEDURE Clear*(list: List);
+BEGIN
+    list.head := NIL;
+    list.tail := NIL;
+    list.size := 0
+END Clear;
+
 END LinkedList.

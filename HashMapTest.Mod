@@ -440,6 +440,50 @@ BEGIN
     RETURN pass
 END TestStringKeys;
 
+PROCEDURE TestClear(): BOOLEAN;
+VAR
+    map: HashMap.HashMap;
+    value: Collections.ItemPtr;
+    pass, found: BOOLEAN;
+    i: INTEGER;
+BEGIN
+    pass := TRUE;
+    map := HashMap.New();
+    
+    (* Add some key-value pairs *)
+    FOR i := 1 TO 5 DO
+        HashMap.Put(map, i, NewTestItem(i * 10))
+    END;
+    IF HashMap.Count(map) # 5 THEN pass := FALSE END;
+    IF HashMap.IsEmpty(map) THEN pass := FALSE END;
+    
+    (* Clear the map *)
+    HashMap.Clear(map);
+    IF HashMap.Count(map) # 0 THEN pass := FALSE END;
+    IF ~HashMap.IsEmpty(map) THEN pass := FALSE END;
+    
+    (* Lookups should fail *)
+    FOR i := 1 TO 5 DO
+        found := HashMap.Get(map, i, value);
+        IF found OR (value # NIL) THEN pass := FALSE END
+    END;
+    
+    (* Add after clearing *)
+    HashMap.Put(map, 42, NewTestItem(123));
+    IF HashMap.Count(map) # 1 THEN pass := FALSE END;
+    found := HashMap.Get(map, 42, value);
+    IF ~found OR (value = NIL) THEN pass := FALSE END;
+    IF value(TestItemPtr).value # 123 THEN pass := FALSE END;
+    
+    (* Clear again, should be empty *)
+    HashMap.Clear(map);
+    IF HashMap.Count(map) # 0 THEN pass := FALSE END;
+    IF ~HashMap.IsEmpty(map) THEN pass := FALSE END;
+    
+    HashMap.Free(map);
+    RETURN pass
+END TestClear;
+
 BEGIN
     Tests.Init(ts, "HashMap Tests");
     Tests.Add(ts, TestNewAndFree);
@@ -452,5 +496,6 @@ BEGIN
     Tests.Add(ts, TestForeach);
     Tests.Add(ts, TestCollisionHandling);
     Tests.Add(ts, TestStringKeys);
+    Tests.Add(ts, TestClear);
     ASSERT(Tests.Run(ts));
 END HashMapTest.

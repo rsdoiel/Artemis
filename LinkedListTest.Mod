@@ -198,6 +198,57 @@ BEGIN
   RETURN pass
 END TestGetAt;
 
+PROCEDURE TestClear(): BOOLEAN;
+VAR
+  list: LinkedList.List;
+  n1, n2, n3: TestItemPtr;
+  result: Collections.ItemPtr;
+  success: BOOLEAN;
+  pass: BOOLEAN;
+BEGIN
+  pass := TRUE;
+  list := LinkedList.New();
+  n1 := NewItem(10); n2 := NewItem(20); n3 := NewItem(30);
+  
+  (* Add some items to the list *)
+  LinkedList.Append(list, n1);
+  LinkedList.Append(list, n2);
+  LinkedList.Append(list, n3);
+  
+  (* Verify list has items *)
+  IF LinkedList.Count(list) # 3 THEN pass := FALSE END;
+  IF LinkedList.IsEmpty(list) THEN pass := FALSE END;
+  
+  (* Clear the list *)
+  LinkedList.Clear(list);
+  
+  (* Verify list is now empty *)
+  IF LinkedList.Count(list) # 0 THEN pass := FALSE END;
+  IF ~LinkedList.IsEmpty(list) THEN pass := FALSE END;
+  
+  (* Verify that GetAt returns FALSE for any position *)
+  success := LinkedList.GetAt(list, 0, result);
+  IF success THEN pass := FALSE END;
+  
+  (* Verify that RemoveFirst returns NIL *)
+  LinkedList.RemoveFirst(list, result);
+  IF result # NIL THEN pass := FALSE END;
+  
+  (* Test that we can still append items after clearing *)
+  LinkedList.Append(list, NewItem(100));
+  IF LinkedList.Count(list) # 1 THEN pass := FALSE END;
+  IF LinkedList.IsEmpty(list) THEN pass := FALSE END;
+  
+  (* Test clearing an already empty list *)
+  LinkedList.Clear(list);
+  LinkedList.Clear(list); (* Should not cause issues *)
+  IF LinkedList.Count(list) # 0 THEN pass := FALSE END;
+  IF ~LinkedList.IsEmpty(list) THEN pass := FALSE END;
+
+  LinkedList.Free(list);
+  RETURN pass
+END TestClear;
+
 BEGIN
   Tests.Init(ts, "LinkedList Tests");
   Tests.Add(ts, TestNewAndIsEmpty);
@@ -205,5 +256,6 @@ BEGIN
   Tests.Add(ts, TestInsertAt);
   Tests.Add(ts, TestForeach);
   Tests.Add(ts, TestGetAt);
+  Tests.Add(ts, TestClear);
   ASSERT(Tests.Run(ts));
 END LinkedListTest.

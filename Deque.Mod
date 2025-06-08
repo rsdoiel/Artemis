@@ -74,6 +74,11 @@ BEGIN
     RETURN result
 END IsEmpty;
 
+(** Clear removes all elements from the deque. *)
+PROCEDURE Clear*(dq: Deque);
+BEGIN
+    DoubleLinkedList.Clear(dq.list)
+END Clear;
 
 (** Apply a procedure to each element in the deque. *)
 PROCEDURE Foreach*(dq: Deque; visit: Collections.VisitProc; VAR state: Collections.VisitorState); 
