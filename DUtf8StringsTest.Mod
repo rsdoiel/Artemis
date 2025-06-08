@@ -314,6 +314,164 @@ BEGIN
   RETURN test
 END TestPut;
 
+PROCEDURE TestLength*() : BOOLEAN;
+VAR 
+  test: BOOLEAN; 
+  s: DUtf8Strings.DUtf8String;
+  len: INTEGER;
+BEGIN 
+  test := TRUE;
+  
+  (* Test empty string *)
+  DUtf8Strings.Init("", s);
+  len := DUtf8Strings.Length(s);
+  T.ExpectedInt(0, len, "Length empty string", test);
+  
+  (* Test ASCII string *)
+  DUtf8Strings.Init("hello", s);
+  len := DUtf8Strings.Length(s);
+  T.ExpectedInt(5, len, "Length ASCII string", test);
+  
+  (* Test UTF-8 string with multibyte characters *)
+  DUtf8Strings.Init("Hëllö", s); (* ë and ö are 2-byte UTF-8 *)
+  len := DUtf8Strings.Length(s);
+  T.ExpectedInt(5, len, "Length UTF-8 string", test);
+  
+  RETURN test
+END TestLength;
+
+PROCEDURE TestInsertAppendDelete*() : BOOLEAN;
+VAR 
+  test: BOOLEAN; 
+  s, source: DUtf8Strings.DUtf8String;
+  result: ARRAY 64 OF CHAR;
+  truncated: INTEGER;
+BEGIN 
+  test := TRUE;
+  
+  (* Test Insert at beginning *)
+  DUtf8Strings.Init("world", s);
+  DUtf8Strings.Init("hello ", source);
+  DUtf8Strings.Insert(source, 0, s);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("hello world", result, "Insert at beginning", test);
+  
+  (* Test Insert in middle *)
+  DUtf8Strings.Init("one three", s);
+  DUtf8Strings.Init("two ", source);
+  DUtf8Strings.Insert(source, 4, s);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("one two three", result, "Insert in middle", test);
+  
+  (* Test Append *)
+  DUtf8Strings.Init("hello", s);
+  DUtf8Strings.Init(" world", source);
+  DUtf8Strings.Append(source, s);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("hello world", result, "Append strings", test);
+  
+  (* Test Delete from beginning *)
+  DUtf8Strings.Init("hello world", s);
+  DUtf8Strings.Delete(s, 0, 6);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("world", result, "Delete from beginning", test);
+  
+  (* Test Delete from middle *)
+  DUtf8Strings.Init("one two three", s);
+  DUtf8Strings.Delete(s, 4, 4);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("one three", result, "Delete from middle", test);
+  
+  RETURN test
+END TestInsertAppendDelete;
+
+PROCEDURE TestExtractReplace*() : BOOLEAN;
+VAR 
+  test: BOOLEAN; 
+  s, extracted, pattern, replacement: DUtf8Strings.DUtf8String;
+  result: ARRAY 64 OF CHAR;
+  truncated: INTEGER;
+BEGIN 
+  test := TRUE;
+  
+  (* Test Extract from beginning *)
+  DUtf8Strings.Init("hello world", s);
+  DUtf8Strings.Extract(s, 0, 5, extracted);
+  DUtf8Strings.ToChars(extracted, result, truncated);
+  T.ExpectedString("hello", result, "Extract from beginning", test);
+  
+  (* Test Extract from middle *)
+  DUtf8Strings.Init("one two three", s);
+  DUtf8Strings.Extract(s, 4, 3, extracted);
+  DUtf8Strings.ToChars(extracted, result, truncated);
+  T.ExpectedString("two", result, "Extract from middle", test);
+  
+  (* Test Extract to end *)
+  DUtf8Strings.Init("hello world", s);
+  DUtf8Strings.Extract(s, 6, 10, extracted); (* count larger than remaining *)
+  DUtf8Strings.ToChars(extracted, result, truncated);
+  T.ExpectedString("world", result, "Extract to end", test);
+  
+  (* Test Replace at beginning *)
+  DUtf8Strings.Init("hi world", s);
+  DUtf8Strings.Init("hi", pattern);
+  DUtf8Strings.Init("hello", replacement);
+  DUtf8Strings.Replace(pattern, replacement, s);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("hello world", result, "Replace at beginning", test);
+  
+  (* Test Replace in middle *)
+  DUtf8Strings.Init("one X three", s);
+  DUtf8Strings.Init("X", pattern);
+  DUtf8Strings.Init("two", replacement);
+  DUtf8Strings.Replace(pattern, replacement, s);
+  DUtf8Strings.ToChars(s, result, truncated);
+  T.ExpectedString("one two three", result, "Replace in middle", test);
+  
+  RETURN test
+END TestExtractReplace;
+
+PROCEDURE TestPos*() : BOOLEAN;
+VAR 
+  test: BOOLEAN; 
+  s, pattern: DUtf8Strings.DUtf8String;
+  pos: INTEGER;
+BEGIN 
+  test := TRUE;
+  
+  (* Test pattern found at beginning *)
+  DUtf8Strings.Init("hello world", s);
+  DUtf8Strings.Init("hello", pattern);
+  pos := DUtf8Strings.Pos(pattern, s, 0);
+  T.ExpectedInt(0, pos, "Pos pattern at beginning", test);
+  
+  (* Test pattern found in middle *)
+  DUtf8Strings.Init("one two three", s);
+  DUtf8Strings.Init("two", pattern);
+  pos := DUtf8Strings.Pos(pattern, s, 0);
+  T.ExpectedInt(4, pos, "Pos pattern in middle", test);
+  
+  (* Test pattern not found *)
+  DUtf8Strings.Init("hello world", s);
+  DUtf8Strings.Init("xyz", pattern);
+  pos := DUtf8Strings.Pos(pattern, s, 0);
+  T.ExpectedInt(-1, pos, "Pos pattern not found", test);
+  
+  (* Test pattern found with start position *)
+  DUtf8Strings.Init("one two two three", s);
+  DUtf8Strings.Init("two", pattern);
+  pos := DUtf8Strings.Pos(pattern, s, 5);
+  T.ExpectedInt(8, pos, "Pos pattern with start position", test);
+  
+  (* Test empty pattern *)
+  DUtf8Strings.Init("hello", s);
+  DUtf8Strings.Init("", pattern);
+  pos := DUtf8Strings.Pos(pattern, s, 0);
+  T.ExpectedInt(-1, pos, "Pos empty pattern", test);
+  
+  RETURN test
+END TestPos;
+
 PROCEDURE TestQuote*() : BOOLEAN;
 VAR 
   test: BOOLEAN; 
@@ -347,13 +505,10 @@ BEGIN
   T.Add(ts, TestCopy);
   T.Add(ts, TestRider);
   T.Add(ts, TestClear);
-  (* FIXME: no such test *)
-  (* T.Add(ts, TestLength); *)
-  T.Add(ts, TestCopy);
-  T.Add(ts, TestRider);
-  (* FIXME: no such tests *)
-  (* T.Add(ts, TestInsertAppendDelete); *)
-  (* T.Add(ts, TestExtractReplace); *)
+  T.Add(ts, TestLength);
+  T.Add(ts, TestInsertAppendDelete);
+  T.Add(ts, TestExtractReplace);
+  T.Add(ts, TestPos);
   T.Add(ts, TestStartsWith);
   T.Add(ts, TestEndsWith);
   T.Add(ts, TestCap);

@@ -399,16 +399,6 @@ BEGIN
   END;
 END Delete;
 
-(** Replace replaces the content of dest at position pos with source. *)
-PROCEDURE Replace*(source: DUtf8String; pos: INTEGER; VAR dest: DUtf8String);
-VAR
-  sourceLen: INTEGER;
-BEGIN
-  sourceLen := Length(source);
-  Delete(dest, pos, sourceLen);
-  Insert(source, pos, dest);
-END Replace;
-
 (** Pos returns the codepoint position of first occurrence of pattern in source, or -1 if not found. *)
 PROCEDURE Pos*(pattern, source: DUtf8String; startPos: INTEGER): INTEGER;
 VAR
@@ -465,6 +455,20 @@ BEGIN
   
   RETURN result
 END Pos;
+
+
+(** Replaces the first occurrence of pattern in source with substitute. *)
+PROCEDURE Replace*(pattern, substitute: DUtf8String; VAR source: DUtf8String);
+VAR
+  pos, patternLen: INTEGER;
+BEGIN
+  pos := Pos(pattern, source, 0);
+  IF pos >= 0 THEN
+    patternLen := Length(pattern);
+    Delete(source, pos, patternLen);
+    Insert(substitute, pos, source);
+  END;
+END Replace;
 
 (** Equal compares two DUtf8String values for equality. *)
 PROCEDURE Equal*(s1, s2: DUtf8String): BOOLEAN;
