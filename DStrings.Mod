@@ -37,7 +37,7 @@ CONST
 TYPE
   (** String, StringDesc implements a data structure to provide
       dynamic string in Oberon-7 type. NOTE: In memory the
-      implentation is currently a private linked list of CHAR. *)
+      implementation is currently a private linked list of CHAR. *)
   String*     = POINTER TO StringDesc;
   StringDesc* = RECORD (Collections.Item)
                   c: CHAR;

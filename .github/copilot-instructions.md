@@ -15,7 +15,7 @@
   - Use VAR in procedure parameters for mutable variables.
   - The CASE statement does not have a default case.
   - SYSTEM.VAL() does not allow procedure parameters, use a local variable to convert types.
-  **Best Practices**
+- **Best Practices**
   - Functions and procedures should be clear, concise, and well-structured.
   - Use helper functions to avoid code duplication.
   - Use modules to encapsulate functionality. Use opaque pointers to expose necessary types. Hide implementation details.
