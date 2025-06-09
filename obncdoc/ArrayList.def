@@ -1,0 +1,38 @@
+DEFINITION ArrayList;
+
+IMPORT Collections;
+
+CONST
+    ChunkSize = 64;
+
+TYPE
+    ArrayList = POINTER TO ArrayListDesc;
+
+(* Create a new, empty ArrayList *)
+PROCEDURE New(): ArrayList;
+
+(* Free the ArrayList and all its chunks *)
+PROCEDURE Free(VAR list: ArrayList);
+
+(* Append an item to the end of the list. Returns TRUE if successful *)
+PROCEDURE Append(list: ArrayList; item: Collections.ItemPtr): BOOLEAN;
+
+(* Get the item at the given index. Returns TRUE if found, item in VAR result *)
+PROCEDURE GetAt(list: ArrayList; index: INTEGER; VAR result: Collections.ItemPtr): BOOLEAN;
+
+(* Set the item at the given index. Returns TRUE if successful *)
+PROCEDURE SetAt(list: ArrayList; index: INTEGER; item: Collections.ItemPtr): BOOLEAN;
+
+(* Return the number of items in the list *)
+PROCEDURE Count(list: ArrayList): INTEGER;
+
+(* Returns TRUE if the list is empty *)
+PROCEDURE IsEmpty(list: ArrayList): BOOLEAN;
+
+(* Remove all items from the list *)
+PROCEDURE Clear(list: ArrayList);
+
+(* Iterate over all items, calling visitor for each *)
+PROCEDURE Foreach(list: ArrayList; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+END ArrayList.
