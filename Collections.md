@@ -1,6 +1,6 @@
 # Collections in Oberon-ML
 
-This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `ArrayList`, `HashMap`, and `Dictionary`. Each module provides a different type of collection with its own interface and use cases.
+This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `ArrayList`, `HashMap`, `Dictionary`, `Heap`, and `HeapSort`. Each module provides a different type of collection with its own interface and use cases.
 
 ## Overview
 
@@ -10,6 +10,8 @@ This document describes the collection modules implemented in Oberon-ML: `Linked
 - **ArrayList**: Dynamic array with indexable access, implemented using chunked arrays for efficient growth.
 - **HashMap**: Hash table with separate chaining for efficient key-value storage and retrieval.
 - **Dictionary**: Flexible key-value store supporting both integer and string keys, with a unified API.
+- **Heap**: Binary heap implementation supporting priority queue operations with customizable comparison functions.
+- **HeapSort**: Heap-based sorting algorithms and utilities for ArrayList collections.
 
 ## API Design Principles
 
@@ -24,25 +26,25 @@ The collections API follows modern software engineering principles:
 
 ## Supported Data Structures and Operations
 
-| LinkedList      | DoubleLinkedList         | Deque           | ArrayList       | HashMap         | Dictionary      |
-|----------------|-------------------------|-----------------|-----------------|-----------------|----------------|
-| New            | New                     | New             | New             | New             | New            |
-| -              | -                       | -               | -               | NewWithSize     | NewStringDict  |
-| Free           | Free                    | Free            | Free            | Free            | Free           |
-| Append         | Append                  | Append          | Append          | Put             | Put, PutString |
-| -              | Prepend                 | Prepend         | -               | -               | -              |
-| InsertAt       | InsertAt                | -               | -               | -               | -              |
-| RemoveFirst    | RemoveFirst             | RemoveFirst     | -               | Remove          | Remove, RemoveString |
-| -              | RemoveLast              | RemoveLast      | -               | -               | -              |
-| GetAt          | GetAt                   | -               | GetAt           | Get             | Get, GetString |
-| -              | -                       | -               | SetAt           | -               | -              |
-| -              | Head                    | -               | -               | -               | -              |
-| -              | Tail                    | -               | -               | -               | -              |
-| Count          | Count                   | Count           | Count           | Count           | Count          |
-| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty         | IsEmpty        |
-| Clear          | Clear                   | Clear           | Clear           | Clear           | Clear          |
-| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach         | Foreach        |
-| -              | -                       | -               | -               | Contains        | Contains, ContainsString |
+| LinkedList      | DoubleLinkedList         | Deque           | ArrayList       | HashMap         | Dictionary      | Heap            | HeapSort        |
+|----------------|-------------------------|-----------------|-----------------|-----------------|----------------|-----------------|-----------------|
+| New            | New                     | New             | New             | New             | New            | New             | SortInPlace     |
+| -              | -                       | -               | -               | NewWithSize     | NewStringDict  | -               | Sort            |
+| Free           | Free                    | Free            | Free            | Free            | Free           | Free            | IsSorted        |
+| Append         | Append                  | Append          | Append          | Put             | Put, PutString | Insert          | FindKthSmallest |
+| -              | Prepend                 | Prepend         | -               | -               | -              | ExtractMin      | MergeSorted     |
+| InsertAt       | InsertAt                | -               | -               | -               | -              | PeekMin         | -               |
+| RemoveFirst    | RemoveFirst             | RemoveFirst     | -               | Remove          | Remove, RemoveString | -         | -               |
+| -              | RemoveLast              | RemoveLast      | -               | -               | -              | -               | -               |
+| GetAt          | GetAt                   | -               | GetAt           | Get             | Get, GetString | -               | -               |
+| -              | -                       | -               | SetAt           | -               | -              | -               | -               |
+| -              | Head                    | -               | -               | -               | -              | -               | -               |
+| -              | Tail                    | -               | -               | -               | -              | -               | -               |
+| Count          | Count                   | Count           | Count           | Count           | Count          | Count           | -               |
+| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty         | IsEmpty        | IsEmpty         | -               |
+| Clear          | Clear                   | Clear           | Clear           | Clear           | Clear          | Clear           | -               |
+| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach         | Foreach        | Foreach         | -               |
+| -              | -                       | -               | -               | Contains        | Contains, ContainsString | -       | -               |
 
 
 ## Module Summaries
@@ -88,6 +90,31 @@ The collections API follows modern software engineering principles:
   - Supports both integer and string keys, with dedicated procedures for each.
   - `Foreach` applies a visitor procedure to all values in the dictionary.
   - `Clear` removes all key-value pairs from the dictionary.
+
+### Heap
+- **Purpose:** Binary heap implementation supporting priority queue operations with customizable comparison functions.
+- **Key Procedures:**
+  - `New`, `Free`, `Insert`, `ExtractMin`, `PeekMin`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Key Types:**
+  - `CompareFunc`: Procedure type for custom comparison functions
+  - `MinCompare`, `MaxCompare`: Built-in comparison functions for min and max heaps
+- **Notes:**
+  - Built on `ArrayList` for efficient storage and automatic growth.
+  - Supports both min-heap and max-heap behavior through comparison functions.
+  - Maintains heap property through automatic rebalancing on insert and extract operations.
+  - `Foreach` applies a visitor procedure to all items in heap order.
+  - `Clear` removes all elements from the heap.
+
+### HeapSort
+- **Purpose:** Heap-based sorting algorithms and utilities for ArrayList collections.
+- **Key Procedures:**
+  - `SortInPlace`, `Sort`, `IsSorted`, `FindKthSmallest`, `MergeSorted`
+- **Notes:**
+  - `SortInPlace`: In-place heap sort algorithm, modifies the original ArrayList.
+  - `Sort`: Non-destructive sorting, creates a new sorted ArrayList.
+  - `IsSorted`: Utility to check if an ArrayList is already sorted.
+  - `FindKthSmallest`: Finds the k-th smallest element using heap selection.
+  - `MergeSorted`: Merges two sorted ArrayLists into a new sorted ArrayList.
 
 ## Usage Examples
 
@@ -279,6 +306,112 @@ BEGIN
 END.
 ```
 
+### Heap Example
+
+```oberon
+IMPORT Heap, Collections;
+
+TYPE
+    Task = RECORD (Collections.Item)
+        priority: INTEGER;
+        name: ARRAY 64 OF CHAR
+    END;
+    TaskPtr = POINTER TO Task;
+
+VAR 
+    heap: Heap.Heap;
+    task: TaskPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    
+PROCEDURE PrintTask(item: Collections.ItemPtr);
+VAR
+    t: TaskPtr;
+BEGIN
+    t := item(TaskPtr);
+    Out.String("Task: "); Out.String(t.name); 
+    Out.String(" (Priority: "); Out.Int(t.priority, 0); Out.String(")");
+    Out.Ln;
+END PrintTask;
+
+BEGIN
+    (* Create a min-heap for task scheduling *)
+    heap := Heap.New(Heap.MinCompare);
+    
+    (* Add tasks with different priorities *)
+    NEW(task); task.priority := 5; COPY("Low priority task", task.name);
+    Heap.Insert(heap, task);
+    
+    NEW(task); task.priority := 1; COPY("High priority task", task.name);
+    Heap.Insert(heap, task);
+    
+    NEW(task); task.priority := 3; COPY("Medium priority task", task.name);
+    Heap.Insert(heap, task);
+    
+    (* Process tasks in priority order *)
+    WHILE ~Heap.IsEmpty(heap) DO
+        success := Heap.ExtractMin(heap, result);
+        IF success THEN
+            PrintTask(result);
+        END;
+    END;
+    
+    Heap.Free(heap);
+END.
+```
+
+### HeapSort Example
+
+```oberon
+IMPORT HeapSort, ArrayList, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    list, sortedList: ArrayList.ArrayList;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    list := ArrayList.New();
+    
+    (* Add unsorted items *)
+    FOR i := 0 TO 9 DO
+        NEW(item); item.value := (31 * i) MOD 17;  (* Generate pseudo-random values *)
+        success := ArrayList.Append(list, item);
+    END;
+    
+    (* Check if already sorted *)
+    IF HeapSort.IsSorted(list, Heap.MinCompare) THEN
+        Out.String("List is already sorted");
+    ELSE
+        Out.String("List needs sorting");
+    END;
+    Out.Ln;
+    
+    (* Sort without modifying original *)
+    sortedList := HeapSort.Sort(list, Heap.MinCompare);
+    
+    (* Or sort in-place *)
+    HeapSort.SortInPlace(list, Heap.MinCompare);
+    
+    (* Find 3rd smallest element *)
+    success := HeapSort.FindKthSmallest(list, 2, result);  (* 0-based: 2 = 3rd smallest *)
+    IF success THEN
+        Out.String("3rd smallest: "); Out.Int(result(MyItemPtr).value, 0); Out.Ln;
+    END;
+    
+    ArrayList.Free(list);
+    ArrayList.Free(sortedList);
+END.
+```
+
 ## Extending Collections
 
 All collection modules work with items that extend the base `Collections.Item` type. The collections use `Collections.ItemPtr` (which is `POINTER TO Collections.Item`) as the universal item type, providing type safety while allowing flexibility.
@@ -369,7 +502,9 @@ The collection modules implement proper information hiding:
 - **ArrayList** uses an opaque `ArrayList` type with internal chunked array structure managed by `LinkedList`
 - **HashMap** uses an opaque `HashMap` type with internal bucket array and hash function
 - **Dictionary** uses an opaque `Dictionary` type with internal structure, supporting both integer and string keys
-- Internal implementation details (nodes, list descriptors, hash buckets, array chunks) are not exposed
+- **Heap** uses an opaque `Heap` type with internal binary heap structure built on `ArrayList`
+- **HeapSort** provides algorithmic utilities without exposing internal heap structures
+- Internal implementation details (nodes, list descriptors, hash buckets, array chunks, heap indices) are not exposed
 - Position-based access (`InsertAt`, `GetAt`, `SetAt`) replaces direct node manipulation or array access
 
 ### Type Safety
@@ -417,6 +552,21 @@ The ArrayList module provides dynamic array functionality while working within O
 - **RemoveString(key)**: Removes key-value pair by string key (Dictionary and HashMap with string keys)
 - **Clear()**: Removes all key-value pairs from the map/dictionary (HashMap, Dictionary)
 
+### Priority Queue Operations (Heap)
+
+- **Insert(item)**: Adds item to the heap, maintaining heap property
+- **ExtractMin(VAR result)**: Removes and returns the minimum item, returns `TRUE` if successful and sets `result`
+- **PeekMin(VAR result)**: Returns the minimum item without removing it, returns `TRUE` if successful and sets `result`
+- **Clear()**: Removes all items from the heap
+
+### Sorting Operations (HeapSort)
+
+- **SortInPlace(list, compare)**: Sorts an ArrayList in-place using heap sort algorithm
+- **Sort(list, compare)**: Creates a new sorted ArrayList without modifying the original
+- **IsSorted(list, compare)**: Returns `TRUE` if the ArrayList is already sorted according to the comparison function
+- **FindKthSmallest(list, k, VAR result)**: Finds the k-th smallest element (0-based), returns `TRUE` if successful and sets `result`
+- **MergeSorted(list1, list2, compare)**: Merges two sorted ArrayLists into a new sorted ArrayList
+
 ---
 
-For detailed API documentation, see the respective `.def.html` files in the `docs/` directory.
+For detailed API documentation, see the respective `.def.html` files in the `obncdoc/` directory.
