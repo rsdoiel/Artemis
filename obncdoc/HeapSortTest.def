@@ -1,0 +1,33 @@
+(*
+    HeapSortTest.Mod - Unit tests for HeapSort.Mod
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)
+DEFINITION HeapSortTest;
+
+(* Create a new test item with value *)
+(* Comparison function for ascending order *)
+(* Comparison function for descending order *)
+(* Helper to create a list with given values *)
+(* Helper to verify list contents *)
+PROCEDURE TestSortInPlaceEmpty(): BOOLEAN;
+
+PROCEDURE TestSortInPlaceSingle(): BOOLEAN;
+
+PROCEDURE TestSortInPlaceAscending(): BOOLEAN;
+
+PROCEDURE TestSortInPlaceDescending(): BOOLEAN;
+
+PROCEDURE TestSortNonDestructive(): BOOLEAN;
+
+PROCEDURE TestIsSorted(): BOOLEAN;
+
+PROCEDURE TestFindKthSmallest(): BOOLEAN;
+
+PROCEDURE TestMergeSorted(): BOOLEAN;
+
+PROCEDURE TestMergeSortedEdgeCases(): BOOLEAN;
+
+PROCEDURE TestLargeDataset(): BOOLEAN;
+
+END HeapSortTest.

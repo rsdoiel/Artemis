@@ -1,0 +1,46 @@
+(*
+    HeapSort.Mod - Heap-based sorting algorithms using the Heap module.
+
+    Provides efficient O(n log n) sorting for ArrayList collections using heap sort algorithm.
+    Supports both in-place and non-destructive sorting with custom comparison functions.
+
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)
+DEFINITION HeapSort;
+
+IMPORT Heap, ArrayList, Collections;
+ (* Sort an ArrayList in-place using heap sort algorithm.
+
+PROCEDURE SortInPlace(list: ArrayList.ArrayList; compare: Heap.CompareFunc);
+
+(* Create a new sorted copy of an ArrayList using heap sort algorithm.
+    The original ArrayList remains unchanged.
+    Returns a new ArrayList containing the same items in sorted order.
+    Time complexity: O(n log n), Space complexity: O(n) for the new list and temporary heap.
+*)
+PROCEDURE Sort(list: ArrayList.ArrayList; compare: Heap.CompareFunc): ArrayList.ArrayList;
+
+(* Check if an ArrayList is sorted according to the given comparison function.
+    Returns TRUE if the list is empty, has one element, or is properly sorted.
+    Time complexity: O(n), Space complexity: O(1).
+*)
+PROCEDURE IsSorted(list: ArrayList.ArrayList; compare: Heap.CompareFunc): BOOLEAN;
+
+(* Find the k-th smallest element in an ArrayList using a heap-based selection algorithm.
+    k is 0-based (k=0 returns the smallest element, k=1 the second smallest, etc.).
+    Returns TRUE if successful and sets result to the k-th smallest element.
+    Returns FALSE if k is out of bounds or the list is empty.
+    Time complexity: O(n log k), Space complexity: O(k).
+    Note: This implementation uses a different approach to avoid nested procedure limitations.
+*)
+PROCEDURE FindKthSmallest(list: ArrayList.ArrayList; k: INTEGER; compare: Heap.CompareFunc; VAR result: Collections.ItemPtr): BOOLEAN;
+
+(* Merge two sorted ArrayLists into a new sorted ArrayList.
+    Both input lists must be sorted according to the given comparison function.
+    Returns a new ArrayList containing all elements from both lists in sorted order.
+    Time complexity: O(n + m), Space complexity: O(n + m).
+*)
+PROCEDURE MergeSorted(list1, list2: ArrayList.ArrayList; compare: Heap.CompareFunc): ArrayList.ArrayList;
+
+END HeapSort.
