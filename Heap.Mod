@@ -150,28 +150,6 @@ BEGIN
     END
 END HeapifyDown;
 
-(* Internal helper: rebuild heap without the last element *)
-PROCEDURE RebuildWithoutLast(heap: Heap);
-VAR 
-    newItems: ArrayList.ArrayList;
-    i, size: INTEGER;
-    item: Collections.ItemPtr;
-    success: BOOLEAN;
-BEGIN
-    size := ArrayList.Count(heap.items);
-    IF size > 1 THEN
-        newItems := ArrayList.New();
-        FOR i := 0 TO size - 2 DO
-            success := ArrayList.GetAt(heap.items, i, item);
-            ASSERT(success);
-            success := ArrayList.Append(newItems, item);
-            ASSERT(success)
-        END;
-        ArrayList.Free(heap.items);
-        heap.items := newItems
-    END
-END RebuildWithoutLast;
-
 (** Insert an item into the heap *)
 PROCEDURE Insert*(heap: Heap; item: Collections.ItemPtr): BOOLEAN;
 VAR 
@@ -203,25 +181,20 @@ BEGIN
         ASSERT(success);
         
         IF size = 1 THEN
-            (* Only one item, just clear the list *)
-            ArrayList.Clear(heap.items)
+            (* Only one item, just remove it *)
+            success := ArrayList.RemoveLast(heap.items);
+            ASSERT(success)
         ELSE
-            (* Move last item to root and heapify down *)
+            (* Move last item to root and remove the last item *)
             success := ArrayList.GetAt(heap.items, size - 1, lastItem);
             ASSERT(success);
             success := ArrayList.SetAt(heap.items, 0, lastItem);
             ASSERT(success);
+            success := ArrayList.RemoveLast(heap.items);
+            ASSERT(success);
             
-            (* Remove the last item (now at root is duplicated) *)
-            (* We simulate removal by creating a new ArrayList without the last item *)
-            DEC(size);
-            (* Note: ArrayList doesn't have RemoveAt, so we'll work around this *)
-            (* by rebuilding without the last element *)
-            RebuildWithoutLast(heap);
-            
-            IF ArrayList.Count(heap.items) > 0 THEN
-                HeapifyDown(heap, 0)
-            END
+            (* Restore heap property *)
+            HeapifyDown(heap, 0)
         END;
         success := TRUE
     END;

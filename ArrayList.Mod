@@ -172,6 +172,34 @@ BEGIN
     list.count := 0
 END Clear;
 
+(** Remove the last item from the list. Returns TRUE if successful *)
+PROCEDURE RemoveLast*(list: ArrayList): BOOLEAN;
+VAR
+    result: BOOLEAN;
+    chunkCount: INTEGER;
+    lastChunk, removedChunk: Collections.ItemPtr;
+    chunk: ChunkPtr;
+    success: BOOLEAN;
+BEGIN
+    result := FALSE;
+    IF list.count > 0 THEN
+        chunkCount := LinkedList.Count(list.chunks);
+        IF LinkedList.GetAt(list.chunks, chunkCount - 1, lastChunk) THEN
+            chunk := lastChunk(ChunkPtr);
+            DEC(chunk.count);
+            DEC(list.count);
+            
+            (* If the chunk becomes empty and it's not the only chunk, remove it *)
+            IF (chunk.count = 0) & (chunkCount > 1) THEN
+                success := LinkedList.RemoveAt(list.chunks, chunkCount - 1, removedChunk);
+                ASSERT(success)
+            END;
+            result := TRUE
+        END
+    END;
+    RETURN result
+END RemoveLast;
+
 (** Iterate over all items, calling visitor for each *)
 PROCEDURE Foreach*(list: ArrayList; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
 VAR

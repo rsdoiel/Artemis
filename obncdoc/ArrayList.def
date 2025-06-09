@@ -32,6 +32,9 @@ PROCEDURE IsEmpty(list: ArrayList): BOOLEAN;
 (* Remove all items from the list *)
 PROCEDURE Clear(list: ArrayList);
 
+(* Remove the last item from the list. Returns TRUE if successful *)
+PROCEDURE RemoveLast(list: ArrayList): BOOLEAN;
+
 (* Iterate over all items, calling visitor for each *)
 PROCEDURE Foreach(list: ArrayList; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
 

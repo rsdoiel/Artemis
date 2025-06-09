@@ -44,6 +44,9 @@ PROCEDURE <em>IsEmpty</em>(list: ArrayList): BOOLEAN;
 <span class='comment'>(* Remove all items from the list *)</span>
 PROCEDURE <em>Clear</em>(list: ArrayList);
 
+<span class='comment'>(* Remove the last item from the list. Returns TRUE if successful *)</span>
+PROCEDURE <em>RemoveLast</em>(list: ArrayList): BOOLEAN;
+
 <span class='comment'>(* Iterate over all items, calling visitor for each *)</span>
 PROCEDURE <em>Foreach</em>(list: ArrayList; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
 
