@@ -7,7 +7,7 @@ Released under The 3-Clause BSD License.
 
 MODULE DictionaryTest;
 
-IMPORT Dictionary, Collections, Tests;
+IMPORT Dictionary, Collections, HashMap, Tests;
 
 TYPE
     TestItem = RECORD(Collections.Item)
@@ -34,9 +34,12 @@ END NewTestItem;
 
 (** Visitor procedure for testing iteration *)
 PROCEDURE Visitor(item: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
-VAR testItem: TestItemPtr;
+VAR 
+    pair: HashMap.KeyValuePairPtr;
+    testItem: TestItemPtr;
 BEGIN
-    testItem := item(TestItemPtr);
+    pair := item(HashMap.KeyValuePairPtr);
+    testItem := pair.value(TestItemPtr);
     state(TestVisitorState).sum := state(TestVisitorState).sum + testItem.value;
     INC(state(TestVisitorState).count);
     RETURN TRUE
