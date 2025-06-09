@@ -1,6 +1,6 @@
 # Collections in Oberon-ML
 
-This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, and `HashMap`. Each module provides a different type of collection with its own interface and use cases.
+This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `HashMap`, and `Dictionary`. Each module provides a different type of collection with its own interface and use cases.
 
 ## Overview
 
@@ -8,6 +8,7 @@ This document describes the collection modules implemented in Oberon-ML: `Linked
 - **DoubleLinkedList**: Doubly-linked list supporting bidirectional traversal and efficient insertions/removals at both ends.
 - **Deque**: Double-ended queue built on `DoubleLinkedList`, supporting efficient insertion and removal at both ends.
 - **HashMap**: Hash table with separate chaining for efficient key-value storage and retrieval.
+- **Dictionary**: Flexible key-value store supporting both integer and string keys, with a unified API.
 
 ## API Design Principles
 
@@ -18,55 +19,67 @@ The collections API follows modern software engineering principles:
 3. **Consistent Type System**: All collections use `Collections.ItemPtr` as the universal item type.
 4. **Safe Error Handling**: Operations that can fail (like `GetAt`, `InsertAt`, `Get`) return boolean success indicators.
 5. **Uniform Interfaces**: Similar operations across different collection types have consistent signatures.
+6. **Flexible Key Support**: Dictionary supports both integer and string keys with a unified interface.
 
 ## Supported Data Structures and Operations
 
-| LinkedList      | DoubleLinkedList         | Deque           | HashMap         |
-|----------------|-------------------------|-----------------|-----------------|
-| New            | New                     | New             | New             |
-| -              | -                       | -               | NewWithSize     |
-| Free           | Free                    | Free            | Free            |
-| Append         | Append                  | Append          | Put             |
-| -              | Prepend                 | Prepend         | Get             |
-| InsertAt       | InsertAt                | -               | Contains        |
-| RemoveFirst    | RemoveFirst             | RemoveFirst     | Remove          |
-| -              | RemoveLast              | RemoveLast      | -               |
-| GetAt          | GetAt                   | -               | -               |
-| -              | Head                    | -               | -               |
-| -              | Tail                    | -               | -               |
-| Count          | Count                   | Count           | Count           |
-| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         |
-| -              | -                       | -               | LoadFactor      |
-| Foreach        | Foreach                 | Foreach         | Foreach         |
+| LinkedList      | DoubleLinkedList         | Deque           | HashMap         | Dictionary      |
+|----------------|-------------------------|-----------------|-----------------|----------------|
+| New            | New                     | New             | New             | New            |
+| -              | -                       | -               | NewWithSize     | NewStringDict  |
+| Free           | Free                    | Free            | Free            | Free           |
+| Append         | Append                  | Append          | Put             | Put, PutString |
+| -              | Prepend                 | Prepend         | -               | -              |
+| InsertAt       | InsertAt                | -               | -               | -              |
+| RemoveFirst    | RemoveFirst             | RemoveFirst     | Remove          | Remove, RemoveString |
+| -              | RemoveLast              | RemoveLast      | -               | -              |
+| GetAt          | GetAt                   | -               | Get             | Get, GetString |
+| -              | Head                    | -               | -               | -              |
+| -              | Tail                    | -               | -               | -              |
+| Count          | Count                   | Count           | Count           | Count          |
+| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty        |
+| Clear          | Clear                   | Clear           | Clear           | Clear          |
+| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach        |
+| -              | -                       | -               | Contains        | Contains, ContainsString |
+
 
 ## Module Summaries
 
 ### LinkedList
 - **Purpose:** Simple, efficient singly-linked list.
 - **Key Procedures:**
-  - `New`, `Free`, `Append`, `RemoveFirst`, `InsertAt`, `GetAt`, `Count`, `IsEmpty`, `Foreach`
-- **Notes:** Position-based access with 0-based indexing. Only supports removal from the front.
+  - `New`, `Free`, `Append`, `RemoveFirst`, `InsertAt`, `GetAt`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Notes:** Position-based access with 0-based indexing. Only supports removal from the front. `Clear` removes all elements from the list.
 
 ### DoubleLinkedList
 - **Purpose:** More flexible list with bidirectional links.
 - **Key Procedures:**
-  - `New`, `Free`, `Append`, `Prepend`, `InsertAt`, `RemoveFirst`, `RemoveLast`, `GetAt`, `Head`, `Tail`, `Count`, `IsEmpty`, `Foreach`
-- **Notes:** Position-based insertion and access with 0-based indexing. Supports removal from both ends and efficient access to head/tail elements.
+  - `New`, `Free`, `Append`, `Prepend`, `InsertAt`, `RemoveFirst`, `RemoveLast`, `GetAt`, `Head`, `Tail`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Notes:** Position-based insertion and access with 0-based indexing. Supports removal from both ends and efficient access to head/tail elements. `Clear` removes all elements from the list.
 
 ### Deque
 - **Purpose:** Double-ended queue for efficient insertion/removal at both ends.
 - **Key Procedures:**
-  - `New`, `Free`, `Append`, `Prepend`, `RemoveFirst`, `RemoveLast`, `Count`, `IsEmpty`, `Foreach`
-- **Notes:** Built on `DoubleLinkedList` for efficiency and code reuse.
+  - `New`, `Free`, `Append`, `Prepend`, `RemoveFirst`, `RemoveLast`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Notes:** Built on `DoubleLinkedList` for efficiency and code reuse. `Clear` removes all elements from the deque.
 
 ### HashMap
 - **Purpose:** Hash table for efficient key-value storage and retrieval.
 - **Key Procedures:**
-  - `New`, `NewWithSize`, `Free`, `Put`, `Get`, `Contains`, `Remove`, `Count`, `IsEmpty`, `LoadFactor`, `Foreach`
+  - `New`, `NewWithSize`, `Free`, `Put`, `Get`, `Contains`, `Remove`, `Count`, `IsEmpty`, `LoadFactor`, `Clear`, `Foreach`
 - **Key Types:**
   - `KeyValuePair`: Record type extending `Collections.Item` with `key` (INTEGER) and `value` (Collections.ItemPtr) fields
   - `NewKeyValuePair`: Constructor for creating key-value pairs
-- **Notes:** Uses separate chaining with LinkedLists for collision resolution. Keys are INTEGER type. Fixed-size bucket array with configurable initial size.
+- **Notes:** Uses separate chaining with LinkedLists for collision resolution. Keys are INTEGER type. Fixed-size bucket array with configurable initial size. `Clear` removes all key-value pairs from the map.
+
+### Dictionary
+- **Purpose:** Flexible key-value store supporting both integer and string keys with a unified API.
+- **Key Procedures:**
+  - `New`, `NewStringDict`, `Free`, `Put`, `PutString`, `Get`, `GetString`, `Remove`, `RemoveString`, `Contains`, `ContainsString`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Notes:**
+  - Supports both integer and string keys, with dedicated procedures for each.
+  - `Foreach` applies a visitor procedure to all values in the dictionary.
+  - `Clear` removes all key-value pairs from the dictionary.
 
 ## Usage Examples
 
@@ -159,6 +172,60 @@ BEGIN
 END.
 ```
 
+### Dictionary Example
+
+```oberon
+IMPORT Dictionary, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR
+    dict: Dictionary.Dictionary;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    found: BOOLEAN;
+
+BEGIN
+    (* Create a dictionary with integer keys *)
+    dict := Dictionary.New();
+
+    (* Or create a dictionary with string keys *)
+    dict := Dictionary.NewStringDict();
+
+    (* Insert by integer key *)
+    NEW(item); item.value := 42;
+    Dictionary.Put(dict, 123, item);
+
+    (* Insert by string key *)
+    NEW(item); item.value := 99;
+    Dictionary.PutString(dict, "foo", item);
+
+    (* Retrieve by integer key *)
+    found := Dictionary.Get(dict, 123, result);
+    IF found THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+
+    (* Retrieve by string key *)
+    found := Dictionary.GetString(dict, "foo", result);
+    IF found THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+
+    (* Remove by integer key *)
+    Dictionary.Remove(dict, 123);
+
+    (* Remove by string key *)
+    Dictionary.RemoveString(dict, "foo");
+
+    Dictionary.Free(dict);
+END.
+```
+
 ## Extending Collections
 
 All collection modules work with items that extend the base `Collections.Item` type. The collections use `Collections.ItemPtr` (which is `POINTER TO Collections.Item`) as the universal item type, providing type safety while allowing flexibility.
@@ -247,6 +314,7 @@ The collection modules implement proper information hiding:
 - **LinkedList** and **DoubleLinkedList** use opaque `List` types with internal node structures
 - **Deque** uses an opaque `Deque` type built on `DoubleLinkedList`
 - **HashMap** uses an opaque `HashMap` type with internal bucket array and hash function
+- **Dictionary** uses an opaque `Dictionary` type with internal structure, supporting both integer and string keys
 - Internal implementation details (nodes, list descriptors, hash buckets) are not exposed
 - Position-based access (`InsertAt`, `GetAt`) replaces direct node manipulation
 
@@ -265,34 +333,20 @@ Always use the provided procedures for manipulating collections to ensure safety
 
 - **InsertAt(position, item)**: Inserts item at 0-based position, returns `TRUE` if successful
 - **GetAt(position, VAR result)**: Retrieves item at position, returns `TRUE` if successful and sets `result`
+- **Clear()**: Removes all elements from the collection (LinkedList, DoubleLinkedList, Deque)
 
-### Key-Based Operations (HashMap)
+### Key-Based Operations (HashMap, Dictionary)
 
 - **Put(key, value)**: Stores or updates the value associated with the key
+- **PutString(key, value)**: Stores or updates the value associated with the string key (Dictionary and HashMap with string keys)
 - **Get(key, VAR result)**: Retrieves value for the key, returns `TRUE` if found and sets `result`
-- **Contains(key)**: Returns `TRUE` if the key exists in the map
-- **Remove(key, VAR result)**: Removes key-value pair, returns `TRUE` if found and sets `result` to the removed value
-
-### Access Operations (DoubleLinkedList only)
-
-- **Head(VAR result)**: Gets first item, returns `TRUE` if list is not empty
-- **Tail(VAR result)**: Gets last item, returns `TRUE` if list is not empty
-
-### Removal Operations
-
-- **RemoveFirst(VAR result)**: Removes first item, sets `result` to item (or `NIL` if empty)
-- **RemoveLast(VAR result)**: Removes last item, sets `result` to item (or `NIL` if empty)
-
-### Performance Monitoring (HashMap)
-
-- **LoadFactor()**: Returns the current load factor (count/size ratio) as a REAL value for performance monitoring
-
-### Notes on Error Handling
-
-- Position-based operations validate bounds and return `FALSE` for invalid positions
-- Access operations on empty collections return `FALSE` and set result to `NIL`
-- Removal from empty collections sets result to `NIL` but does not signal error
-- HashMap operations with non-existent keys return `FALSE` and set result to `NIL`
+- **GetString(key, VAR result)**: Retrieves value for the string key, returns `TRUE` if found and sets `result` (Dictionary and HashMap with string keys)
+- **Contains(key)**: Returns `TRUE` if the key exists in the map/dictionary
+- **ContainsString(key)**: Returns `TRUE` if the string key exists (Dictionary and HashMap with string keys)
+- **Remove(key, VAR result)**: Removes key-value pair, returns `TRUE` if found and sets `result` to the removed value (HashMap)
+- **Remove(key)**: Removes key-value pair by key (Dictionary)
+- **RemoveString(key)**: Removes key-value pair by string key (Dictionary and HashMap with string keys)
+- **Clear()**: Removes all key-value pairs from the map/dictionary (HashMap, Dictionary)
 
 ---
 
