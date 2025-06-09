@@ -1,0 +1,54 @@
+(* IniConfigTokenizer.Mod - Line-based tokenizer for INI configuration files.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION IniConfigTokenizer;
+
+IMPORT Files;
+
+CONST
+    EofToken = 0;
+    SectionToken = 1;
+    KeyToken = 2;
+    ValueToken = 3;
+    CommentToken = 4;
+    ErrorToken = 5;
+
+    NoError = 0;
+    SyntaxError = 1;
+    IOError = 2;
+
+    MaxTokenLength = 256;
+
+TYPE
+    Token = RECORD
+        type: INTEGER;
+        value: ARRAY MaxTokenLength OF CHAR;
+        line: INTEGER;
+        error: INTEGER
+    END;
+
+    Tokenizer = POINTER TO TokenizerDesc;
+
+(* Initialize tokenizer for reading from a file *)
+PROCEDURE Init(VAR tokenizer: Tokenizer; file: Files.File);
+
+(* Get the next token from the input *)
+PROCEDURE NextToken(tokenizer: Tokenizer; VAR token: Token);
+
+(* Get the value token after a key token *)
+PROCEDURE GetValue(tokenizer: Tokenizer; VAR token: Token);
+
+(* Check if tokenizer has reached end of file *)
+PROCEDURE AtEof(tokenizer: Tokenizer): BOOLEAN;
+
+(* Get current line number *)
+PROCEDURE GetLine(tokenizer: Tokenizer): INTEGER;
+
+(* Get current error state *)
+PROCEDURE GetError(tokenizer: Tokenizer): INTEGER;
+
+END IniConfigTokenizer.

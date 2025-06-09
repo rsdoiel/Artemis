@@ -1,8 +1,7 @@
 # Artemis INI Config Parser – Preliminary Contract (MVP)
 
-**Date:** June 9, 2025  
 **Project:** Artemis Standard Library Extensions  
-**Module:** INI Config Parser  
+**Feature:** INI Config Parser  
 
 ---
 
@@ -45,5 +44,12 @@
 - Section representation: ArrayList of Dictionaries, with a default section.
 
 ---
+
+## Implementation
+ - IniConfigTokenizer - dedicated tokenizer module,  handles file operations.
+ - IniConfigParser - parser, uses tokenizer, (user facing module)
+
+## Testing
+ - Follow test organization example given in RandomTest.Mod
 
 This document summarizes the Q&A and design contract for the Artemis INI Config Parser MVP. Further refinements and features may be added after the MVP is complete.
