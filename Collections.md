@@ -1,6 +1,6 @@
 # Collections in Oberon-ML
 
-This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `ArrayList`, `HashMap`, `Dictionary`, `Heap`, and `HeapSort`. Each module provides a different type of collection with its own interface and use cases.
+This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `ArrayList`, `HashMap`, `Dictionary`, `Heap`, `HeapSort`, and `Stack`. Each module provides a different type of collection with its own interface and use cases.
 
 ## Overview
 
@@ -12,6 +12,7 @@ This document describes the collection modules implemented in Oberon-ML: `Linked
 - **Dictionary**: Flexible key-value store supporting both integer and string keys, with a unified API.
 - **Heap**: Binary heap implementation supporting priority queue operations with customizable comparison functions.
 - **HeapSort**: Heap-based sorting algorithms and utilities for ArrayList collections.
+- **Stack**: Last-In-First-Out (LIFO) collection built on `LinkedList`, ideal for managing temporary data and implementing function call stacks.
 
 ## API Design Principles
 
@@ -26,25 +27,25 @@ The collections API follows modern software engineering principles:
 
 ## Supported Data Structures and Operations
 
-| LinkedList      | DoubleLinkedList         | Deque           | ArrayList       | HashMap         | Dictionary      | Heap            | HeapSort        |
-|----------------|-------------------------|-----------------|-----------------|-----------------|----------------|-----------------|-----------------|
-| New            | New                     | New             | New             | New             | New            | New             | SortInPlace     |
-| -              | -                       | -               | -               | NewWithSize     | NewStringDict  | -               | Sort            |
-| Free           | Free                    | Free            | Free            | Free            | Free           | Free            | IsSorted        |
-| Append         | Append                  | Append          | Append          | Put             | Put, PutString | Insert          | FindKthSmallest |
-| -              | Prepend                 | Prepend         | -               | -               | -              | ExtractMin      | MergeSorted     |
-| InsertAt       | InsertAt                | -               | -               | -               | -              | PeekMin         | -               |
-| RemoveFirst    | RemoveFirst             | RemoveFirst     | -               | Remove          | Remove, RemoveString | -         | -               |
-| -              | RemoveLast              | RemoveLast      | -               | -               | -              | -               | -               |
-| GetAt          | GetAt                   | -               | GetAt           | Get             | Get, GetString | -               | -               |
-| -              | -                       | -               | SetAt           | -               | -              | -               | -               |
-| -              | Head                    | -               | -               | -               | -              | -               | -               |
-| -              | Tail                    | -               | -               | -               | -              | -               | -               |
-| Count          | Count                   | Count           | Count           | Count           | Count          | Count           | -               |
-| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty         | IsEmpty        | IsEmpty         | -               |
-| Clear          | Clear                   | Clear           | Clear           | Clear           | Clear          | Clear           | -               |
-| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach         | Foreach        | Foreach         | -               |
-| -              | -                       | -               | -               | Contains        | Contains, ContainsString | -       | -               |
+| LinkedList      | DoubleLinkedList         | Deque           | ArrayList       | HashMap         | Dictionary      | Heap            | HeapSort        | Stack           |
+|----------------|-------------------------|-----------------|-----------------|-----------------|----------------|-----------------|-----------------|-----------------|
+| New            | New                     | New             | New             | New             | New            | New             | SortInPlace     | New             |
+| -              | -                       | -               | -               | NewWithSize     | NewStringDict  | -               | Sort            | -               |
+| Free           | Free                    | Free            | Free            | Free            | Free           | Free            | IsSorted        | Free            |
+| Append         | Append                  | Append          | Append          | Put             | Put, PutString | Insert          | FindKthSmallest | Push            |
+| -              | Prepend                 | Prepend         | -               | -               | -              | ExtractMin      | MergeSorted     | Pop             |
+| InsertAt       | InsertAt                | -               | -               | -               | -              | PeekMin         | -               | Top             |
+| RemoveFirst    | RemoveFirst             | RemoveFirst     | -               | Remove          | Remove, RemoveString | -         | -               | -               |
+| -              | RemoveLast              | RemoveLast      | -               | -               | -              | -               | -               | -               |
+| GetAt          | GetAt                   | -               | GetAt           | Get             | Get, GetString | -               | -               | -               |
+| -              | -                       | -               | SetAt           | -               | -              | -               | -               | -               |
+| -              | Head                    | -               | -               | -               | -              | -               | -               | -               |
+| -              | Tail                    | -               | -               | -               | -              | -               | -               | -               |
+| Count          | Count                   | Count           | Count           | Count           | Count          | Count           | -               | Count           |
+| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty         | IsEmpty        | IsEmpty         | -               | IsEmpty         |
+| Clear          | Clear                   | Clear           | Clear           | Clear           | Clear          | Clear           | -               | Clear           |
+| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach         | Foreach        | Foreach         | -               | Foreach         |
+| -              | -                       | -               | -               | Contains        | Contains, ContainsString | -       | -               | -               |
 
 
 ## Module Summaries
@@ -115,6 +116,19 @@ The collections API follows modern software engineering principles:
   - `IsSorted`: Utility to check if an ArrayList is already sorted.
   - `FindKthSmallest`: Finds the k-th smallest element using heap selection.
   - `MergeSorted`: Merges two sorted ArrayLists into a new sorted ArrayList.
+
+### Stack
+- **Purpose:** Last-In-First-Out (LIFO) collection for managing temporary data and implementing function call stacks.
+- **Key Procedures:**
+  - `New`, `Free`, `Push`, `Pop`, `Top`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Notes:**
+  - Built on `LinkedList` for efficiency and code reuse.
+  - `Push`: Adds an item to the top of the stack.
+  - `Pop`: Removes and returns the top item from the stack.
+  - `Top`: Returns the top item without removing it.
+  - Follows strict LIFO semantics - items are retrieved in reverse order of insertion.
+  - `Clear` removes all elements from the stack.
+  - Ideal for expression evaluation, function call management, and undo/redo operations.
 
 ## Usage Examples
 
@@ -409,6 +423,54 @@ BEGIN
     
     ArrayList.Free(list);
     ArrayList.Free(sortedList);
+END.
+```
+
+### Stack Example
+
+```oberon
+IMPORT Stack, Collections, Out;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    stack: Stack.Stack;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    stack := Stack.New();
+    
+    (* Push items onto the stack *)
+    FOR i := 1 TO 5 DO
+        NEW(item); item.value := i * 10;
+        Stack.Push(stack, item);
+        Out.String("Pushed: "); Out.Int(item.value, 0); Out.Ln;
+    END;
+    
+    (* Peek at the top item *)
+    success := Stack.Top(stack, result);
+    IF success THEN
+        Out.String("Top item: "); Out.Int(result(MyItemPtr).value, 0); Out.Ln;
+    END;
+    
+    (* Pop items in LIFO order *)
+    Out.String("Popping items: ");
+    WHILE ~Stack.IsEmpty(stack) DO
+        Stack.Pop(stack, result);
+        IF result # NIL THEN
+            Out.Int(result(MyItemPtr).value, 0); Out.String(" ");
+        END;
+    END;
+    Out.Ln;
+    
+    Stack.Free(stack);
 END.
 ```
 

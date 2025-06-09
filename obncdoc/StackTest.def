@@ -1,0 +1,10 @@
+(* StackTest.Mod - Tests for Stack.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION StackTest;
+
+END StackTest.
