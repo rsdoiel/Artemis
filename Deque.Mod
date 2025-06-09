@@ -36,6 +36,7 @@ END Free;
 PROCEDURE Prepend*(dq: Deque; item: Collections.ItemPtr);
 BEGIN
     IF ~DoubleLinkedList.InsertAt(dq.list, 0, item) THEN
+        ASSERT(FALSE);
         (* Handle error - should not happen for valid deque *)
     END
 END Prepend;
