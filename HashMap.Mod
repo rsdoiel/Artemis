@@ -17,8 +17,8 @@ CONST
 TYPE
     (** Key-Value pair for storage *)
     KeyValuePair* = RECORD(Collections.Item)
-        key*: CollectionKeys.KeyPtr;
-        value*: Collections.ItemPtr
+        key: CollectionKeys.KeyPtr;
+        value: Collections.ItemPtr
     END;
     KeyValuePairPtr* = POINTER TO KeyValuePair;
 
@@ -47,8 +47,8 @@ TYPE
         keyOps: CollectionKeys.KeyOps
     END;
 
-(** Create a new key-value pair *)
-PROCEDURE NewKeyValuePair*(key: CollectionKeys.KeyPtr; value: Collections.ItemPtr): KeyValuePairPtr;
+(* Create a new key-value pair - internal use only *)
+PROCEDURE NewKeyValuePair(key: CollectionKeys.KeyPtr; value: Collections.ItemPtr): KeyValuePairPtr;
 VAR pair: KeyValuePairPtr;
 BEGIN
     NEW(pair);
@@ -56,6 +56,30 @@ BEGIN
     pair.value := value;
     RETURN pair
 END NewKeyValuePair;
+
+(** Get the key from a key-value pair *)
+PROCEDURE PairKey*(pair: KeyValuePairPtr): CollectionKeys.KeyPtr;
+VAR result: CollectionKeys.KeyPtr;
+BEGIN
+    IF pair # NIL THEN
+        result := pair.key
+    ELSE
+        result := NIL
+    END;
+    RETURN result
+END PairKey;
+
+(** Get the value from a key-value pair *)
+PROCEDURE PairValue*(pair: KeyValuePairPtr): Collections.ItemPtr;
+VAR result: Collections.ItemPtr;
+BEGIN
+    IF pair # NIL THEN
+        result := pair.value
+    ELSE
+        result := NIL
+    END;
+    RETURN result
+END PairValue;
 
 (* Internal helper function *)
 PROCEDURE FindInBucket(VAR bucket: Bucket; key: CollectionKeys.KeyPtr; keyOps: CollectionKeys.KeyOps; VAR found: KeyValuePairPtr): BOOLEAN;

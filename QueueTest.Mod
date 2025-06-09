@@ -263,7 +263,6 @@ END TestLargeQueue;
 PROCEDURE TestMixedOperations(): BOOLEAN;
 VAR
   queue: Queue.Queue;
-  item: TestItemPtr;
   result: Collections.ItemPtr;
   success: BOOLEAN;
   pass: BOOLEAN;

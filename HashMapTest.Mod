@@ -54,9 +54,11 @@ PROCEDURE Visitor(item: Collections.ItemPtr; VAR state: Collections.VisitorState
 VAR 
     pair: HashMap.KeyValuePairPtr;
     testItem: TestItemPtr;
+    value: Collections.ItemPtr;
 BEGIN
     pair := item(HashMap.KeyValuePairPtr);
-    testItem := pair.value(TestItemPtr);
+    value := HashMap.PairValue(pair);
+    testItem := value(TestItemPtr);
     
     state(TestVisitorState).sum := state(TestVisitorState).sum + testItem.value;
     INC(state(TestVisitorState).count);

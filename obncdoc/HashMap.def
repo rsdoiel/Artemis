@@ -14,17 +14,17 @@ CONST
 
 TYPE
     (* Key-Value pair for storage *)
-    KeyValuePair = RECORD(Collections.Item)
-        key: CollectionKeys.KeyPtr;
-        value: Collections.ItemPtr
-    END;
+    KeyValuePair = RECORD(Collections.Item) END;
     KeyValuePairPtr = POINTER TO KeyValuePair;
 
     (* Opaque pointer to a HashMap *)
     HashMap = POINTER TO HashMapDesc;
 
-(* Create a new key-value pair *)
-PROCEDURE NewKeyValuePair(key: CollectionKeys.KeyPtr; value: Collections.ItemPtr): KeyValuePairPtr;
+(* Get the key from a key-value pair *)
+PROCEDURE PairKey(pair: KeyValuePairPtr): CollectionKeys.KeyPtr;
+
+(* Get the value from a key-value pair *)
+PROCEDURE PairValue(pair: KeyValuePairPtr): Collections.ItemPtr;
 
 (* Constructor: Allocate and initialize a new hashmap with specified size *)
 PROCEDURE NewWithSize(initialSize: INTEGER; keyOps: CollectionKeys.KeyOps): HashMap;

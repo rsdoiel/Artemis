@@ -7,7 +7,7 @@ Released under The 3-Clause BSD License.
 
 MODULE ExampleDictionary;
 
-IMPORT Dictionary, Collections, HashMap, CollectionKeys, Strings, Out;
+IMPORT Dictionary, Collections, Strings, Out;
 
 TYPE
     PersonInfo = RECORD(Collections.Item)
