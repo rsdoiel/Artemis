@@ -47,7 +47,7 @@
 
 ## Implementation
  - IniConfigTokenizer - dedicated tokenizer module,  handles file operations.
- - IniConfigParser - parser, uses tokenizer, (user facing module)
+ - IniConfigParser - parser, uses tokenizer to produce arraylist of dictionaries, (user facing module), pr
 
 ## Testing
  - Follow test organization example given in RandomTest.Mod
