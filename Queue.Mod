@@ -52,6 +52,7 @@ PROCEDURE Front*(queue: Queue; VAR result: Collections.ItemPtr): BOOLEAN;
 VAR success: BOOLEAN;
 BEGIN
     success := LinkedList.GetAt(queue.list, 0, result);
+    IF ~success THEN result := NIL END;
     RETURN success
 END Front;
 
