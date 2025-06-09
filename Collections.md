@@ -1,12 +1,13 @@
 # Collections in Oberon-ML
 
-This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `HashMap`, and `Dictionary`. Each module provides a different type of collection with its own interface and use cases.
+This document describes the collection modules implemented in Oberon-ML: `LinkedList`, `DoubleLinkedList`, `Deque`, `ArrayList`, `HashMap`, and `Dictionary`. Each module provides a different type of collection with its own interface and use cases.
 
 ## Overview
 
 - **LinkedList**: Singly-linked list for simple, linear data storage with position-based access.
 - **DoubleLinkedList**: Doubly-linked list supporting bidirectional traversal and efficient insertions/removals at both ends.
 - **Deque**: Double-ended queue built on `DoubleLinkedList`, supporting efficient insertion and removal at both ends.
+- **ArrayList**: Dynamic array with indexable access, implemented using chunked arrays for efficient growth.
 - **HashMap**: Hash table with separate chaining for efficient key-value storage and retrieval.
 - **Dictionary**: Flexible key-value store supporting both integer and string keys, with a unified API.
 
@@ -23,24 +24,25 @@ The collections API follows modern software engineering principles:
 
 ## Supported Data Structures and Operations
 
-| LinkedList      | DoubleLinkedList         | Deque           | HashMap         | Dictionary      |
-|----------------|-------------------------|-----------------|-----------------|----------------|
-| New            | New                     | New             | New             | New            |
-| -              | -                       | -               | NewWithSize     | NewStringDict  |
-| Free           | Free                    | Free            | Free            | Free           |
-| Append         | Append                  | Append          | Put             | Put, PutString |
-| -              | Prepend                 | Prepend         | -               | -              |
-| InsertAt       | InsertAt                | -               | -               | -              |
-| RemoveFirst    | RemoveFirst             | RemoveFirst     | Remove          | Remove, RemoveString |
-| -              | RemoveLast              | RemoveLast      | -               | -              |
-| GetAt          | GetAt                   | -               | Get             | Get, GetString |
-| -              | Head                    | -               | -               | -              |
-| -              | Tail                    | -               | -               | -              |
-| Count          | Count                   | Count           | Count           | Count          |
-| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty        |
-| Clear          | Clear                   | Clear           | Clear           | Clear          |
-| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach        |
-| -              | -                       | -               | Contains        | Contains, ContainsString |
+| LinkedList      | DoubleLinkedList         | Deque           | ArrayList       | HashMap         | Dictionary      |
+|----------------|-------------------------|-----------------|-----------------|-----------------|----------------|
+| New            | New                     | New             | New             | New             | New            |
+| -              | -                       | -               | -               | NewWithSize     | NewStringDict  |
+| Free           | Free                    | Free            | Free            | Free            | Free           |
+| Append         | Append                  | Append          | Append          | Put             | Put, PutString |
+| -              | Prepend                 | Prepend         | -               | -               | -              |
+| InsertAt       | InsertAt                | -               | -               | -               | -              |
+| RemoveFirst    | RemoveFirst             | RemoveFirst     | -               | Remove          | Remove, RemoveString |
+| -              | RemoveLast              | RemoveLast      | -               | -               | -              |
+| GetAt          | GetAt                   | -               | GetAt           | Get             | Get, GetString |
+| -              | -                       | -               | SetAt           | -               | -              |
+| -              | Head                    | -               | -               | -               | -              |
+| -              | Tail                    | -               | -               | -               | -              |
+| Count          | Count                   | Count           | Count           | Count           | Count          |
+| IsEmpty        | IsEmpty                 | IsEmpty         | IsEmpty         | IsEmpty         | IsEmpty        |
+| Clear          | Clear                   | Clear           | Clear           | Clear           | Clear          |
+| Foreach        | Foreach                 | Foreach         | Foreach         | Foreach         | Foreach        |
+| -              | -                       | -               | -               | Contains        | Contains, ContainsString |
 
 
 ## Module Summaries
@@ -62,6 +64,12 @@ The collections API follows modern software engineering principles:
 - **Key Procedures:**
   - `New`, `Free`, `Append`, `Prepend`, `RemoveFirst`, `RemoveLast`, `Count`, `IsEmpty`, `Clear`, `Foreach`
 - **Notes:** Built on `DoubleLinkedList` for efficiency and code reuse. `Clear` removes all elements from the deque.
+
+### ArrayList
+- **Purpose:** Dynamic array providing indexable access with automatic growth.
+- **Key Procedures:**
+  - `New`, `Free`, `Append`, `GetAt`, `SetAt`, `Count`, `IsEmpty`, `Clear`, `Foreach`
+- **Notes:** Implemented using chunked arrays (64-item chunks) managed by `LinkedList`. Provides O(1) append and reasonable random access performance. Index-based access with 0-based indexing. `Clear` removes all elements from the list.
 
 ### HashMap
 - **Purpose:** Hash table for efficient key-value storage and retrieval.
@@ -118,6 +126,51 @@ BEGIN
     END;
     
     LinkedList.Free(list);
+END.
+```
+
+### ArrayList Example
+
+```oberon
+IMPORT ArrayList, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    list: ArrayList.ArrayList;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    list := ArrayList.New();
+    
+    (* Append items to the list *)
+    FOR i := 0 TO 99 DO
+        NEW(item); item.value := i * 10;
+        success := ArrayList.Append(list, item);
+    END;
+    
+    (* Access items by index *)
+    success := ArrayList.GetAt(list, 50, result);
+    IF success THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+    
+    (* Update an item at specific index *)
+    NEW(item); item.value := 999;
+    success := ArrayList.SetAt(list, 25, item);
+    
+    (* Access elements efficiently across chunk boundaries *)
+    success := ArrayList.GetAt(list, 63, result);  (* Last item in first chunk *)
+    success := ArrayList.GetAt(list, 64, result);  (* First item in second chunk *)
+    
+    ArrayList.Free(list);
 END.
 ```
 
@@ -313,10 +366,11 @@ END StringKeyOps;
 The collection modules implement proper information hiding:
 - **LinkedList** and **DoubleLinkedList** use opaque `List` types with internal node structures
 - **Deque** uses an opaque `Deque` type built on `DoubleLinkedList`
+- **ArrayList** uses an opaque `ArrayList` type with internal chunked array structure managed by `LinkedList`
 - **HashMap** uses an opaque `HashMap` type with internal bucket array and hash function
 - **Dictionary** uses an opaque `Dictionary` type with internal structure, supporting both integer and string keys
-- Internal implementation details (nodes, list descriptors, hash buckets) are not exposed
-- Position-based access (`InsertAt`, `GetAt`) replaces direct node manipulation
+- Internal implementation details (nodes, list descriptors, hash buckets, array chunks) are not exposed
+- Position-based access (`InsertAt`, `GetAt`, `SetAt`) replaces direct node manipulation or array access
 
 ### Type Safety
 
@@ -327,13 +381,28 @@ All collections use the common `Collections.ItemPtr` type, which ensures:
 
 Always use the provided procedures for manipulating collections to ensure safety and correctness.
 
+## ArrayList Implementation Details
+
+The ArrayList module provides dynamic array functionality while working within Oberon-07's fixed-size array constraints. It uses a chunked array approach:
+
+- **Chunked Storage**: Items are stored in fixed-size chunks (64 items each) managed by a LinkedList
+- **Performance Characteristics**:
+  - O(1) append operations (amortized)
+  - O(n/64) random access (where n is the index)
+  - Automatic growth without memory reallocation of existing data
+- **Memory Efficiency**: Only allocates chunks as needed, reducing memory waste
+- **Cross-Chunk Access**: Seamless access across chunk boundaries with 0-based indexing
+- **Suitable Use Cases**: When you need indexable access to a growing collection but don't know the final size in advance
+
 ## Operation Details
 
 ### Position-Based Operations (Linear Collections)
 
-- **InsertAt(position, item)**: Inserts item at 0-based position, returns `TRUE` if successful
-- **GetAt(position, VAR result)**: Retrieves item at position, returns `TRUE` if successful and sets `result`
-- **Clear()**: Removes all elements from the collection (LinkedList, DoubleLinkedList, Deque)
+- **InsertAt(position, item)**: Inserts item at 0-based position, returns `TRUE` if successful (LinkedList, DoubleLinkedList)
+- **GetAt(position, VAR result)**: Retrieves item at position, returns `TRUE` if successful and sets `result` (LinkedList, DoubleLinkedList, ArrayList)
+- **SetAt(position, item)**: Updates item at position, returns `TRUE` if successful (ArrayList)
+- **Append(item)**: Adds item to the end of the collection (LinkedList, DoubleLinkedList, ArrayList)
+- **Clear()**: Removes all elements from the collection (LinkedList, DoubleLinkedList, Deque, ArrayList)
 
 ### Key-Based Operations (HashMap, Dictionary)
 
