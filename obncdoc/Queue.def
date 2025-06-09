@@ -1,0 +1,44 @@
+(*
+    Queue.Mod - A FIFO (First In, First Out) queue implementation.
+    
+    Provides classical queue operations with clear semantics using LinkedList as underlying storage.
+    
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)
+DEFINITION Queue;
+
+IMPORT Collections;
+
+TYPE
+    (* Opaque pointer to a Queue *)
+    Queue = POINTER TO QueueDesc;
+
+(* Constructor: Allocate and initialize a new queue. *)
+PROCEDURE New(): Queue;
+
+(* Destructor: Free the queue. *)
+PROCEDURE Free(VAR queue: Queue);
+
+(* Enqueue an item to the rear of the queue. *)
+PROCEDURE Enqueue(queue: Queue; item: Collections.ItemPtr);
+
+(* Dequeue and return the front item from the queue. *)
+PROCEDURE Dequeue(queue: Queue; VAR result: Collections.ItemPtr);
+
+(* Peek at the front item without removing it. *)
+PROCEDURE Front(queue: Queue; VAR result: Collections.ItemPtr): BOOLEAN;
+
+(* Get the number of items in the queue. *)
+PROCEDURE Count(queue: Queue): INTEGER;
+
+(* Check if the queue is empty. *)
+PROCEDURE IsEmpty(queue: Queue): BOOLEAN;
+
+(* Clear all items from the queue. *)
+PROCEDURE Clear(queue: Queue);
+
+(* Apply a visitor procedure to each item in the queue (front to rear order). *)
+PROCEDURE Foreach(queue: Queue; visitor: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+END Queue.

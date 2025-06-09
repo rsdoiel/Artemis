@@ -1,0 +1,10 @@
+(* QueueTest.Mod - Tests for Queue.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION QueueTest;
+
+END QueueTest.

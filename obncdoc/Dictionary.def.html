@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION Dictionary</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+DEFINITION <em>Dictionary</em>;
+
+IMPORT Collections;
+
+TYPE
+    Dictionary = POINTER TO DictionaryDesc;
+
+    <span class='comment'>(* Dictionary-specific visitor procedures *)</span>
+    IntKeyVisitProc = PROCEDURE(key: INTEGER; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+    StringKeyVisitProc = PROCEDURE(key: ARRAY OF CHAR; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+
+    <span class='comment'>(* Extended visitor state for Dictionary iteration *)</span>
+    DictVisitorState = RECORD(Collections.VisitorState) END;
+
+<span class='comment'>(* Create a new dictionary with integer keys *)</span>
+PROCEDURE <em>New</em>(): Dictionary;
+
+<span class='comment'>(* Create a new dictionary with string keys *)</span>
+PROCEDURE <em>NewStringDict</em>(): Dictionary;
+
+<span class='comment'>(* Free the dictionary and all its resources *)</span>
+PROCEDURE <em>Free</em>(VAR dict: Dictionary);
+
+<span class='comment'>(* Insert or update a value by integer key *)</span>
+PROCEDURE <em>Put</em>(dict: Dictionary; key: INTEGER; value: Collections.ItemPtr);
+
+<span class='comment'>(* Insert or update a value by string key *)</span>
+PROCEDURE <em>PutString</em>(dict: Dictionary; key: ARRAY OF CHAR; value: Collections.ItemPtr);
+
+<span class='comment'>(* Get a value by integer key *)</span>
+PROCEDURE <em>Get</em>(dict: Dictionary; key: INTEGER; VAR value: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Get a value by string key *)</span>
+PROCEDURE <em>GetString</em>(dict: Dictionary; key: ARRAY OF CHAR; VAR value: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Remove a value by integer key *)</span>
+PROCEDURE <em>Remove</em>(dict: Dictionary; key: INTEGER): BOOLEAN;
+
+<span class='comment'>(* Remove a value by string key *)</span>
+PROCEDURE <em>RemoveString</em>(dict: Dictionary; key: ARRAY OF CHAR): BOOLEAN;
+
+<span class='comment'>(* Check if an integer key exists in the dictionary *)</span>
+PROCEDURE <em>Contains</em>(dict: Dictionary; key: INTEGER): BOOLEAN;
+
+<span class='comment'>(* Check if a string key exists in the dictionary *)</span>
+PROCEDURE <em>ContainsString</em>(dict: Dictionary; key: ARRAY OF CHAR): BOOLEAN;
+
+<span class='comment'>(* Get the number of key-value pairs in the dictionary *)</span>
+PROCEDURE <em>Count</em>(dict: Dictionary): INTEGER;
+
+<span class='comment'>(* Test if the dictionary is empty *)</span>
+PROCEDURE <em>IsEmpty</em>(dict: Dictionary): BOOLEAN;
+
+<span class='comment'>(* Remove all key-value pairs from the dictionary *)</span>
+PROCEDURE <em>Clear</em>(dict: Dictionary);
+
+<span class='comment'>(* Apply a procedure to each integer key-value pair in the dictionary *)</span>
+PROCEDURE <em>ForeachInt</em>(dict: Dictionary; visit: IntKeyVisitProc; VAR state: DictVisitorState);
+
+<span class='comment'>(* Apply a procedure to each string key-value pair in the dictionary *)</span>
+PROCEDURE <em>ForeachString</em>(dict: Dictionary; visit: StringKeyVisitProc; VAR state: DictVisitorState);
+
+END Dictionary.
+</pre>
+	</body>
+</html>

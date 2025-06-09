@@ -1,0 +1,47 @@
+(* CollectionKeys.mod - Key types and operations for key-value collections.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION CollectionKeys;
+
+IMPORT Collections;
+
+TYPE
+    (* Base type for all keys *)
+    Key = RECORD(Collections.Item) END;
+    KeyPtr = POINTER TO Key;
+
+    (* Integer key implementation *)
+    IntegerKey = RECORD(Key)
+        value: INTEGER
+    END;
+    IntegerKeyPtr = POINTER TO IntegerKey;
+
+    (* String key implementation *)
+    StringKey = RECORD(Key)
+        value: ARRAY 256 OF CHAR
+    END;
+    StringKeyPtr = POINTER TO StringKey;
+
+    (* Key operations interface *)
+    KeyOps = RECORD
+        hash: PROCEDURE(key: KeyPtr; size: INTEGER): INTEGER;
+        equals: PROCEDURE(key1, key2: KeyPtr): BOOLEAN
+    END;
+
+(* Create integer key *)
+PROCEDURE NewIntegerKey(value: INTEGER): IntegerKeyPtr;
+
+(* Create string key *)
+PROCEDURE NewStringKey(value: ARRAY OF CHAR): StringKeyPtr;
+
+(* Get integer key operations *)
+PROCEDURE IntegerKeyOps(VAR ops: KeyOps);
+
+(* Get string key operations *)
+PROCEDURE StringKeyOps(VAR ops: KeyOps);
+
+END CollectionKeys.

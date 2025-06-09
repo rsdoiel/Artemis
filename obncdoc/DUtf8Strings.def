@@ -1,0 +1,121 @@
+(* DUtf8Strings.Mod implements a dynamic UTF-8 string with Rider support in Oberon-7.
+
+Copyright (C) 2025 Artemis Project
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+*)
+DEFINITION DUtf8Strings;
+
+IMPORT Collections;
+
+TYPE
+  (* DUtf8String implements a dynamic UTF-8 string as a linked list of codepoints.
+      Each node stores one UTF-8 codepoint (1-4 bytes) with proper encoding. *)
+  DUtf8String = POINTER TO DUtf8StringDesc;
+  DUtf8StringDesc = RECORD (Collections.Item) END;
+
+  (* Rider provides file-like interface for traversing/modifying DUtf8String.
+      All positions are in Unicode codepoints, not bytes. *)
+  Rider = RECORD
+    pos: INTEGER;
+    eot: BOOLEAN
+  END;
+
+(* Init takes an ARRAY OF CHAR (UTF-8 encoded) and initializes a DUtf8String.
+    The source array is expected to contain valid UTF-8. *)
+PROCEDURE Init(source: ARRAY OF CHAR; VAR s: DUtf8String);
+
+(* Length returns the number of Unicode codepoints in the string. *)
+PROCEDURE Length(s: DUtf8String): INTEGER;
+
+(* Set initializes a Rider to position pos (in codepoints) in the string. *)
+PROCEDURE Set(VAR r: Rider; s: DUtf8String; pos: INTEGER);
+
+(* Base returns the string the Rider operates on. *)
+PROCEDURE Base(r: Rider): DUtf8String;
+
+(* Get returns the current codepoint and advances the Rider. *)
+PROCEDURE Get(VAR r: Rider): INTEGER;
+
+(* ToChars converts the DUtf8String to an ARRAY OF CHAR (UTF-8 encoded).
+    Returns the number of bytes that were truncated due to insufficient space. *)
+PROCEDURE ToChars(s: DUtf8String; VAR dest: ARRAY OF CHAR; VAR truncated: INTEGER);
+
+(* Copy duplicates the source string into dest, allocating as needed. *)
+PROCEDURE Copy(source: DUtf8String; VAR dest: DUtf8String);
+
+(* Clear sets the string to empty (single node with 0X codepoint). *)
+PROCEDURE Clear(VAR s: DUtf8String);
+
+(* CopyChars copies an ARRAY OF CHAR (UTF-8 encoded) into a DUtf8String. *)
+PROCEDURE CopyChars(source: ARRAY OF CHAR; VAR dest: DUtf8String);
+
+(* Extract extracts count codepoints from source starting at position pos. *)
+PROCEDURE Extract(source: DUtf8String; pos, count: INTEGER; VAR dest: DUtf8String);
+
+(* Append appends source string to the end of dest. *)
+PROCEDURE Append(source: DUtf8String; VAR dest: DUtf8String);
+
+(* Insert inserts source string at position pos (in codepoints) in dest. *)
+PROCEDURE Insert(source: DUtf8String; pos: INTEGER; VAR dest: DUtf8String);
+
+(* Delete deletes count codepoints from string s starting at position pos. *)
+PROCEDURE Delete(VAR s: DUtf8String; pos, count: INTEGER);
+
+(* Pos returns the codepoint position of first occurrence of pattern in source, or -1 if not found. *)
+PROCEDURE Pos(pattern, source: DUtf8String; startPos: INTEGER): INTEGER;
+
+(* Replaces the first occurrence of pattern in source with substitute. *)
+PROCEDURE Replace(pattern, substitute: DUtf8String; VAR source: DUtf8String);
+
+(* Equal compares two DUtf8String values for equality. *)
+PROCEDURE Equal(s1, s2: DUtf8String): BOOLEAN;
+
+(* StartsWith checks if source string starts with prefix *)
+PROCEDURE StartsWith(prefix, source: DUtf8String): BOOLEAN;
+
+(* EndsWith checks if source string ends with suffix *)
+PROCEDURE EndsWith(suffix, source: DUtf8String): BOOLEAN;
+
+(* Cap converts lowercase ASCII letters (a-z) to uppercase (A-Z) in place.
+    UTF-8 characters beyond ASCII are left unchanged. *)
+PROCEDURE Cap(VAR s: DUtf8String);
+
+(* Peek returns the current codepoint without advancing the rider position.
+    Returns 0 if at end of string or on invalid UTF-8. *)
+PROCEDURE Peek(r: Rider): INTEGER;
+
+(* Put writes a codepoint at the current rider position and advances.
+    Allocates new nodes as needed for string expansion. *)
+PROCEDURE Put(VAR r: Rider; codePoint: INTEGER);
+
+(* TrimPrefix removes prefix from beginning of source if it matches *)
+PROCEDURE TrimPrefix(prefix: DUtf8String; VAR source: DUtf8String);
+
+(* TrimSuffix removes suffix from end of source if it matches *)
+PROCEDURE TrimSuffix(suffix: DUtf8String; VAR source: DUtf8String);
+
+(* TrimString removes cutString from both beginning and end of source *)
+PROCEDURE TrimString(cutString: DUtf8String; VAR source: DUtf8String);
+
+(* TrimLeft removes codepoints from beginning of source if they match any in cutset *)
+PROCEDURE TrimLeft(cutset: ARRAY OF INTEGER; cutsetLen: INTEGER; VAR source: DUtf8String);
+
+(* TrimRight removes codepoints from end of source if they match any in cutset *)
+PROCEDURE TrimRight(cutset: ARRAY OF INTEGER; cutsetLen: INTEGER; VAR source: DUtf8String);
+
+(* Trim removes codepoints from both ends of source if they match any in cutset *)
+PROCEDURE Trim(cutset: ARRAY OF INTEGER; cutsetLen: INTEGER; VAR source: DUtf8String);
+
+(* TrimSpaces removes Unicode whitespace characters from both ends *)
+PROCEDURE TrimSpaces(VAR source: DUtf8String);
+
+(* Quote adds leftQuote at beginning and rightQuote at end of string *)
+PROCEDURE Quote(leftQuote, rightQuote: INTEGER; VAR source: DUtf8String);
+
+(* Prune removes trailing nodes after the first node with 0X terminator.
+    This helps with memory optimization after string operations. *)
+PROCEDURE Prune(VAR s: DUtf8String);
+
+END DUtf8Strings.

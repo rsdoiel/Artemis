@@ -1,0 +1,92 @@
+(* HashMap.mod - A hashmap implementation using separate chaining.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION HashMap;
+
+IMPORT Collections, CollectionKeys;
+
+CONST
+    DefaultSize = 16;
+
+TYPE
+    (* Key-Value pair for storage *)
+    KeyValuePair = RECORD(Collections.Item) END;
+    KeyValuePairPtr = POINTER TO KeyValuePair;
+
+    (* Opaque pointer to a HashMap *)
+    HashMap = POINTER TO HashMapDesc;
+
+(* Get the key from a key-value pair *)
+PROCEDURE PairKey(pair: KeyValuePairPtr): CollectionKeys.KeyPtr;
+
+(* Get the value from a key-value pair *)
+PROCEDURE PairValue(pair: KeyValuePairPtr): Collections.ItemPtr;
+
+(* Constructor: Allocate and initialize a new hashmap with specified size *)
+PROCEDURE NewWithSize(initialSize: INTEGER; keyOps: CollectionKeys.KeyOps): HashMap;
+
+(* Constructor: Allocate and initialize a new hashmap with integer keys *)
+PROCEDURE New(): HashMap;
+
+(* Constructor: Allocate and initialize a new hashmap with string keys *)
+PROCEDURE NewStringMap(): HashMap;
+
+(* Destructor: Free the hashmap *)
+PROCEDURE Free(VAR map: HashMap);
+
+(* Insert or update a key-value pair *)
+PROCEDURE PutKey(map: HashMap; key: CollectionKeys.KeyPtr; value: Collections.ItemPtr);
+
+(* Insert or update a key-value pair with integer key *)
+PROCEDURE Put(map: HashMap; key: INTEGER; value: Collections.ItemPtr);
+
+(* Insert or update a key-value pair with string key *)
+PROCEDURE PutString(map: HashMap; key: ARRAY OF CHAR; value: Collections.ItemPtr);
+
+(* Get a value by key *)
+PROCEDURE GetKey(map: HashMap; key: CollectionKeys.KeyPtr; VAR value: Collections.ItemPtr): BOOLEAN;
+
+(* Get a value by integer key *)
+PROCEDURE Get(map: HashMap; key: INTEGER; VAR value: Collections.ItemPtr): BOOLEAN;
+
+(* Get a value by string key *)
+PROCEDURE GetString(map: HashMap; key: ARRAY OF CHAR; VAR value: Collections.ItemPtr): BOOLEAN;
+
+(* Check if a key exists in the hashmap *)
+PROCEDURE ContainsKey(map: HashMap; key: CollectionKeys.KeyPtr): BOOLEAN;
+
+(* Check if an integer key exists in the hashmap *)
+PROCEDURE Contains(map: HashMap; key: INTEGER): BOOLEAN;
+
+(* Check if a string key exists in the hashmap *)
+PROCEDURE ContainsString(map: HashMap; key: ARRAY OF CHAR): BOOLEAN;
+
+(* Remove a key-value pair from the hashmap *)
+PROCEDURE RemoveKey(map: HashMap; key: CollectionKeys.KeyPtr): BOOLEAN;
+
+(* Remove an integer key-value pair from the hashmap *)
+PROCEDURE Remove(map: HashMap; key: INTEGER): BOOLEAN;
+
+(* Remove a string key-value pair from the hashmap *)
+PROCEDURE RemoveString(map: HashMap; key: ARRAY OF CHAR): BOOLEAN;
+
+(* Get the number of key-value pairs in the hashmap *)
+PROCEDURE Count(map: HashMap): INTEGER;
+
+(* Test if the hashmap is empty *)
+PROCEDURE IsEmpty(map: HashMap): BOOLEAN;
+
+(* Get the current load factor as percentage *)
+PROCEDURE LoadFactor(map: HashMap): INTEGER;
+
+(* Apply a procedure to each key-value pair in the hashmap *)
+PROCEDURE Foreach(map: HashMap; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+(* Clear removes all key-value pairs from the hashmap. *)
+PROCEDURE Clear(map: HashMap);
+
+END HashMap.

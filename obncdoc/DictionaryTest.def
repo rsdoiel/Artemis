@@ -1,0 +1,31 @@
+(* DictionaryTest.mod - Unit tests for Dictionary.mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION DictionaryTest;
+
+(* Create a new test item *)
+(* Visitor procedure for testing iteration with integer keys *)
+(* Visitor procedure for testing iteration with string keys *)
+PROCEDURE TestNewAndFree(): BOOLEAN;
+
+PROCEDURE TestPutAndGet(): BOOLEAN;
+
+PROCEDURE TestUpdateExistingKey(): BOOLEAN;
+
+PROCEDURE TestContains(): BOOLEAN;
+
+PROCEDURE TestRemove(): BOOLEAN;
+
+PROCEDURE TestForeach(): BOOLEAN;
+
+PROCEDURE TestClear(): BOOLEAN;
+
+PROCEDURE TestStringKeys(): BOOLEAN;
+
+PROCEDURE TestStringForeach(): BOOLEAN;
+
+END DictionaryTest.

@@ -1,0 +1,45 @@
+(*
+    Heap.mod - A binary min-heap implementation using ArrayList.
+
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)
+DEFINITION Heap;
+
+IMPORT Collections;
+
+TYPE
+    (* Comparison function type - returns TRUE if left < right *)
+    CompareFunc = PROCEDURE(left, right: Collections.ItemPtr): BOOLEAN;
+
+    (* Opaque pointer to a Heap *)
+    Heap = POINTER TO HeapDesc;
+
+(* Constructor: Allocate and initialize a new heap with a comparison function *)
+PROCEDURE New(compare: CompareFunc): Heap;
+
+(* Destructor: Free the heap *)
+PROCEDURE Free(VAR heap: Heap);
+
+(* Insert an item into the heap *)
+PROCEDURE Insert(heap: Heap; item: Collections.ItemPtr): BOOLEAN;
+
+(* Extract the minimum item from the heap. Returns TRUE if successful *)
+PROCEDURE ExtractMin(heap: Heap; VAR result: Collections.ItemPtr): BOOLEAN;
+
+(* Peek at the minimum item without removing it. Returns TRUE if successful *)
+PROCEDURE PeekMin(heap: Heap; VAR result: Collections.ItemPtr): BOOLEAN;
+
+(* Return the number of items in the heap *)
+PROCEDURE Count(heap: Heap): INTEGER;
+
+(* Returns TRUE if the heap is empty *)
+PROCEDURE IsEmpty(heap: Heap): BOOLEAN;
+
+(* Remove all items from the heap *)
+PROCEDURE Clear(heap: Heap);
+
+(* Iterate over all items in heap order (level-order traversal) *)
+PROCEDURE Foreach(heap: Heap; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+END Heap.
