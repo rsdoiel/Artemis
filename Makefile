@@ -8,6 +8,7 @@ BUILD_NAME = Artemis-Modules
 PROG_NAMES = #$(shell ls -1 *CmdLn.Mod | sed -E 's/CmdLn\.Mod')
 TEST_NAMES = $(shell ls -1 *Test.Mod | sed -E 's/\.Mod//g' )
 EXAMPLE_NAMES = $(shell ls -1 examples/*.Mod | sed -E 's/examples\/(.*)\.Mod/\1/g' )
+EXAMPLE_NAMES = $(shell ls -1 examples/*.Mod | sed -E 's/examples\/(.*)\.Mod/\1/g' )
 MODULES = $(shell ls -1 *.Mod)
 DOCS= codemeta.json CITATION.cff README.md LICENSE INSTALL.txt
 HTML_FILES=$(shell find . -type f | grep -E '.html')
@@ -70,6 +71,8 @@ build: $(TEST_NAMES) # $(PROG_NAMES)
 
 examples: $(EXAMPLE_NAMES)
 
+examples: $(EXAMPLE_NAMES)
+
 $(PROG_NAMES): $(MODULES)
 	@mkdir -p bin
 	$(OC) -o "bin/$@$(EXT)" "$@.Mod"
@@ -92,6 +95,7 @@ docs: .FORCE
 clean: .FORCE
 	@if [ -d dist ]; then rm -fR dist; fi
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
+	@if [ -d examples/bin ]; then rm -fR examples/bin; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f "bin/$${FNAME}$(EXT)" ]; then rm -v "bin/$${FNAME}"; fi; done
 	@for FNAME in $(TEST_NAMES); do if [ -f "$${FNAME}$(EXT)" ]; then rm -v "$${FNAME}"; fi; done
 	@for FNAME in $(EXAMPLE_NAMES); do if [ -f "examples/bin/$${FNAME}$(EXT)" ]; then rm -v "examples/bin/$${FNAME}${EXT}"; fi; done

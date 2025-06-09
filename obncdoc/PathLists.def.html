@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION PathLists</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(* PathLists is a module for working with a delimited list of paths. *)</span>
+DEFINITION <em>PathLists</em>;
+CONST
+    <span class='comment'>(* Merge operations *)</span>
+    PREPEND = 1; <span class='comment'>(* Insert into path list *)</span>
+    APPEND = 2; <span class='comment'>(* Add to end of path list *)</span>
+    CUT = 3; <span class='comment'>(* Remove from path from path list *)</span>
+
+TYPE
+    PathList = POINTER TO PathListDesc;
+
+<span class='comment'>(* NewPathItem creates a new PathItem with the given path *)</span>
+<span class='comment'>(* New creates a new empty PathList *)</span>
+PROCEDURE <em>New</em>(): PathList;
+
+<span class='comment'>(* Free releases memory used by a PathList *)</span>
+PROCEDURE <em>Free</em>(VAR pathList: PathList);
+
+<span class='comment'>(* Length returns the length of the PathList *)</span>
+PROCEDURE <em>Length</em>(pathList : PathList) : INTEGER;
+
+<span class='comment'>(* Find takes a path and searches a path list return -1 if not found
+or the position where it was found (zero indexed) *)</span>
+PROCEDURE <em>Find</em>(path : ARRAY OF CHAR; pathList : PathList) : INTEGER;
+
+<span class='comment'>(* Prepend takes a path and a path list and prepends path to path list updating
+  path list. *)</span>
+PROCEDURE <em>Prepend</em>(path : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+<span class='comment'>(* Append takes a path and path list and adds the path to the end of path list *)</span>
+PROCEDURE <em>Append</em>(path: ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+<span class='comment'>(* Cut takes a path and a path list and removes the path element from path list. *)</span>
+PROCEDURE <em>Cut</em>(path : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+<span class='comment'>(* SetDelimiter sets the delimiter to be used for encoding and decoding paths *)</span>
+
+<span class='comment'>(* Encode takes a PathList and encodes it into pathListString using the delimiter provided *)</span>
+PROCEDURE <em>Encode</em>(pathList : PathList; delimiter: CHAR; VAR pathListString : ARRAY OF CHAR; VAR success : BOOLEAN);
+
+<span class='comment'>(* Decode takes a path list string and decodes it into a PathList data structure *)</span>
+PROCEDURE <em>Decode</em>(pathListString : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
+
+<span class='comment'>(* Apply takes a path, an operation and a path list string. It applies the operation
+    using the path and pathList updating pathList. Return TRUE of successful,
+    FALSE otherwise. *)</span>
+PROCEDURE <em>Apply</em>(path: ARRAY OF CHAR; operation: INTEGER; VAR pathListString: ARRAY OF CHAR): BOOLEAN;
+
+END PathLists.
+</pre>
+	</body>
+</html>

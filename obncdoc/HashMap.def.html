@@ -26,17 +26,29 @@ CONST
 
 TYPE
     <span class='comment'>(* Key-Value pair for storage *)</span>
+<<<<<<< HEAD
     KeyValuePair = RECORD(Collections.Item) END;
+=======
+    KeyValuePair = RECORD(Collections.Item)
+        key: CollectionKeys.KeyPtr;
+        value: Collections.ItemPtr
+    END;
+>>>>>>> PathLists
     KeyValuePairPtr = POINTER TO KeyValuePair;
 
     <span class='comment'>(* Opaque pointer to a HashMap *)</span>
     HashMap = POINTER TO HashMapDesc;
 
+<<<<<<< HEAD
 <span class='comment'>(* Get the key from a key-value pair *)</span>
 PROCEDURE <em>PairKey</em>(pair: KeyValuePairPtr): CollectionKeys.KeyPtr;
 
 <span class='comment'>(* Get the value from a key-value pair *)</span>
 PROCEDURE <em>PairValue</em>(pair: KeyValuePairPtr): Collections.ItemPtr;
+=======
+<span class='comment'>(* Create a new key-value pair *)</span>
+PROCEDURE <em>NewKeyValuePair</em>(key: CollectionKeys.KeyPtr; value: Collections.ItemPtr): KeyValuePairPtr;
+>>>>>>> PathLists
 
 <span class='comment'>(* Constructor: Allocate and initialize a new hashmap with specified size *)</span>
 PROCEDURE <em>NewWithSize</em>(initialSize: INTEGER; keyOps: CollectionKeys.KeyOps): HashMap;
