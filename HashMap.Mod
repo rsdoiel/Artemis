@@ -7,11 +7,12 @@ Released under The 3-Clause BSD License.
 
 MODULE HashMap;
 
-IMPORT Collections, LinkedList, CollectionKeys;
+IMPORT Collections, CollectionKeys;
 
 CONST
     DefaultSize* = 16;
     MaxSize = 1024;
+    BucketCapacity = 16;  (* Maximum items per bucket *)
 
 TYPE
     (** Key-Value pair for storage *)
@@ -21,8 +22,20 @@ TYPE
     END;
     KeyValuePairPtr* = POINTER TO KeyValuePair;
 
+    (* Internal bucket item *)
+    BucketItem = RECORD
+        pair: KeyValuePairPtr;
+        used: BOOLEAN
+    END;
+    
+    (* Internal bucket structure *)
+    Bucket = RECORD
+        items: ARRAY BucketCapacity OF BucketItem;
+        count: INTEGER
+    END;
+
     (* BucketArray is hidden - clients don't need to know about buckets *)
-    BucketArray = ARRAY MaxSize OF LinkedList.List;
+    BucketArray = ARRAY MaxSize OF Bucket;
 
     (** Opaque pointer to a HashMap *)
     HashMap* = POINTER TO HashMapDesc;
@@ -45,28 +58,71 @@ BEGIN
 END NewKeyValuePair;
 
 (* Internal helper function *)
-PROCEDURE FindInBucket(list: LinkedList.List; key: CollectionKeys.KeyPtr; keyOps: CollectionKeys.KeyOps; VAR found: KeyValuePairPtr): BOOLEAN;
+PROCEDURE FindInBucket(VAR bucket: Bucket; key: CollectionKeys.KeyPtr; keyOps: CollectionKeys.KeyOps; VAR found: KeyValuePairPtr): BOOLEAN;
 VAR 
     i: INTEGER;
-    item: Collections.ItemPtr;
-    pair: KeyValuePairPtr;
     result: BOOLEAN;
 BEGIN
     result := FALSE;
     found := NIL;
     
-    FOR i := 0 TO LinkedList.Count(list) - 1 DO
-        IF LinkedList.GetAt(list, i, item) THEN
-            pair := item(KeyValuePairPtr);
-            IF keyOps.equals(pair.key, key) THEN
-                found := pair;
-                result := TRUE
-            END
-        END
+    i := 0;
+    WHILE (i < bucket.count) & ~result DO
+        IF bucket.items[i].used & keyOps.equals(bucket.items[i].pair.key, key) THEN
+            found := bucket.items[i].pair;
+            result := TRUE
+        END;
+        INC(i)
     END;
     
     RETURN result
 END FindInBucket;
+
+(* Internal helper to add item to bucket *)
+PROCEDURE AddToBucket(VAR bucket: Bucket; pair: KeyValuePairPtr): BOOLEAN;
+VAR 
+    result: BOOLEAN;
+BEGIN
+    result := FALSE;
+    
+    IF bucket.count < BucketCapacity THEN
+        bucket.items[bucket.count].pair := pair;
+        bucket.items[bucket.count].used := TRUE;
+        INC(bucket.count);
+        result := TRUE
+    END;
+    
+    RETURN result
+END AddToBucket;
+
+(* Internal helper to remove item from bucket *)
+PROCEDURE RemoveFromBucket(VAR bucket: Bucket; key: CollectionKeys.KeyPtr; keyOps: CollectionKeys.KeyOps): BOOLEAN;
+VAR 
+    i, j: INTEGER;
+    result: BOOLEAN;
+BEGIN
+    result := FALSE;
+    
+    i := 0;
+    WHILE (i < bucket.count) & ~result DO
+        IF bucket.items[i].used & keyOps.equals(bucket.items[i].pair.key, key) THEN
+            (* Mark as unused *)
+            bucket.items[i].used := FALSE;
+            bucket.items[i].pair := NIL;
+            
+            (* Shift remaining items down *)
+            FOR j := i TO bucket.count - 2 DO
+                bucket.items[j] := bucket.items[j + 1]
+            END;
+            
+            DEC(bucket.count);
+            result := TRUE
+        END;
+        INC(i)
+    END;
+    
+    RETURN result
+END RemoveFromBucket;
 
 (** Constructor: Allocate and initialize a new hashmap with specified size *)
 PROCEDURE NewWithSize*(initialSize: INTEGER; keyOps: CollectionKeys.KeyOps): HashMap;
@@ -86,8 +142,9 @@ BEGIN
     map.count := 0;
     map.keyOps := keyOps;
     
+    (* Initialize buckets *)
     FOR i := 0 TO map.size - 1 DO
-        map.buckets[i] := LinkedList.New()
+        map.buckets[i].count := 0
     END;
     
     RETURN map
@@ -117,12 +174,8 @@ END NewStringMap;
 
 (** Destructor: Free the hashmap *)
 PROCEDURE Free*(VAR map: HashMap);
-VAR i: INTEGER;
 BEGIN
     IF map # NIL THEN
-        FOR i := 0 TO map.size - 1 DO
-            LinkedList.Free(map.buckets[i])
-        END;
         map := NIL
     END
 END Free;
@@ -131,21 +184,20 @@ END Free;
 PROCEDURE PutKey*(map: HashMap; key: CollectionKeys.KeyPtr; value: Collections.ItemPtr);
 VAR 
     index: INTEGER;
-    bucket: LinkedList.List;
     existingPair: KeyValuePairPtr;
     newPair: KeyValuePairPtr;
 BEGIN
     index := map.keyOps.hash(key, map.size);
-    bucket := map.buckets[index];
     
-    IF FindInBucket(bucket, key, map.keyOps, existingPair) THEN
+    IF FindInBucket(map.buckets[index], key, map.keyOps, existingPair) THEN
         (* Update existing key *)
         existingPair.value := value
     ELSE
         (* Insert new key-value pair *)
         newPair := NewKeyValuePair(key, value);
-        LinkedList.Append(bucket, newPair);
-        INC(map.count)
+        IF AddToBucket(map.buckets[index], newPair) THEN
+            INC(map.count)
+        END
     END
 END PutKey;
 
@@ -169,14 +221,12 @@ END PutString;
 PROCEDURE GetKey*(map: HashMap; key: CollectionKeys.KeyPtr; VAR value: Collections.ItemPtr): BOOLEAN;
 VAR 
     index: INTEGER;
-    bucket: LinkedList.List;
     pair: KeyValuePairPtr;
     result: BOOLEAN;
 BEGIN
     index := map.keyOps.hash(key, map.size);
-    bucket := map.buckets[index];
     
-    IF FindInBucket(bucket, key, map.keyOps, pair) THEN
+    IF FindInBucket(map.buckets[index], key, map.keyOps, pair) THEN
         value := pair.value;
         result := TRUE
     ELSE
@@ -213,13 +263,11 @@ END GetString;
 PROCEDURE ContainsKey*(map: HashMap; key: CollectionKeys.KeyPtr): BOOLEAN;
 VAR 
     index: INTEGER;
-    bucket: LinkedList.List;
     pair: KeyValuePairPtr;
     result: BOOLEAN;
 BEGIN
     index := map.keyOps.hash(key, map.size);
-    bucket := map.buckets[index];
-    result := FindInBucket(bucket, key, map.keyOps, pair);
+    result := FindInBucket(map.buckets[index], key, map.keyOps, pair);
     RETURN result
 END ContainsKey;
 
@@ -248,26 +296,16 @@ END ContainsString;
 (** Remove a key-value pair from the hashmap *)
 PROCEDURE RemoveKey*(map: HashMap; key: CollectionKeys.KeyPtr): BOOLEAN;
 VAR 
-    index, i: INTEGER;
-    bucket: LinkedList.List;
-    item: Collections.ItemPtr;
-    pair: KeyValuePairPtr;
+    index: INTEGER;
     result: BOOLEAN;
 BEGIN
-    result := FALSE;
     index := map.keyOps.hash(key, map.size);
-    bucket := map.buckets[index];
     
-    FOR i := 0 TO LinkedList.Count(bucket) - 1 DO
-        IF LinkedList.GetAt(bucket, i, item) THEN
-            pair := item(KeyValuePairPtr);
-            IF map.keyOps.equals(pair.key, key) THEN
-                IF LinkedList.RemoveAt(bucket, i, item) THEN
-                    DEC(map.count);
-                    result := TRUE
-                END
-            END
-        END
+    IF RemoveFromBucket(map.buckets[index], key, map.keyOps) THEN
+        DEC(map.count);
+        result := TRUE
+    ELSE
+        result := FALSE
     END;
     
     RETURN result
@@ -327,20 +365,15 @@ END LoadFactor;
 PROCEDURE Foreach*(map: HashMap; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
 VAR 
     i, j: INTEGER;
-    bucket: LinkedList.List;
-    item: Collections.ItemPtr;
-    pair: KeyValuePairPtr;
     continue: BOOLEAN;
 BEGIN
     continue := TRUE;
     i := 0;
     WHILE (i < map.size) & continue DO
-        bucket := map.buckets[i];
         j := 0;
-        WHILE (j < LinkedList.Count(bucket)) & continue DO
-            IF LinkedList.GetAt(bucket, j, item) THEN
-                pair := item(KeyValuePairPtr);
-                continue := visit(pair, state)
+        WHILE (j < map.buckets[i].count) & continue DO
+            IF map.buckets[i].items[j].used THEN
+                continue := visit(map.buckets[i].items[j].pair, state)
             END;
             INC(j)
         END;
@@ -354,7 +387,7 @@ VAR i: INTEGER;
 BEGIN
     IF map # NIL THEN
         FOR i := 0 TO map.size - 1 DO
-            LinkedList.Clear(map.buckets[i])
+            map.buckets[i].count := 0
         END;
         map.count := 0
     END
