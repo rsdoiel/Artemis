@@ -8,7 +8,8 @@ Released under The 3-Clause BSD License.
 DEFINITION DictionaryTest;
 
 (* Create a new test item *)
-(* Visitor procedure for testing iteration *)
+(* Visitor procedure for testing iteration with integer keys *)
+(* Visitor procedure for testing iteration with string keys *)
 PROCEDURE TestNewAndFree(): BOOLEAN;
 
 PROCEDURE TestPutAndGet(): BOOLEAN;
@@ -24,5 +25,7 @@ PROCEDURE TestForeach(): BOOLEAN;
 PROCEDURE TestClear(): BOOLEAN;
 
 PROCEDURE TestStringKeys(): BOOLEAN;
+
+PROCEDURE TestStringForeach(): BOOLEAN;
 
 END DictionaryTest.
