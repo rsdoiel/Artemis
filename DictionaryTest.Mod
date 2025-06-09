@@ -7,7 +7,7 @@ Released under The 3-Clause BSD License.
 
 MODULE DictionaryTest;
 
-IMPORT Dictionary, Collections, HashMap, Tests;
+IMPORT Dictionary, Collections, Tests;
 
 TYPE
     TestItem = RECORD(Collections.Item)
@@ -15,7 +15,7 @@ TYPE
     END;
     TestItemPtr = POINTER TO TestItem;
 
-    TestVisitorState = RECORD(Collections.VisitorState)
+    TestVisitorState = RECORD(Dictionary.DictVisitorState)
         sum: INTEGER;
         count: INTEGER
     END;
@@ -32,20 +32,25 @@ BEGIN
     RETURN item
 END NewTestItem;
 
-(** Visitor procedure for testing iteration *)
-PROCEDURE Visitor(item: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
-VAR 
-    pair: HashMap.KeyValuePairPtr;
-    testItem: TestItemPtr;
-    value: Collections.ItemPtr;
+(** Visitor procedure for testing iteration with integer keys *)
+PROCEDURE IntKeyVisitor(key: INTEGER; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+VAR testItem: TestItemPtr;
 BEGIN
-    pair := item(HashMap.KeyValuePairPtr);
-    value := HashMap.PairValue(pair);
     testItem := value(TestItemPtr);
     state(TestVisitorState).sum := state(TestVisitorState).sum + testItem.value;
     INC(state(TestVisitorState).count);
     RETURN TRUE
-END Visitor;
+END IntKeyVisitor;
+
+(** Visitor procedure for testing iteration with string keys *)
+PROCEDURE StringKeyVisitor(key: ARRAY OF CHAR; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+VAR testItem: TestItemPtr;
+BEGIN
+    testItem := value(TestItemPtr);
+    state(TestVisitorState).sum := state(TestVisitorState).sum + testItem.value;
+    INC(state(TestVisitorState).count);
+    RETURN TRUE
+END StringKeyVisitor;
 
 PROCEDURE TestNewAndFree*(): BOOLEAN;
 VAR dict: Dictionary.Dictionary; pass: BOOLEAN;
@@ -167,7 +172,7 @@ BEGIN
     Dictionary.Put(dict, 3, item3);
     state.sum := 0;
     state.count := 0;
-    Dictionary.Foreach(dict, Visitor, state);
+    Dictionary.ForeachInt(dict, IntKeyVisitor, state);
     Tests.ExpectedInt(60, state.sum, "Sum of all values should be 60", pass);
     Tests.ExpectedInt(3, state.count, "Should visit 3 items", pass);
     Dictionary.Free(dict);
@@ -249,6 +254,26 @@ BEGIN
     RETURN pass
 END TestStringKeys;
 
+PROCEDURE TestStringForeach*(): BOOLEAN;
+VAR dict: Dictionary.Dictionary; item1, item2, item3: TestItemPtr; state: TestVisitorState; pass: BOOLEAN;
+BEGIN
+    pass := TRUE;
+    dict := Dictionary.NewStringDict();
+    item1 := NewTestItem(10);
+    item2 := NewTestItem(20);
+    item3 := NewTestItem(30);
+    Dictionary.PutString(dict, "first", item1);
+    Dictionary.PutString(dict, "second", item2);
+    Dictionary.PutString(dict, "third", item3);
+    state.sum := 0;
+    state.count := 0;
+    Dictionary.ForeachString(dict, StringKeyVisitor, state);
+    Tests.ExpectedInt(60, state.sum, "Sum of values should be 60", pass);
+    Tests.ExpectedInt(3, state.count, "Should visit 3 items", pass);
+    Dictionary.Free(dict);
+    RETURN pass
+END TestStringForeach;
+
 BEGIN
     Tests.Init(ts, "Dictionary Tests");
     Tests.Add(ts, TestNewAndFree);
@@ -259,5 +284,6 @@ BEGIN
     Tests.Add(ts, TestForeach);
     Tests.Add(ts, TestClear);
     Tests.Add(ts, TestStringKeys);
+    Tests.Add(ts, TestStringForeach);
     ASSERT(Tests.Run(ts))
 END DictionaryTest.
