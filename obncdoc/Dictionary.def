@@ -6,6 +6,9 @@ TYPE
     Dictionary = POINTER TO DictionaryDesc;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
     (* Dictionary-specific visitor procedures *)
     IntKeyVisitProc = PROCEDURE(key: INTEGER; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
     StringKeyVisitProc = PROCEDURE(key: ARRAY OF CHAR; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
@@ -13,8 +16,11 @@ TYPE
     (* Extended visitor state for Dictionary iteration *)
     DictVisitorState = RECORD(Collections.VisitorState) END;
 
+<<<<<<< HEAD
 =======
 >>>>>>> PathLists
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 (* Create a new dictionary with integer keys *)
 PROCEDURE New(): Dictionary;
 
@@ -58,14 +64,20 @@ PROCEDURE IsEmpty(dict: Dictionary): BOOLEAN;
 PROCEDURE Clear(dict: Dictionary);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 (* Apply a procedure to each integer key-value pair in the dictionary *)
 PROCEDURE ForeachInt(dict: Dictionary; visit: IntKeyVisitProc; VAR state: DictVisitorState);
 
 (* Apply a procedure to each string key-value pair in the dictionary *)
 PROCEDURE ForeachString(dict: Dictionary; visit: StringKeyVisitProc; VAR state: DictVisitorState);
+<<<<<<< HEAD
 =======
 (* Apply a procedure to each value in the dictionary *)
 PROCEDURE Foreach(dict: Dictionary; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
 >>>>>>> PathLists
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 
 END Dictionary.

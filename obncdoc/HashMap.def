@@ -15,6 +15,7 @@ CONST
 TYPE
     (* Key-Value pair for storage *)
 <<<<<<< HEAD
+<<<<<<< HEAD
     KeyValuePair = RECORD(Collections.Item) END;
 =======
     KeyValuePair = RECORD(Collections.Item)
@@ -22,21 +23,30 @@ TYPE
         value: Collections.ItemPtr
     END;
 >>>>>>> PathLists
+=======
+    KeyValuePair = RECORD(Collections.Item) END;
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
     KeyValuePairPtr = POINTER TO KeyValuePair;
 
     (* Opaque pointer to a HashMap *)
     HashMap = POINTER TO HashMapDesc;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 (* Get the key from a key-value pair *)
 PROCEDURE PairKey(pair: KeyValuePairPtr): CollectionKeys.KeyPtr;
 
 (* Get the value from a key-value pair *)
 PROCEDURE PairValue(pair: KeyValuePairPtr): Collections.ItemPtr;
+<<<<<<< HEAD
 =======
 (* Create a new key-value pair *)
 PROCEDURE NewKeyValuePair(key: CollectionKeys.KeyPtr; value: Collections.ItemPtr): KeyValuePairPtr;
 >>>>>>> PathLists
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 
 (* Constructor: Allocate and initialize a new hashmap with specified size *)
 PROCEDURE NewWithSize(initialSize: INTEGER; keyOps: CollectionKeys.KeyOps): HashMap;

@@ -18,6 +18,9 @@ TYPE
     Dictionary = POINTER TO DictionaryDesc;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
     <span class='comment'>(* Dictionary-specific visitor procedures *)</span>
     IntKeyVisitProc = PROCEDURE(key: INTEGER; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
     StringKeyVisitProc = PROCEDURE(key: ARRAY OF CHAR; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
@@ -25,8 +28,11 @@ TYPE
     <span class='comment'>(* Extended visitor state for Dictionary iteration *)</span>
     DictVisitorState = RECORD(Collections.VisitorState) END;
 
+<<<<<<< HEAD
 =======
 >>>>>>> PathLists
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 <span class='comment'>(* Create a new dictionary with integer keys *)</span>
 PROCEDURE <em>New</em>(): Dictionary;
 
@@ -70,15 +76,21 @@ PROCEDURE <em>IsEmpty</em>(dict: Dictionary): BOOLEAN;
 PROCEDURE <em>Clear</em>(dict: Dictionary);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 <span class='comment'>(* Apply a procedure to each integer key-value pair in the dictionary *)</span>
 PROCEDURE <em>ForeachInt</em>(dict: Dictionary; visit: IntKeyVisitProc; VAR state: DictVisitorState);
 
 <span class='comment'>(* Apply a procedure to each string key-value pair in the dictionary *)</span>
 PROCEDURE <em>ForeachString</em>(dict: Dictionary; visit: StringKeyVisitProc; VAR state: DictVisitorState);
+<<<<<<< HEAD
 =======
 <span class='comment'>(* Apply a procedure to each value in the dictionary *)</span>
 PROCEDURE <em>Foreach</em>(dict: Dictionary; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
 >>>>>>> PathLists
+=======
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 
 END Dictionary.
 </pre>
