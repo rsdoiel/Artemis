@@ -56,18 +56,19 @@ as a use case to really get this effort off the ground.  In 2023 the
 Oberon community is still active but is generally is small, dispersed and
 largely aging (as am I). Makes me feel a little like Don Quote. I have hope
 2024 may allow time for Artemis but I suspect I'll reach mid 2025 before I
-revisit it again. I remain hopeful but not expecting to much as I finish
-2023.
+revisit it again. I remain hopeful but not expecting to much as I finish 2023. - RSD 
 
 
 Project layout
 --------------
 
 - root
+  - docs
   - obncdocs
   - obnc (not portable)
   - oxford (not portable)
   - ofrontplus (not portable)
+  - examples
 
 The directories named for their compilers will implement modules
 providing a common definition but specifically written to that compiler.
@@ -139,9 +140,12 @@ advice of "simple but no simpler".
 built-in Oberon-2 procedures that were dropped in the evolution
 to Oberon-07.
 
-[Path](Path.Mod) is a module for working with POSIX style paths and file extensions. It does not directly interact with the OS. It does provided a means of working with path strings in a uniform way. By default it assumes the paths are delimited with the '/' character and '.' for file extensions. This is configurable by the Path module's `SetDelimiter()` and `SetExtDelimiter()` procedures.
+[Path](Path.Mod) and [PathLists](PathLists.Mod) is a module for working with POSIX style paths and file extensions. It does not directly interact with the OS. It does provided a means of working with path strings in a uniform way. By default it assumes the paths are delimited with the '/' character and '.' for file extensions. This is configurable by the Path module's `SetDelimiter()` and `SetExtDelimiter()` procedures.
 
+[Collections](docs/Collections.md) - A generic Collections API including LinkedLists, ArrayLists, Deque, Heap, Dictionary, etc.
 
+[IniConfigParser](docs/IniConfigParser.md) - a simple ini config parser to load and save 
+configurations, and exposing them as a dictionary. 
 
 OBNC specific modules
 ---------------------
