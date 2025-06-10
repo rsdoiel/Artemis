@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION ArrayList</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+DEFINITION <em>ArrayList</em>;
+
+IMPORT Collections;
+
+CONST
+    ChunkSize = 64;
+
+TYPE
+    ArrayList = POINTER TO ArrayListDesc;
+
+<span class='comment'>(* Create a new, empty ArrayList *)</span>
+PROCEDURE <em>New</em>(): ArrayList;
+
+<span class='comment'>(* Free the ArrayList and all its chunks *)</span>
+PROCEDURE <em>Free</em>(VAR list: ArrayList);
+
+<span class='comment'>(* Append an item to the end of the list. Returns TRUE if successful *)</span>
+PROCEDURE <em>Append</em>(list: ArrayList; item: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Get the item at the given index. Returns TRUE if found, item in VAR result *)</span>
+PROCEDURE <em>GetAt</em>(list: ArrayList; index: INTEGER; VAR result: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Set the item at the given index. Returns TRUE if successful *)</span>
+PROCEDURE <em>SetAt</em>(list: ArrayList; index: INTEGER; item: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Return the number of items in the list *)</span>
+PROCEDURE <em>Count</em>(list: ArrayList): INTEGER;
+
+<span class='comment'>(* Returns TRUE if the list is empty *)</span>
+PROCEDURE <em>IsEmpty</em>(list: ArrayList): BOOLEAN;
+
+<span class='comment'>(* Remove all items from the list *)</span>
+PROCEDURE <em>Clear</em>(list: ArrayList);
+
+<<<<<<< HEAD
+<span class='comment'>(* Remove the last item from the list. Returns TRUE if successful *)</span>
+PROCEDURE <em>RemoveLast</em>(list: ArrayList): BOOLEAN;
+
+=======
+>>>>>>> PathLists
+<span class='comment'>(* Iterate over all items, calling visitor for each *)</span>
+PROCEDURE <em>Foreach</em>(list: ArrayList; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+END ArrayList.
+</pre>
+	</body>
+</html>

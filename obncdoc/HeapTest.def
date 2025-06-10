@@ -1,0 +1,28 @@
+(*
+    HeapTest.Mod - Unit tests for Heap.Mod
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)
+DEFINITION HeapTest;
+
+(* Create a new test item with value and priority *)
+(* Comparison function for min-heap based on priority *)
+(* Comparison function for max-heap based on priority *)
+(* Visitor procedure for testing iteration *)
+PROCEDURE TestNewAndFree(): BOOLEAN;
+
+PROCEDURE TestInsertAndPeek(): BOOLEAN;
+
+PROCEDURE TestExtractMin(): BOOLEAN;
+
+PROCEDURE TestMaxHeap(): BOOLEAN;
+
+PROCEDURE TestLargeDataset(): BOOLEAN;
+
+PROCEDURE TestClear(): BOOLEAN;
+
+PROCEDURE TestForeach(): BOOLEAN;
+
+PROCEDURE TestHeapProperty(): BOOLEAN;
+
+END HeapTest.

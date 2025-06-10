@@ -1,0 +1,33 @@
+(* HashMapTest.mod - Tests for HashMap.mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION HashMapTest;
+
+(* Create a new test item *)
+(* Create a new integer item *)
+(* Visitor procedure for testing iteration *)
+PROCEDURE TestNewAndFree(): BOOLEAN;
+
+PROCEDURE TestNewWithSize(): BOOLEAN;
+
+PROCEDURE TestPutAndGet(): BOOLEAN;
+
+PROCEDURE TestUpdateExistingKey(): BOOLEAN;
+
+PROCEDURE TestContains(): BOOLEAN;
+
+PROCEDURE TestRemove(): BOOLEAN;
+
+PROCEDURE TestLoadFactor(): BOOLEAN;
+
+PROCEDURE TestForeach(): BOOLEAN;
+
+PROCEDURE TestCollisionHandling(): BOOLEAN;
+
+PROCEDURE TestStringKeys(): BOOLEAN;
+
+END HashMapTest.

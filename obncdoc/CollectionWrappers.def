@@ -1,0 +1,15 @@
+DEFINITION CollectionWrappers;
+
+IMPORT Collections, Dictionary;
+
+TYPE
+    (* Wrapper for Dictionary.Dictionary as a Collections.Item *)
+    DictionaryWrapper = RECORD(Collections.Item)
+        dict: Dictionary.Dictionary
+    END;
+    DictionaryWrapperPtr = POINTER TO DictionaryWrapper;
+
+(* Create a new dictionary wrapper *)
+PROCEDURE NewDictionaryWrapper(dict: Dictionary.Dictionary): Collections.ItemPtr;
+
+END CollectionWrappers.

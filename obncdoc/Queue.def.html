@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION Queue</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(*
+    Queue.Mod - A FIFO (First In, First Out) queue implementation.
+    
+    Provides classical queue operations with clear semantics using LinkedList as underlying storage.
+    
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)</span>
+DEFINITION <em>Queue</em>;
+
+IMPORT Collections;
+
+TYPE
+    <span class='comment'>(* Opaque pointer to a Queue *)</span>
+    Queue = POINTER TO QueueDesc;
+
+<span class='comment'>(* Constructor: Allocate and initialize a new queue. *)</span>
+PROCEDURE <em>New</em>(): Queue;
+
+<span class='comment'>(* Destructor: Free the queue. *)</span>
+PROCEDURE <em>Free</em>(VAR queue: Queue);
+
+<span class='comment'>(* Enqueue an item to the rear of the queue. *)</span>
+PROCEDURE <em>Enqueue</em>(queue: Queue; item: Collections.ItemPtr);
+
+<span class='comment'>(* Dequeue and return the front item from the queue. *)</span>
+PROCEDURE <em>Dequeue</em>(queue: Queue; VAR result: Collections.ItemPtr);
+
+<span class='comment'>(* Peek at the front item without removing it. *)</span>
+PROCEDURE <em>Front</em>(queue: Queue; VAR result: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Get the number of items in the queue. *)</span>
+PROCEDURE <em>Count</em>(queue: Queue): INTEGER;
+
+<span class='comment'>(* Check if the queue is empty. *)</span>
+PROCEDURE <em>IsEmpty</em>(queue: Queue): BOOLEAN;
+
+<span class='comment'>(* Clear all items from the queue. *)</span>
+PROCEDURE <em>Clear</em>(queue: Queue);
+
+<span class='comment'>(* Apply a visitor procedure to each item in the queue (front to rear order). *)</span>
+PROCEDURE <em>Foreach</em>(queue: Queue; visitor: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+END Queue.
+</pre>
+	</body>
+</html>

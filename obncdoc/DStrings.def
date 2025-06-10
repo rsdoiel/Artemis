@@ -7,7 +7,7 @@ See https://opensource.org/licenses/BSD-3-Clause
 *)
 DEFINITION DStrings;
 
-IMPORT Chars;
+IMPORT Chars, Collections;
 
 CONST
   (* Constants describing special characters *)
@@ -37,7 +37,7 @@ TYPE
       dynamic string in Oberon-7 type. NOTE: In memory the
       implentation is currently a private linked list of CHAR. *)
   String     = POINTER TO StringDesc;
-  StringDesc = RECORD END;
+  StringDesc = RECORD (Collections.Item) END;
 
   (* Rider when combined with a String gives you a char buffer 
       with a File like interface.
@@ -106,7 +106,7 @@ PROCEDURE Prune(VAR s : String);
     ARRAY OF CHAR with an 0X *)
 PROCEDURE ToChars(s : String; VAR str: ARRAY OF CHAR; VAR res : INTEGER);
 
-(* String procedures that implement Oakword Strings functionality but for the String type instread of ARRAY OF CHAR *)
+(* String procedures that implement Oakword Strings functionality but for the String type instead of ARRAY OF CHAR *)
 
 (* Length is the number of CHAR before 0X is encountered. *)
 PROCEDURE Length( s : String ) : INTEGER;
@@ -120,7 +120,7 @@ PROCEDURE Append(extra : String; VAR dest: String);
 (* Delete *)
 PROCEDURE Delete(VAR s : String; pos, n : INTEGER);
 
-(* Replace replace the contents of dest with source starting at
+(* Replace the contents of dest with source starting at
     pos. *)
 PROCEDURE Replace(source : String; pos : INTEGER; VAR dest : String);
 

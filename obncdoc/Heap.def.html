@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION Heap</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(*
+    Heap.mod - A binary min-heap implementation using ArrayList.
+
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)</span>
+DEFINITION <em>Heap</em>;
+
+IMPORT Collections;
+
+TYPE
+    <span class='comment'>(* Comparison function type - returns TRUE if left &lt; right *)</span>
+    CompareFunc = PROCEDURE(left, right: Collections.ItemPtr): BOOLEAN;
+
+    <span class='comment'>(* Opaque pointer to a Heap *)</span>
+    Heap = POINTER TO HeapDesc;
+
+<span class='comment'>(* Constructor: Allocate and initialize a new heap with a comparison function *)</span>
+PROCEDURE <em>New</em>(compare: CompareFunc): Heap;
+
+<span class='comment'>(* Destructor: Free the heap *)</span>
+PROCEDURE <em>Free</em>(VAR heap: Heap);
+
+<span class='comment'>(* Insert an item into the heap *)</span>
+PROCEDURE <em>Insert</em>(heap: Heap; item: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Extract the minimum item from the heap. Returns TRUE if successful *)</span>
+PROCEDURE <em>ExtractMin</em>(heap: Heap; VAR result: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Peek at the minimum item without removing it. Returns TRUE if successful *)</span>
+PROCEDURE <em>PeekMin</em>(heap: Heap; VAR result: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Return the number of items in the heap *)</span>
+PROCEDURE <em>Count</em>(heap: Heap): INTEGER;
+
+<span class='comment'>(* Returns TRUE if the heap is empty *)</span>
+PROCEDURE <em>IsEmpty</em>(heap: Heap): BOOLEAN;
+
+<span class='comment'>(* Remove all items from the heap *)</span>
+PROCEDURE <em>Clear</em>(heap: Heap);
+
+<span class='comment'>(* Iterate over all items in heap order (level-order traversal) *)</span>
+PROCEDURE <em>Foreach</em>(heap: Heap; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+END Heap.
+</pre>
+	</body>
+</html>

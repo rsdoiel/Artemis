@@ -1,0 +1,29 @@
+(* IniConfigTokenizerTest.Mod - Tests for IniConfigTokenizer.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+DEFINITION IniConfigTokenizerTest;
+
+PROCEDURE TestBasicTokens(): BOOLEAN;
+
+PROCEDURE TestKeyValuePairs(): BOOLEAN;
+
+PROCEDURE TestQuotedValues(): BOOLEAN;
+
+PROCEDURE TestComments(): BOOLEAN;
+
+PROCEDURE TestWhitespaceHandling(): BOOLEAN;
+
+PROCEDURE TestMultipleLines(): BOOLEAN;
+
+PROCEDURE TestEmptyLines(): BOOLEAN;
+
+PROCEDURE TestSyntaxError(): BOOLEAN;
+
+PROCEDURE TestUtilityFunctions(): BOOLEAN;
+
+PROCEDURE TestSpecialCharacters(): BOOLEAN;
+
+END IniConfigTokenizerTest.

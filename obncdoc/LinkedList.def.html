@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION LinkedList</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(* LinkedList.mod - A singly linked list implementation.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)</span>
+
+DEFINITION <em>LinkedList</em>;
+
+IMPORT Collections;
+
+TYPE
+    <span class='comment'>(* Opaque pointer to a List *)</span>
+    List = POINTER TO ListDesc; 
+
+<span class='comment'>(* Constructor: Allocate and initialize a new list *)</span>
+PROCEDURE <em>New</em>(): List;
+
+<span class='comment'>(* Destructor: (optional, only if you want to clear memory) *)</span>
+PROCEDURE <em>Free</em>(VAR list: List);
+
+<span class='comment'>(* Append a new element. *)</span>
+PROCEDURE <em>Append</em>(list: List; item: Collections.ItemPtr);
+
+<span class='comment'>(* Remove and return the first list element. *)</span>
+PROCEDURE <em>RemoveFirst</em>(list: List; VAR result: Collections.ItemPtr);
+
+<span class='comment'>(* Insert a new element after a given position (0-based index). *)</span>
+PROCEDURE <em>InsertAt</em>(list: List; position: INTEGER; item: Collections.ItemPtr): BOOLEAN;
+
+    <span class='comment'>(* Insert at beginning if position is 0 *)</span>
+    <span class='comment'>(* Insert within valid range *)</span>
+        <span class='comment'>(* Find the node at position-1 *)</span>
+
+<span class='comment'>(* Return the number of elements in the list. *)</span>
+PROCEDURE <em>Count</em>(list: List): INTEGER;
+
+<span class='comment'>(* Test if the list is empty. *)</span>
+PROCEDURE <em>IsEmpty</em>(list: List): BOOLEAN;
+
+<span class='comment'>(* Apply a procedure to each element in the list, passing a state variable. 
+If visit returns FALSE, iteration stops. *)</span>
+PROCEDURE <em>Foreach</em>(list: List; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+<span class='comment'>(* Get item at specified position (0-based index), returns TRUE if successful. *)</span>
+PROCEDURE <em>GetAt</em>(list: List; position: INTEGER; VAR result: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Remove item at specified position (0-based index), returns TRUE if successful. *)</span>
+PROCEDURE <em>RemoveAt</em>(list: List; position: INTEGER; VAR result: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Clear removes all elements from the list. *)</span>
+PROCEDURE <em>Clear</em>(list: List);
+
+END LinkedList.
+</pre>
+	</body>
+</html>

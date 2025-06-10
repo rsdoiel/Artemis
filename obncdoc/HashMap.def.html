@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+		<title>DEFINITION HashMap</title>
+		<link rel='stylesheet' type='text/css' href='style.css' />
+	</head>
+	<body>
+		<p><a href='index.html'>Index</a></p>
+
+		<pre>
+<span class='comment'>(* HashMap.mod - A hashmap implementation using separate chaining.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)</span>
+
+DEFINITION <em>HashMap</em>;
+
+IMPORT Collections, CollectionKeys;
+
+CONST
+    DefaultSize = 16;
+
+TYPE
+    <span class='comment'>(* Key-Value pair for storage *)</span>
+<<<<<<< HEAD
+    KeyValuePair = RECORD(Collections.Item) END;
+=======
+    KeyValuePair = RECORD(Collections.Item)
+        key: CollectionKeys.KeyPtr;
+        value: Collections.ItemPtr
+    END;
+>>>>>>> PathLists
+    KeyValuePairPtr = POINTER TO KeyValuePair;
+
+    <span class='comment'>(* Opaque pointer to a HashMap *)</span>
+    HashMap = POINTER TO HashMapDesc;
+
+<<<<<<< HEAD
+<span class='comment'>(* Get the key from a key-value pair *)</span>
+PROCEDURE <em>PairKey</em>(pair: KeyValuePairPtr): CollectionKeys.KeyPtr;
+
+<span class='comment'>(* Get the value from a key-value pair *)</span>
+PROCEDURE <em>PairValue</em>(pair: KeyValuePairPtr): Collections.ItemPtr;
+=======
+<span class='comment'>(* Create a new key-value pair *)</span>
+PROCEDURE <em>NewKeyValuePair</em>(key: CollectionKeys.KeyPtr; value: Collections.ItemPtr): KeyValuePairPtr;
+>>>>>>> PathLists
+
+<span class='comment'>(* Constructor: Allocate and initialize a new hashmap with specified size *)</span>
+PROCEDURE <em>NewWithSize</em>(initialSize: INTEGER; keyOps: CollectionKeys.KeyOps): HashMap;
+
+<span class='comment'>(* Constructor: Allocate and initialize a new hashmap with integer keys *)</span>
+PROCEDURE <em>New</em>(): HashMap;
+
+<span class='comment'>(* Constructor: Allocate and initialize a new hashmap with string keys *)</span>
+PROCEDURE <em>NewStringMap</em>(): HashMap;
+
+<span class='comment'>(* Destructor: Free the hashmap *)</span>
+PROCEDURE <em>Free</em>(VAR map: HashMap);
+
+<span class='comment'>(* Insert or update a key-value pair *)</span>
+PROCEDURE <em>PutKey</em>(map: HashMap; key: CollectionKeys.KeyPtr; value: Collections.ItemPtr);
+
+<span class='comment'>(* Insert or update a key-value pair with integer key *)</span>
+PROCEDURE <em>Put</em>(map: HashMap; key: INTEGER; value: Collections.ItemPtr);
+
+<span class='comment'>(* Insert or update a key-value pair with string key *)</span>
+PROCEDURE <em>PutString</em>(map: HashMap; key: ARRAY OF CHAR; value: Collections.ItemPtr);
+
+<span class='comment'>(* Get a value by key *)</span>
+PROCEDURE <em>GetKey</em>(map: HashMap; key: CollectionKeys.KeyPtr; VAR value: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Get a value by integer key *)</span>
+PROCEDURE <em>Get</em>(map: HashMap; key: INTEGER; VAR value: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Get a value by string key *)</span>
+PROCEDURE <em>GetString</em>(map: HashMap; key: ARRAY OF CHAR; VAR value: Collections.ItemPtr): BOOLEAN;
+
+<span class='comment'>(* Check if a key exists in the hashmap *)</span>
+PROCEDURE <em>ContainsKey</em>(map: HashMap; key: CollectionKeys.KeyPtr): BOOLEAN;
+
+<span class='comment'>(* Check if an integer key exists in the hashmap *)</span>
+PROCEDURE <em>Contains</em>(map: HashMap; key: INTEGER): BOOLEAN;
+
+<span class='comment'>(* Check if a string key exists in the hashmap *)</span>
+PROCEDURE <em>ContainsString</em>(map: HashMap; key: ARRAY OF CHAR): BOOLEAN;
+
+<span class='comment'>(* Remove a key-value pair from the hashmap *)</span>
+PROCEDURE <em>RemoveKey</em>(map: HashMap; key: CollectionKeys.KeyPtr): BOOLEAN;
+
+<span class='comment'>(* Remove an integer key-value pair from the hashmap *)</span>
+PROCEDURE <em>Remove</em>(map: HashMap; key: INTEGER): BOOLEAN;
+
+<span class='comment'>(* Remove a string key-value pair from the hashmap *)</span>
+PROCEDURE <em>RemoveString</em>(map: HashMap; key: ARRAY OF CHAR): BOOLEAN;
+
+<span class='comment'>(* Get the number of key-value pairs in the hashmap *)</span>
+PROCEDURE <em>Count</em>(map: HashMap): INTEGER;
+
+<span class='comment'>(* Test if the hashmap is empty *)</span>
+PROCEDURE <em>IsEmpty</em>(map: HashMap): BOOLEAN;
+
+<span class='comment'>(* Get the current load factor as percentage *)</span>
+PROCEDURE <em>LoadFactor</em>(map: HashMap): INTEGER;
+
+<span class='comment'>(* Apply a procedure to each key-value pair in the hashmap *)</span>
+PROCEDURE <em>Foreach</em>(map: HashMap; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+
+<span class='comment'>(* Clear removes all key-value pairs from the hashmap. *)</span>
+PROCEDURE <em>Clear</em>(map: HashMap);
+
+END HashMap.
+</pre>
+	</body>
+</html>

@@ -1,0 +1,44 @@
+(*
+    Stack.Mod - A LIFO (Last In, First Out) stack implementation.
+    
+    Provides classical stack operations with clear semantics using LinkedList as underlying storage.
+    
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+*)
+DEFINITION Stack;
+
+IMPORT Collections;
+
+TYPE
+    (* Opaque pointer to a Stack *)
+    Stack = POINTER TO StackDesc;
+
+(* Constructor: Allocate and initialize a new stack. *)
+PROCEDURE New(): Stack;
+
+(* Destructor: Free the stack. *)
+PROCEDURE Free(VAR stack: Stack);
+
+(* Push an item onto the stack. *)
+PROCEDURE Push(stack: Stack; item: Collections.ItemPtr);
+
+(* Pop and return the top item from the stack. *)
+PROCEDURE Pop(stack: Stack; VAR result: Collections.ItemPtr);
+
+(* Peek at the top item without removing it. Returns TRUE if successful *)
+PROCEDURE Top(stack: Stack; VAR result: Collections.ItemPtr): BOOLEAN;
+
+(* Return the number of items in the stack. *)
+PROCEDURE Count(stack: Stack): INTEGER;
+
+(* Test if the stack is empty. *)
+PROCEDURE IsEmpty(stack: Stack): BOOLEAN;
+
+(* Clear removes all elements from the stack. *)
+PROCEDURE Clear(stack: Stack);
+
+(* Apply a procedure to each element in the stack from top to bottom. *)
+PROCEDURE Foreach(stack: Stack; visit: Collections.VisitProc; VAR state: Collections.VisitorState); 
+
+END Stack.

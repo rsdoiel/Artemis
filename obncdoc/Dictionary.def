@@ -1,0 +1,71 @@
+DEFINITION Dictionary;
+
+IMPORT Collections;
+
+TYPE
+    Dictionary = POINTER TO DictionaryDesc;
+
+<<<<<<< HEAD
+    (* Dictionary-specific visitor procedures *)
+    IntKeyVisitProc = PROCEDURE(key: INTEGER; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+    StringKeyVisitProc = PROCEDURE(key: ARRAY OF CHAR; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+
+    (* Extended visitor state for Dictionary iteration *)
+    DictVisitorState = RECORD(Collections.VisitorState) END;
+
+=======
+>>>>>>> PathLists
+(* Create a new dictionary with integer keys *)
+PROCEDURE New(): Dictionary;
+
+(* Create a new dictionary with string keys *)
+PROCEDURE NewStringDict(): Dictionary;
+
+(* Free the dictionary and all its resources *)
+PROCEDURE Free(VAR dict: Dictionary);
+
+(* Insert or update a value by integer key *)
+PROCEDURE Put(dict: Dictionary; key: INTEGER; value: Collections.ItemPtr);
+
+(* Insert or update a value by string key *)
+PROCEDURE PutString(dict: Dictionary; key: ARRAY OF CHAR; value: Collections.ItemPtr);
+
+(* Get a value by integer key *)
+PROCEDURE Get(dict: Dictionary; key: INTEGER; VAR value: Collections.ItemPtr): BOOLEAN;
+
+(* Get a value by string key *)
+PROCEDURE GetString(dict: Dictionary; key: ARRAY OF CHAR; VAR value: Collections.ItemPtr): BOOLEAN;
+
+(* Remove a value by integer key *)
+PROCEDURE Remove(dict: Dictionary; key: INTEGER): BOOLEAN;
+
+(* Remove a value by string key *)
+PROCEDURE RemoveString(dict: Dictionary; key: ARRAY OF CHAR): BOOLEAN;
+
+(* Check if an integer key exists in the dictionary *)
+PROCEDURE Contains(dict: Dictionary; key: INTEGER): BOOLEAN;
+
+(* Check if a string key exists in the dictionary *)
+PROCEDURE ContainsString(dict: Dictionary; key: ARRAY OF CHAR): BOOLEAN;
+
+(* Get the number of key-value pairs in the dictionary *)
+PROCEDURE Count(dict: Dictionary): INTEGER;
+
+(* Test if the dictionary is empty *)
+PROCEDURE IsEmpty(dict: Dictionary): BOOLEAN;
+
+(* Remove all key-value pairs from the dictionary *)
+PROCEDURE Clear(dict: Dictionary);
+
+<<<<<<< HEAD
+(* Apply a procedure to each integer key-value pair in the dictionary *)
+PROCEDURE ForeachInt(dict: Dictionary; visit: IntKeyVisitProc; VAR state: DictVisitorState);
+
+(* Apply a procedure to each string key-value pair in the dictionary *)
+PROCEDURE ForeachString(dict: Dictionary; visit: StringKeyVisitProc; VAR state: DictVisitorState);
+=======
+(* Apply a procedure to each value in the dictionary *)
+PROCEDURE Foreach(dict: Dictionary; visit: Collections.VisitProc; VAR state: Collections.VisitorState);
+>>>>>>> PathLists
+
+END Dictionary.

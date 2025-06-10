@@ -1,9 +1,20 @@
 (* PathLists is a module for working with a delimited list of paths. *)
 DEFINITION PathLists;
+CONST
     (* Merge operations *)
+    PREPEND = 1; (* Insert into path list *)
+    APPEND = 2; (* Add to end of path list *)
+    CUT = 3; (* Remove from path from path list *)
+
 TYPE
     PathList = POINTER TO PathListDesc;
-    PathListDesc = RECORD END;
+
+(* NewPathItem creates a new PathItem with the given path *)
+(* New creates a new empty PathList *)
+PROCEDURE New(): PathList;
+
+(* Free releases memory used by a PathList *)
+PROCEDURE Free(VAR pathList: PathList);
 
 (* Length returns the length of the PathList *)
 PROCEDURE Length(pathList : PathList) : INTEGER;
@@ -28,7 +39,7 @@ PROCEDURE Cut(path : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLE
 PROCEDURE Encode(pathList : PathList; delimiter: CHAR; VAR pathListString : ARRAY OF CHAR; VAR success : BOOLEAN);
 
 (* Decode takes a path list string and decodes it into a PathList data structure *)
-PROCEDURE Decode(pathListString : ARRAY OF CHAR; VAR pathList : PathList; success : BOOLEAN);
+PROCEDURE Decode(pathListString : ARRAY OF CHAR; VAR pathList : PathList; VAR success : BOOLEAN);
 
 (* Apply takes a path, an operation and a path list string. It applies the operation
     using the path and pathList updating pathList. Return TRUE of successful,
