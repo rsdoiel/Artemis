@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Artemis</title>
+    <link rel="stylesheet" type="text/css"  href="/printfonts/print.css" media="print" />
+  <link rel="stylesheet" type="text/css"  href="/webfonts/fonts.css" media="screen" />
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="artemis-iniconfigparser-user-guide">
+Artemis IniConfigParser – User Guide
+</h1>
+<p>
+<strong>Module:</strong> IniConfigParser.Mod<br />
+<strong>Project:</strong> Artemis Standard Library Extensions
+</p>
+<hr />
+<h2 id="overview">
+Overview
+</h2>
+<p>
+The <code>IniConfigParser</code> module provides a type-aware parser and
+writer for INI configuration files in Oberon-07. It is designed for
+integration with Artemis project, supporting automatic type detection,
+sectioned configuration, error handling, and config saving.
+</p>
+<hr />
+<h2 id="features">
+Features
+</h2>
+<ul>
+<li>
+<strong>Automatic Type Detection:</strong>
+<ul>
+<li>
+Unquoted values are parsed as INTEGER, REAL, BOOLEAN (TRUE/FALSE), or
+STRING.
+</li>
+<li>
+Quoted values are always treated as strings.
+</li>
+</ul>
+</li>
+<li>
+<strong>Section Support:</strong>
+<ul>
+<li>
+Case-sensitive section names.
+</li>
+<li>
+Keys outside any section are placed in a default section.
+</li>
+</ul>
+</li>
+<li>
+<strong>API Procedures:</strong>
+<ul>
+<li>
+<code>LoadConfig</code>: Loads and parses an INI file.
+</li>
+<li>
+<code>GetSection</code>: Retrieves a section by name.
+</li>
+<li>
+<code>GetValue</code>: Retrieves a value by key and section.
+</li>
+<li>
+<code>GetDefaultValue</code>: Retrieves a value from the default
+section.
+</li>
+<li>
+<code>GetType</code>: Returns the detected type of a value.
+</li>
+<li>
+<code>SetValue</code>/<code>SetDefaultValue</code>: Set or update values
+in the config.
+</li>
+<li>
+<code>SaveConfig</code>: Saves the configuration back to an INI file.
+</li>
+<li>
+<code>GetError</code>/<code>GetErrorLine</code>: Retrieve error codes
+and line numbers for diagnostics.
+</li>
+<li>
+<code>FreeConfig</code>: Frees all resources used by a config object.
+</li>
+</ul>
+</li>
+<li>
+<strong>Error Handling:</strong>
+<ul>
+<li>
+All major procedures return error codes for robust error reporting.
+</li>
+</ul>
+</li>
+<li>
+<strong>Integration:</strong>
+<ul>
+<li>
+Uses Artemis Collections (ArrayList, Dictionary) for internal storage.
+</li>
+<li>
+Designed for Oberon-07 language constraints.
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="usage-example">
+Usage Example
+</h2>
+<pre class="oberon"><code>MODULE ExampleIniConfigParser;
+  IMPORT IniConfigParser, Out;
+
+  VAR
+    config: IniConfigParser.Config;
+    err: INTEGER;
+    value: IniConfigParser.ConfigValuePtr;
+    valueType: INTEGER;
+    ok: BOOLEAN;
+
+BEGIN
+  err := IniConfigParser.LoadConfig(&quot;settings.ini&quot;, config);
+  IF err = IniConfigParser.NoError THEN
+    ok := IniConfigParser.GetValue(config, &quot;Database&quot;, &quot;port&quot;, value);
+    IF ok THEN
+      valueType := IniConfigParser.GetType(value);
+      IF valueType = IniConfigParser.IntegerType THEN
+        Out.String(&quot;Port: &quot;); Out.Int(ORD(value.value[0]), 0); Out.Ln
+      END
+    END;
+    (* Set a value and save *)
+    IniConfigParser.SetValue(config, &quot;Database&quot;, &quot;host&quot;, &quot;localhost&quot;);
+    IniConfigParser.SaveConfig(config, &quot;settings-out.ini&quot;)
+  ELSE
+    Out.String(&quot;Failed to load config, error code: &quot;); Out.Int(err, 0); Out.Ln
+  END;
+  IniConfigParser.FreeConfig(config)
+END ExampleIniConfigParser.</code></pre>
+<hr />
+<h2 id="limitations">
+Limitations
+</h2>
+<ul>
+<li>
+Only fixed-size arrays are supported (Oberon-07 constraint).
+</li>
+<li>
+<strong>Maximum token/key/section name length:</strong> 256 characters
+(see <code>IniConfigTokenizer.MaxTokenLength</code>).
+</li>
+<li>
+<strong>Maximum value length:</strong> 512 characters (see
+<code>ConfigValue.value</code>).
+</li>
+<li>
+<strong>Maximum number of sections/keys:</strong> Limited by available
+memory; internally uses <code>ArrayList</code> and
+<code>Dictionary</code> which dynamically allocate as needed, but are
+subject to system memory limits.
+</li>
+<li>
+No nested sections or multiline values.
+</li>
+<li>
+Comments must start at the beginning of a line with a semicolon
+(<code>;</code>).
+</li>
+<li>
+Section and key names are case-sensitive.
+</li>
+<li>
+Value interpolation and advanced INI features are not supported.
+</li>
+<li>
+Type detection is simple and may not handle all edge cases.
+</li>
+<li>
+<strong>Maximum INI file size:</strong> Limited by available system
+memory and Oberon-07 implementation.
+</li>
+</ul>
+<hr />
+<h2 id="integration-notes">
+Integration Notes
+</h2>
+<ul>
+<li>
+Uses <code>Files</code> for I/O and
+<code>Dictionary</code>/<code>ArrayList</code> from Artemis Collections.
+</li>
+<li>
+See <code>IniConfigParserTest.Mod</code> and
+<code>examples/ExampleIniConfigParser.Mod</code> for more usage examples
+and tests.
+</li>
+<li>
+Documentation is generated with <code>obncdoc</code> and available in
+<code>obncdoc/IniConfigParser.def</code>.
+</li>
+</ul>
+<hr />
+<h2 id="see-also">
+See Also
+</h2>
+<ul>
+<li>
+<a href="./Collections.md">Artemis Collections API</a>
+</li>
+<li>
+<a
+href="./examples/ExampleIniConfigParser.Mod">ExampleIniConfigParser.Mod</a>
+</li>
+<li>
+<a href="./IniConfigParserTest.Mod">IniConfigParserTest.Mod</a>
+</li>
+</ul>
+<hr />
+<p>
+© 2025 Artemis Project. BSD 3-Clause License.
+</p>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="./">README</a>
+</li>
+<li>
+<a href="license.html">LICENSE</a>
+</li>
+<li>
+<a href="install.html">INSTALL</a>
+</li>
+<li>
+<a href="./obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="./oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="./ofrontplus/">Ofront+ Modules</a>
+</li>
+<li>
+<a href="./development-notes.html">development notes</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>

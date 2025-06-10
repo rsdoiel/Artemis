@@ -15,7 +15,10 @@ Ports, from Oberon-2 to Oberon-07
 README Ports
 </h1>
 <p>
-The ports directory contains modules that were ported to a POSIX environment from previous Oberon Systems written in Oberon-2. The ported code is written in Oberon-7. Where necessary compatibility modules have been created to minimize the changes to the ported code.
+The ports directory contains modules that were ported to a POSIX
+environment from previous Oberon Systems written in Oberon-2. The ported
+code is written in Oberon-7. Where necessary compatibility modules have
+been created to minimize the changes to the ported code.
 </p>
 <ul>
 <li>
@@ -26,26 +29,38 @@ The ports directory contains modules that were ported to a POSIX environment fro
 </li>
 </ul>
 <p>
-NOTE: Authorship of the modules in this sub directory vary. They included “ported” code. The “ports” retain their original authorship, copyright, license, etc.
+NOTE: Authorship of the modules in this sub directory vary. They
+included “ported” code. The “ports” retain their original authorship,
+copyright, license, etc.
 </p>
 <h2 id="porting-strategy">
 Porting Strategy
 </h2>
 <ol type="1">
 <li>
-<a href="https://people.inf.ethz.ch/wirth/Oberon/PortingOberon.pdf">Porting the Oberon Compiler from Oberon to Oberon-07</a>, Niklaus Wirth, 2007-08-15.
+<a
+href="https://people.inf.ethz.ch/wirth/Oberon/PortingOberon.pdf">Porting
+the Oberon Compiler from Oberon to Oberon-07</a>, Niklaus Wirth,
+2007-08-15.
 </li>
 <li>
-<a href="https://people.inf.ethz.ch/wirth/Oberon/Oberon07.pdf">Differences between Revised Oberon and Oberon</a>, Niklaus Wirth, 2008-03-22 / 2011-07-05
+<a
+href="https://people.inf.ethz.ch/wirth/Oberon/Oberon07.pdf">Differences
+between Revised Oberon and Oberon</a>, Niklaus Wirth, 2008-03-22 /
+2011-07-05
 </li>
 <li>
-<a href="https://people.inf.ethz.ch/wirth/Oberon/Oberon07.Report.pdf">The Programming Language Oberon</a>, Niklaus Wirth, Revision 2013-10-01 / 2016-05-03
+<a
+href="https://people.inf.ethz.ch/wirth/Oberon/Oberon07.Report.pdf">The
+Programming Language Oberon</a>, Niklaus Wirth, Revision 2013-10-01 /
+2016-05-03
 <ul>
 <li>
 aka “The Programming Language Oberon-07 (Revised Oberon)”
 </li>
 <li>
-Karl Landström provides an <a href="http://miasap.se/obnc/oberon-report.html">HTML version</a>
+Karl Landström provides an <a
+href="http://miasap.se/obnc/oberon-report.html">HTML version</a>
 </li>
 </ul>
 </li>
@@ -54,11 +69,15 @@ Karl Landström provides an <a href="http://miasap.se/obnc/oberon-report.html">H
 What follows are my notes which might be helpful to others (YMMV).
 </p>
 <p>
-The basic data types in Oberon-7 are more limitted. In some cases the data types could simply be mapped to the newer version of the language. The built-in procedures and functions are different from Oberon-2 to Oberon-7. The <a href="Obn2.Mod">Obn2.Mod</a> provides a small collection of formerly build-in Oberon-2 function for use in Oberon-7.
+The basic data types in Oberon-7 are more limitted. In some cases the
+data types could simply be mapped to the newer version of the language.
+The built-in procedures and functions are different from Oberon-2 to
+Oberon-7. The <a href="Obn2.Mod">Obn2.Mod</a> provides a small
+collection of formerly build-in Oberon-2 function for use in Oberon-7.
 </p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th style="text-align: left;">
 Oberon-2
 </th>
@@ -71,7 +90,7 @@ Compatibility
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 LONGINT
 </td>
@@ -81,7 +100,7 @@ INTEGER
 <td style="text-align: left;">
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 LONGREAL
 </td>
@@ -91,7 +110,7 @@ REAL
 <td style="text-align: left;">
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 SHORTINT
 </td>
@@ -101,7 +120,7 @@ BYTE
 <td style="text-align: left;">
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 ASH
 </td>
@@ -111,7 +130,7 @@ ASH
 Obn2.ASH
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 MAX
 </td>
@@ -121,7 +140,7 @@ MAX
 Obn2.MAX
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 MIN
 </td>
@@ -131,7 +150,7 @@ MIN
 Obn2.MIN
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 ENTIER
 </td>
@@ -142,7 +161,7 @@ FLOOR
 Obn2.ENTIER
 </td>
 </tr>
-<tr class="even">
+<tr>
 <td style="text-align: left;">
 HALT
 </td>
@@ -153,7 +172,7 @@ ASSERT(FALSE)
 Obn2.HALT
 </td>
 </tr>
-<tr class="odd">
+<tr>
 <td style="text-align: left;">
 ROT
 </td>
@@ -170,18 +189,24 @@ Obn2.ROT
 POSIX compilers
 </h2>
 <p>
-Artemis and these ports have been developed with two Oberon-7 POSIX based compilers in mind
+Artemis and these ports have been developed with two Oberon-7 POSIX
+based compilers in mind
 </p>
 <ul>
 <li>
 <a href="https://">OBNC</a>
 </li>
 <li>
-<a href="https://github.com/Spivoxity/Obc-3" title="aka Oxford Oberon Compiler">Obc-3</a>
+<a href="https://github.com/Spivoxity/Obc-3"
+title="aka Oxford Oberon Compiler">Obc-3</a>
 </li>
 </ul>
 <p>
-OBNC advantage is it is realatively easy to port between POSIX systems. It only requires a good C compiler and optionally SDL 1.2. Obc-3 has the advantage of also being able to compile both Oberon-2 and Oberon-7 code selectable with a command line flag. This has been used to help compare behaviors in the language.
+OBNC advantage is it is realatively easy to port between POSIX systems.
+It only requires a good C compiler and optionally SDL 1.2. Obc-3 has the
+advantage of also being able to compile both Oberon-2 and Oberon-7 code
+selectable with a command line flag. This has been used to help compare
+behaviors in the language.
 </p>
 <h2 id="obnc">
 OBNC
@@ -190,16 +215,19 @@ OBNC
 Standard compiler envocation, <code>obnc MODULE_NAME</code>
 </p>
 <p>
-Haven’t noticed deviation from Oakwood except Out has some additional output formats.
+Haven’t noticed deviation from Oakwood except Out has some additional
+output formats.
 </p>
 <h2 id="oxford-oberon-compiler-obc-3">
 Oxford Oberon Compiler (obc-3)
 </h2>
 <p>
-Standard compiler envocation, <code>obc -07 DEP_MODULE_LIST PROG_MODULE -m</code>
+Standard compiler envocation, <code>obc -07 DEP_MODULE_LIST PROG_MODULE
+-m</code>
 </p>
 <p>
-The latest version on GitHub includes a more Oakwood-ish implementation of Out and Math modules.
+The latest version on GitHub includes a more Oakwood-ish implementation
+of Out and Math modules.
 </p>
 </section>
 <nav>

@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Artemis</title>
+    <link rel="stylesheet" type="text/css"  href="/printfonts/print.css" media="print" />
+  <link rel="stylesheet" type="text/css"  href="/webfonts/fonts.css" media="screen" />
+    <link href="/css/site.css" rel="stylesheet" />
+</head>
+<body>
+<header>
+…
+</header>
+<section>
+<h1 id="collections-in-oberon-ml">
+Collections in Oberon-ML
+</h1>
+<p>
+This document describes the collection modules implemented in Oberon-ML:
+<code>LinkedList</code>, <code>DoubleLinkedList</code>,
+<code>Deque</code>, <code>ArrayList</code>, <code>HashMap</code>,
+<code>Dictionary</code>, <code>Heap</code>, <code>HeapSort</code>,
+<code>Stack</code>, and <code>Queue</code>. Each module provides a
+different type of collection with its own interface and use cases.
+</p>
+<h2 id="overview">
+Overview
+</h2>
+<ul>
+<li>
+<strong>LinkedList</strong>: Singly-linked list for simple, linear data
+storage with position-based access.
+</li>
+<li>
+<strong>DoubleLinkedList</strong>: Doubly-linked list supporting
+bidirectional traversal and efficient insertions/removals at both ends.
+</li>
+<li>
+<strong>Deque</strong>: Double-ended queue built on
+<code>DoubleLinkedList</code>, supporting efficient insertion and
+removal at both ends.
+</li>
+<li>
+<strong>ArrayList</strong>: Dynamic array with indexable access,
+implemented using chunked arrays for efficient growth.
+</li>
+<li>
+<strong>HashMap</strong>: Hash table with separate chaining for
+efficient key-value storage and retrieval.
+</li>
+<li>
+<strong>Dictionary</strong>: Flexible key-value store supporting both
+integer and string keys, with a unified API.
+</li>
+<li>
+<strong>Heap</strong>: Binary heap implementation supporting priority
+queue operations with customizable comparison functions.
+</li>
+<li>
+<strong>HeapSort</strong>: Heap-based sorting algorithms and utilities
+for ArrayList collections.
+</li>
+<li>
+<strong>Stack</strong>: Last-In-First-Out (LIFO) collection built on
+<code>LinkedList</code>, ideal for managing temporary data and
+implementing function call stacks.
+</li>
+<li>
+<strong>Queue</strong>: First-In-First-Out (FIFO) collection built on
+<code>LinkedList</code>, ideal for task scheduling, event processing,
+and breadth-first algorithms.
+</li>
+</ul>
+<h2 id="api-design-principles">
+API Design Principles
+</h2>
+<p>
+The collections API follows modern software engineering principles:
+</p>
+<ol type="1">
+<li>
+<strong>Information Hiding</strong>: Internal structures (nodes,
+descriptors, buckets) are encapsulated and not exposed to client code.
+</li>
+<li>
+<strong>Position-Based Access</strong>: Linear collections use 0-based
+indexing instead of exposing internal node references.
+</li>
+<li>
+<strong>Consistent Type System</strong>: All collections use
+<code>Collections.ItemPtr</code> as the universal item type.
+</li>
+<li>
+<strong>Safe Error Handling</strong>: Operations that can fail (like
+<code>GetAt</code>, <code>InsertAt</code>, <code>Get</code>) return
+boolean success indicators.
+</li>
+<li>
+<strong>Uniform Interfaces</strong>: Similar operations across different
+collection types have consistent signatures.
+</li>
+<li>
+<strong>Flexible Key Support</strong>: Dictionary supports both integer
+and string keys with a unified interface.
+</li>
+</ol>
+<h2 id="supported-data-structures-and-operations">
+Supported Data Structures and Operations
+</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 14%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr>
+<th>
+LinkedList
+</th>
+<th>
+DoubleLinkedList
+</th>
+<th>
+Deque
+</th>
+<th>
+ArrayList
+</th>
+<th>
+HashMap
+</th>
+<th>
+Dictionary
+</th>
+<th>
+Heap
+</th>
+<th>
+HeapSort
+</th>
+<th>
+Stack
+</th>
+<th>
+Queue
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+New
+</td>
+<td>
+New
+</td>
+<td>
+New
+</td>
+<td>
+New
+</td>
+<td>
+New
+</td>
+<td>
+New
+</td>
+<td>
+New
+</td>
+<td>
+SortInPlace
+</td>
+<td>
+New
+</td>
+<td>
+New
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+NewWithSize
+</td>
+<td>
+NewStringDict
+</td>
+<td>
+-
+</td>
+<td>
+Sort
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+<td>
+IsSorted
+</td>
+<td>
+Free
+</td>
+<td>
+Free
+</td>
+</tr>
+<tr>
+<td>
+Append
+</td>
+<td>
+Append
+</td>
+<td>
+Append
+</td>
+<td>
+Append
+</td>
+<td>
+Put
+</td>
+<td>
+Put, PutString
+</td>
+<td>
+Insert
+</td>
+<td>
+FindKthSmallest
+</td>
+<td>
+Push
+</td>
+<td>
+Enqueue
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+Prepend
+</td>
+<td>
+Prepend
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+ExtractMin
+</td>
+<td>
+MergeSorted
+</td>
+<td>
+Pop
+</td>
+<td>
+Dequeue
+</td>
+</tr>
+<tr>
+<td>
+InsertAt
+</td>
+<td>
+InsertAt
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+PeekMin
+</td>
+<td>
+-
+</td>
+<td>
+Top
+</td>
+<td>
+Front
+</td>
+</tr>
+<tr>
+<td>
+RemoveFirst
+</td>
+<td>
+RemoveFirst
+</td>
+<td>
+RemoveFirst
+</td>
+<td>
+-
+</td>
+<td>
+Remove
+</td>
+<td>
+Remove, RemoveString
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+RemoveLast
+</td>
+<td>
+RemoveLast
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+GetAt
+</td>
+<td>
+GetAt
+</td>
+<td>
+-
+</td>
+<td>
+GetAt
+</td>
+<td>
+Get
+</td>
+<td>
+Get, GetString
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+SetAt
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+Head
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+Tail
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+<tr>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+<td>
+-
+</td>
+<td>
+Count
+</td>
+<td>
+Count
+</td>
+</tr>
+<tr>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+-
+</td>
+<td>
+IsEmpty
+</td>
+<td>
+IsEmpty
+</td>
+</tr>
+<tr>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+<td>
+-
+</td>
+<td>
+Clear
+</td>
+<td>
+Clear
+</td>
+</tr>
+<tr>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+<td>
+-
+</td>
+<td>
+Foreach
+</td>
+<td>
+Foreach
+</td>
+</tr>
+<tr>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+Contains
+</td>
+<td>
+Contains, ContainsString
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+<td>
+-
+</td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-summaries">
+Module Summaries
+</h2>
+<h3 id="linkedlist">
+LinkedList
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Simple, efficient singly-linked list.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Append</code>,
+<code>RemoveFirst</code>, <code>InsertAt</code>, <code>GetAt</code>,
+<code>Count</code>, <code>IsEmpty</code>, <code>Clear</code>,
+<code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong> Position-based access with 0-based indexing.
+Only supports removal from the front. <code>Clear</code> removes all
+elements from the list.
+</li>
+</ul>
+<h3 id="doublelinkedlist">
+DoubleLinkedList
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> More flexible list with bidirectional links.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Append</code>,
+<code>Prepend</code>, <code>InsertAt</code>, <code>RemoveFirst</code>,
+<code>RemoveLast</code>, <code>GetAt</code>, <code>Head</code>,
+<code>Tail</code>, <code>Count</code>, <code>IsEmpty</code>,
+<code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong> Position-based insertion and access with 0-based
+indexing. Supports removal from both ends and efficient access to
+head/tail elements. <code>Clear</code> removes all elements from the
+list.
+</li>
+</ul>
+<h3 id="deque">
+Deque
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Double-ended queue for efficient
+insertion/removal at both ends.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Append</code>,
+<code>Prepend</code>, <code>RemoveFirst</code>, <code>RemoveLast</code>,
+<code>Count</code>, <code>IsEmpty</code>, <code>Clear</code>,
+<code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong> Built on <code>DoubleLinkedList</code> for
+efficiency and code reuse. <code>Clear</code> removes all elements from
+the deque.
+</li>
+</ul>
+<h3 id="arraylist">
+ArrayList
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Dynamic array providing indexable access with
+automatic growth.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Append</code>,
+<code>GetAt</code>, <code>SetAt</code>, <code>Count</code>,
+<code>IsEmpty</code>, <code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong> Implemented using chunked arrays (64-item
+chunks) managed by <code>LinkedList</code>. Provides O(1) append and
+reasonable random access performance. Index-based access with 0-based
+indexing. <code>Clear</code> removes all elements from the list.
+</li>
+</ul>
+<h3 id="hashmap">
+HashMap
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Hash table for efficient key-value storage and
+retrieval.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>NewWithSize</code>, <code>Free</code>,
+<code>Put</code>, <code>Get</code>, <code>Contains</code>,
+<code>Remove</code>, <code>Count</code>, <code>IsEmpty</code>,
+<code>LoadFactor</code>, <code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Key Types:</strong>
+<ul>
+<li>
+<code>KeyValuePair</code>: Record type extending
+<code>Collections.Item</code> with <code>key</code> (INTEGER) and
+<code>value</code> (Collections.ItemPtr) fields
+</li>
+<li>
+<code>NewKeyValuePair</code>: Constructor for creating key-value pairs
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong> Uses separate chaining with LinkedLists for
+collision resolution. Keys are INTEGER type. Fixed-size bucket array
+with configurable initial size. <code>Clear</code> removes all key-value
+pairs from the map.
+</li>
+</ul>
+<h3 id="dictionary">
+Dictionary
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Flexible key-value store supporting both
+integer and string keys with a unified API.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>NewStringDict</code>, <code>Free</code>,
+<code>Put</code>, <code>PutString</code>, <code>Get</code>,
+<code>GetString</code>, <code>Remove</code>, <code>RemoveString</code>,
+<code>Contains</code>, <code>ContainsString</code>, <code>Count</code>,
+<code>IsEmpty</code>, <code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong>
+<ul>
+<li>
+Supports both integer and string keys, with dedicated procedures for
+each.
+</li>
+<li>
+<code>Foreach</code> applies a visitor procedure to all values in the
+dictionary.
+</li>
+<li>
+<code>Clear</code> removes all key-value pairs from the dictionary.
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="heap">
+Heap
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Binary heap implementation supporting priority
+queue operations with customizable comparison functions.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Insert</code>,
+<code>ExtractMin</code>, <code>PeekMin</code>, <code>Count</code>,
+<code>IsEmpty</code>, <code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Key Types:</strong>
+<ul>
+<li>
+<code>CompareFunc</code>: Procedure type for custom comparison functions
+</li>
+<li>
+<code>MinCompare</code>, <code>MaxCompare</code>: Built-in comparison
+functions for min and max heaps
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong>
+<ul>
+<li>
+Built on <code>ArrayList</code> for efficient storage and automatic
+growth.
+</li>
+<li>
+Supports both min-heap and max-heap behavior through comparison
+functions.
+</li>
+<li>
+Maintains heap property through automatic rebalancing on insert and
+extract operations.
+</li>
+<li>
+<code>Foreach</code> applies a visitor procedure to all items in heap
+order.
+</li>
+<li>
+<code>Clear</code> removes all elements from the heap.
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="heapsort">
+HeapSort
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Heap-based sorting algorithms and utilities
+for ArrayList collections.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>SortInPlace</code>, <code>Sort</code>, <code>IsSorted</code>,
+<code>FindKthSmallest</code>, <code>MergeSorted</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong>
+<ul>
+<li>
+<code>SortInPlace</code>: In-place heap sort algorithm, modifies the
+original ArrayList.
+</li>
+<li>
+<code>Sort</code>: Non-destructive sorting, creates a new sorted
+ArrayList.
+</li>
+<li>
+<code>IsSorted</code>: Utility to check if an ArrayList is already
+sorted.
+</li>
+<li>
+<code>FindKthSmallest</code>: Finds the k-th smallest element using heap
+selection.
+</li>
+<li>
+<code>MergeSorted</code>: Merges two sorted ArrayLists into a new sorted
+ArrayList.
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="stack">
+Stack
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> Last-In-First-Out (LIFO) collection for
+managing temporary data and implementing function call stacks.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Push</code>,
+<code>Pop</code>, <code>Top</code>, <code>Count</code>,
+<code>IsEmpty</code>, <code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong>
+<ul>
+<li>
+Built on <code>LinkedList</code> for efficiency and code reuse.
+</li>
+<li>
+<code>Push</code>: Adds an item to the top of the stack.
+</li>
+<li>
+<code>Pop</code>: Removes and returns the top item from the stack.
+</li>
+<li>
+<code>Top</code>: Returns the top item without removing it.
+</li>
+<li>
+Follows strict LIFO semantics - items are retrieved in reverse order of
+insertion.
+</li>
+<li>
+<code>Clear</code> removes all elements from the stack.
+</li>
+<li>
+Ideal for expression evaluation, function call management, and undo/redo
+operations.
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="queue">
+Queue
+</h3>
+<ul>
+<li>
+<strong>Purpose:</strong> First-In-First-Out (FIFO) collection for task
+scheduling, event processing, and breadth-first algorithms.
+</li>
+<li>
+<strong>Key Procedures:</strong>
+<ul>
+<li>
+<code>New</code>, <code>Free</code>, <code>Enqueue</code>,
+<code>Dequeue</code>, <code>Front</code>, <code>Count</code>,
+<code>IsEmpty</code>, <code>Clear</code>, <code>Foreach</code>
+</li>
+</ul>
+</li>
+<li>
+<strong>Notes:</strong>
+<ul>
+<li>
+Built on <code>LinkedList</code> for efficiency and code reuse.
+</li>
+<li>
+<code>Enqueue</code>: Adds an item to the rear of the queue.
+</li>
+<li>
+<code>Dequeue</code>: Removes and returns the front item from the queue.
+</li>
+<li>
+<code>Front</code>: Returns the front item without removing it.
+</li>
+<li>
+Follows strict FIFO semantics - items are retrieved in the same order
+they were inserted.
+</li>
+<li>
+<code>Clear</code> removes all elements from the queue.
+</li>
+<li>
+Ideal for task scheduling, customer service systems, and breadth-first
+search algorithms.
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="usage-examples">
+Usage Examples
+</h2>
+<h3 id="linkedlist-example">
+LinkedList Example
+</h3>
+<pre class="oberon"><code>IMPORT LinkedList, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    list: LinkedList.List;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+
+BEGIN
+    list := LinkedList.New();
+    
+    (* Create and add items *)
+    NEW(item); item.value := 42;
+    LinkedList.Append(list, item);
+    
+    (* Insert at specific position *)
+    NEW(item); item.value := 10;
+    success := LinkedList.InsertAt(list, 0, item);
+    
+    (* Access items by position *)
+    success := LinkedList.GetAt(list, 1, result);
+    IF success THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+    
+    LinkedList.Free(list);
+END.</code></pre>
+<h3 id="arraylist-example">
+ArrayList Example
+</h3>
+<pre class="oberon"><code>IMPORT ArrayList, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    list: ArrayList.ArrayList;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    list := ArrayList.New();
+    
+    (* Append items to the list *)
+    FOR i := 0 TO 99 DO
+        NEW(item); item.value := i * 10;
+        success := ArrayList.Append(list, item);
+    END;
+    
+    (* Access items by index *)
+    success := ArrayList.GetAt(list, 50, result);
+    IF success THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+    
+    (* Update an item at specific index *)
+    NEW(item); item.value := 999;
+    success := ArrayList.SetAt(list, 25, item);
+    
+    (* Access elements efficiently across chunk boundaries *)
+    success := ArrayList.GetAt(list, 63, result);  (* Last item in first chunk *)
+    success := ArrayList.GetAt(list, 64, result);  (* First item in second chunk *)
+    
+    ArrayList.Free(list);
+END.</code></pre>
+<h3 id="hashmap-example">
+HashMap Example
+</h3>
+<pre class="oberon"><code>IMPORT HashMap, Collections, CollectionKeys;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        name: ARRAY 32 OF CHAR;
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    map: HashMap.HashMap;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    ops: CollectionKeys.KeyOps;
+    success: BOOLEAN;
+
+BEGIN
+    (* Create HashMap with integer keys *)
+    map := HashMap.New();
+    
+    (* Or create with custom size *)
+    CollectionKeys.IntegerKeyOps(ops);
+    map := HashMap.NewWithSize(32, ops);
+    
+    (* Create and store items *)
+    NEW(item); 
+    item.name := &quot;test&quot;;
+    item.value := 42;
+    HashMap.Put(map, 123, item);
+    
+    (* Retrieve items by key *)
+    success := HashMap.Get(map, 123, result);
+    IF success THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+    
+    (* Check if key exists *)
+    IF HashMap.Contains(map, 123) THEN
+        (* Key is present *)
+    END;
+    
+    (* Remove items *)
+    success := HashMap.Remove(map, 123);
+    
+    HashMap.Free(map);
+END.</code></pre>
+<h3 id="dictionary-example">
+Dictionary Example
+</h3>
+<pre class="oberon"><code>IMPORT Dictionary, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR
+    dict: Dictionary.Dictionary;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    found: BOOLEAN;
+
+BEGIN
+    (* Create a dictionary with integer keys *)
+    dict := Dictionary.New();
+
+    (* Or create a dictionary with string keys *)
+    dict := Dictionary.NewStringDict();
+
+    (* Insert by integer key *)
+    NEW(item); item.value := 42;
+    Dictionary.Put(dict, 123, item);
+
+    (* Insert by string key *)
+    NEW(item); item.value := 99;
+    Dictionary.PutString(dict, &quot;foo&quot;, item);
+
+    (* Retrieve by integer key *)
+    found := Dictionary.Get(dict, 123, result);
+    IF found THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+
+    (* Retrieve by string key *)
+    found := Dictionary.GetString(dict, &quot;foo&quot;, result);
+    IF found THEN
+        (* Use result(MyItemPtr).value *)
+    END;
+
+    (* Remove by integer key *)
+    Dictionary.Remove(dict, 123);
+
+    (* Remove by string key *)
+    Dictionary.RemoveString(dict, &quot;foo&quot;);
+
+    Dictionary.Free(dict);
+END.</code></pre>
+<h3 id="heap-example">
+Heap Example
+</h3>
+<pre class="oberon"><code>IMPORT Heap, Collections;
+
+TYPE
+    Task = RECORD (Collections.Item)
+        priority: INTEGER;
+        name: ARRAY 64 OF CHAR
+    END;
+    TaskPtr = POINTER TO Task;
+
+VAR 
+    heap: Heap.Heap;
+    task: TaskPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    
+PROCEDURE PrintTask(item: Collections.ItemPtr);
+VAR
+    t: TaskPtr;
+BEGIN
+    t := item(TaskPtr);
+    Out.String(&quot;Task: &quot;); Out.String(t.name); 
+    Out.String(&quot; (Priority: &quot;); Out.Int(t.priority, 0); Out.String(&quot;)&quot;);
+    Out.Ln;
+END PrintTask;
+
+BEGIN
+    (* Create a min-heap for task scheduling *)
+    heap := Heap.New(Heap.MinCompare);
+    
+    (* Add tasks with different priorities *)
+    NEW(task); task.priority := 5; COPY(&quot;Low priority task&quot;, task.name);
+    Heap.Insert(heap, task);
+    
+    NEW(task); task.priority := 1; COPY(&quot;High priority task&quot;, task.name);
+    Heap.Insert(heap, task);
+    
+    NEW(task); task.priority := 3; COPY(&quot;Medium priority task&quot;, task.name);
+    Heap.Insert(heap, task);
+    
+    (* Process tasks in priority order *)
+    WHILE ~Heap.IsEmpty(heap) DO
+        success := Heap.ExtractMin(heap, result);
+        IF success THEN
+            PrintTask(result);
+        END;
+    END;
+    
+    Heap.Free(heap);
+END.</code></pre>
+<h3 id="heapsort-example">
+HeapSort Example
+</h3>
+<pre class="oberon"><code>IMPORT HeapSort, ArrayList, Collections;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    list, sortedList: ArrayList.ArrayList;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    list := ArrayList.New();
+    
+    (* Add unsorted items *)
+    FOR i := 0 TO 9 DO
+        NEW(item); item.value := (31 * i) MOD 17;  (* Generate pseudo-random values *)
+        success := ArrayList.Append(list, item);
+    END;
+    
+    (* Check if already sorted *)
+    IF HeapSort.IsSorted(list, Heap.MinCompare) THEN
+        Out.String(&quot;List is already sorted&quot;);
+    ELSE
+        Out.String(&quot;List needs sorting&quot;);
+    END;
+    Out.Ln;
+    
+    (* Sort without modifying original *)
+    sortedList := HeapSort.Sort(list, Heap.MinCompare);
+    
+    (* Or sort in-place *)
+    HeapSort.SortInPlace(list, Heap.MinCompare);
+    
+    (* Find 3rd smallest element *)
+    success := HeapSort.FindKthSmallest(list, 2, result);  (* 0-based: 2 = 3rd smallest *)
+    IF success THEN
+        Out.String(&quot;3rd smallest: &quot;); Out.Int(result(MyItemPtr).value, 0); Out.Ln;
+    END;
+    
+    ArrayList.Free(list);
+    ArrayList.Free(sortedList);
+END.</code></pre>
+<h3 id="stack-example">
+Stack Example
+</h3>
+<pre class="oberon"><code>IMPORT Stack, Collections, Out;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    stack: Stack.Stack;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    stack := Stack.New();
+    
+    (* Push items onto the stack *)
+    FOR i := 1 TO 5 DO
+        NEW(item); item.value := i * 10;
+        Stack.Push(stack, item);
+        Out.String(&quot;Pushed: &quot;); Out.Int(item.value, 0); Out.Ln;
+    END;
+    
+    (* Peek at the top item *)
+    success := Stack.Top(stack, result);
+    IF success THEN
+        Out.String(&quot;Top item: &quot;); Out.Int(result(MyItemPtr).value, 0); Out.Ln;
+    END;
+    
+    (* Pop items in LIFO order *)
+    Out.String(&quot;Popping items: &quot;);
+    WHILE ~Stack.IsEmpty(stack) DO
+        Stack.Pop(stack, result);
+        IF result # NIL THEN
+            Out.Int(result(MyItemPtr).value, 0); Out.String(&quot; &quot;);
+        END;
+    END;
+    Out.Ln;
+    
+    Stack.Free(stack);
+END.</code></pre>
+<h3 id="queue-example">
+Queue Example
+</h3>
+<pre class="oberon"><code>IMPORT Queue, Collections, Out;
+
+TYPE
+    MyItem = RECORD (Collections.Item)
+        value: INTEGER
+    END;
+    MyItemPtr = POINTER TO MyItem;
+
+VAR 
+    queue: Queue.Queue;
+    item: MyItemPtr;
+    result: Collections.ItemPtr;
+    success: BOOLEAN;
+    i: INTEGER;
+
+BEGIN
+    queue := Queue.New();
+    
+    (* Enqueue items to the queue *)
+    FOR i := 1 TO 5 DO
+        NEW(item); item.value := i * 10;
+        Queue.Enqueue(queue, item);
+        Out.String(&quot;Enqueued: &quot;); Out.Int(item.value, 0); Out.Ln;
+    END;
+    
+    (* Peek at the front item *)
+    success := Queue.Front(queue, result);
+    IF success THEN
+        Out.String(&quot;Front item: &quot;); Out.Int(result(MyItemPtr).value, 0); Out.Ln;
+    END;
+    
+    (* Dequeue items in FIFO order *)
+    Out.String(&quot;Dequeuing items: &quot;);
+    WHILE ~Queue.IsEmpty(queue) DO
+        Queue.Dequeue(queue, result);
+        IF result # NIL THEN
+            Out.Int(result(MyItemPtr).value, 0); Out.String(&quot; &quot;);
+        END;
+    END;
+    Out.Ln;
+    
+    Queue.Free(queue);
+END.</code></pre>
+<h2 id="extending-collections">
+Extending Collections
+</h2>
+<p>
+All collection modules work with items that extend the base
+<code>Collections.Item</code> type. The collections use
+<code>Collections.ItemPtr</code> (which is <code>POINTER TO
+Collections.Item</code>) as the universal item type, providing type
+safety while allowing flexibility.
+</p>
+<h3 id="hashmap-key-value-pairs">
+HashMap Key-Value Pairs
+</h3>
+<p>
+The HashMap module provides a special <code>KeyValuePair</code> type
+that extends <code>Collections.Item</code>:
+</p>
+<pre class="oberon"><code>TYPE
+    KeyValuePair* = RECORD(Collections.Item)
+        key*: CollectionKeys.KeyPtr;
+        value*: Collections.ItemPtr
+    END;</code></pre>
+<p>
+This allows HashMap to work seamlessly with the visitor pattern used by
+<code>Foreach</code>, where the visitor receives
+<code>KeyValuePair</code> items containing both the key and the
+associated value.
+</p>
+<h2 id="collectionkeys-module">
+CollectionKeys Module
+</h2>
+<p>
+The <code>CollectionKeys</code> module provides extensible key support
+for key-value collections like HashMap. It defines base key types and
+operations that can be extended for different key types.
+</p>
+<h3 id="key-types">
+Key Types
+</h3>
+<pre class="oberon"><code>TYPE
+    (* Base key type - extend for specific key types *)
+    Key* = RECORD(Collections.Item) END;
+    KeyPtr* = POINTER TO Key;
+    
+    (* Integer key implementation *)
+    IntegerKey* = RECORD(Key)
+        value*: INTEGER
+    END;
+    IntegerKeyPtr* = POINTER TO IntegerKey;
+    
+    (* Key operations interface *)
+    KeyOps* = RECORD
+        hash*: PROCEDURE(key: KeyPtr; size: INTEGER): INTEGER;
+        equals*: PROCEDURE(key1, key2: KeyPtr): BOOLEAN
+    END;</code></pre>
+<h3 id="usage">
+Usage
+</h3>
+<pre class="oberon"><code>(* Create integer key operations *)
+VAR ops: CollectionKeys.KeyOps;
+CollectionKeys.IntegerKeyOps(ops);
+
+(* Use with HashMap *)
+map := HashMap.NewWithSize(32, ops);
+
+(* Or use convenience constructor for integer keys *)
+map := HashMap.New();</code></pre>
+<h3 id="extending-with-custom-key-types">
+Extending with Custom Key Types
+</h3>
+<p>
+Future key types can be added by extending the base <code>Key</code>
+type and providing appropriate hash and equality functions:
+</p>
+<pre class="oberon"><code>(* Example: String key type *)
+TYPE
+    StringKey = RECORD(CollectionKeys.Key)
+        value: ARRAY 256 OF CHAR
+    END;
+    StringKeyPtr = POINTER TO StringKey;
+
+PROCEDURE HashString(key: CollectionKeys.KeyPtr; size: INTEGER): INTEGER;
+    (* Implementation for string hashing *)
+
+PROCEDURE EqualsString(key1, key2: CollectionKeys.KeyPtr): BOOLEAN;
+    (* Implementation for string comparison *)
+
+PROCEDURE StringKeyOps(VAR ops: CollectionKeys.KeyOps);
+BEGIN
+    ops.hash := HashString;
+    ops.equals := EqualsString
+END StringKeyOps;</code></pre>
+<h3 id="information-hiding">
+Information Hiding
+</h3>
+<p>
+The collection modules implement proper information hiding: -
+<strong>LinkedList</strong> and <strong>DoubleLinkedList</strong> use
+opaque <code>List</code> types with internal node structures -
+<strong>Deque</strong> uses an opaque <code>Deque</code> type built on
+<code>DoubleLinkedList</code> - <strong>ArrayList</strong> uses an
+opaque <code>ArrayList</code> type with internal chunked array structure
+managed by <code>LinkedList</code> - <strong>HashMap</strong> uses an
+opaque <code>HashMap</code> type with internal bucket array and hash
+function - <strong>Dictionary</strong> uses an opaque
+<code>Dictionary</code> type with internal structure, supporting both
+integer and string keys - <strong>Heap</strong> uses an opaque
+<code>Heap</code> type with internal binary heap structure built on
+<code>ArrayList</code> - <strong>HeapSort</strong> provides algorithmic
+utilities without exposing internal heap structures - Internal
+implementation details (nodes, list descriptors, hash buckets, array
+chunks, heap indices) are not exposed - Position-based access
+(<code>InsertAt</code>, <code>GetAt</code>, <code>SetAt</code>) replaces
+direct node manipulation or array access
+</p>
+<h3 id="type-safety">
+Type Safety
+</h3>
+<p>
+All collections use the common <code>Collections.ItemPtr</code> type,
+which ensures: - Consistent interfaces across all collection types -
+Type-safe operations with proper type guards when needed - No
+module-specific item types that could cause confusion
+</p>
+<p>
+Always use the provided procedures for manipulating collections to
+ensure safety and correctness.
+</p>
+<h2 id="arraylist-implementation-details">
+ArrayList Implementation Details
+</h2>
+<p>
+The ArrayList module provides dynamic array functionality while working
+within Oberon-07’s fixed-size array constraints. It uses a chunked array
+approach:
+</p>
+<ul>
+<li>
+<strong>Chunked Storage</strong>: Items are stored in fixed-size chunks
+(64 items each) managed by a LinkedList
+</li>
+<li>
+<strong>Performance Characteristics</strong>:
+<ul>
+<li>
+O(1) append operations (amortized)
+</li>
+<li>
+O(n/64) random access (where n is the index)
+</li>
+<li>
+Automatic growth without memory reallocation of existing data
+</li>
+</ul>
+</li>
+<li>
+<strong>Memory Efficiency</strong>: Only allocates chunks as needed,
+reducing memory waste
+</li>
+<li>
+<strong>Cross-Chunk Access</strong>: Seamless access across chunk
+boundaries with 0-based indexing
+</li>
+<li>
+<strong>Suitable Use Cases</strong>: When you need indexable access to a
+growing collection but don’t know the final size in advance
+</li>
+</ul>
+<h2 id="operation-details">
+Operation Details
+</h2>
+<h3 id="position-based-operations-linear-collections">
+Position-Based Operations (Linear Collections)
+</h3>
+<ul>
+<li>
+<strong>InsertAt(position, item)</strong>: Inserts item at 0-based
+position, returns <code>TRUE</code> if successful (LinkedList,
+DoubleLinkedList)
+</li>
+<li>
+<strong>GetAt(position, VAR result)</strong>: Retrieves item at
+position, returns <code>TRUE</code> if successful and sets
+<code>result</code> (LinkedList, DoubleLinkedList, ArrayList)
+</li>
+<li>
+<strong>SetAt(position, item)</strong>: Updates item at position,
+returns <code>TRUE</code> if successful (ArrayList)
+</li>
+<li>
+<strong>Append(item)</strong>: Adds item to the end of the collection
+(LinkedList, DoubleLinkedList, ArrayList)
+</li>
+<li>
+<strong>Clear()</strong>: Removes all elements from the collection
+(LinkedList, DoubleLinkedList, Deque, ArrayList)
+</li>
+</ul>
+<h3 id="key-based-operations-hashmap-dictionary">
+Key-Based Operations (HashMap, Dictionary)
+</h3>
+<ul>
+<li>
+<strong>Put(key, value)</strong>: Stores or updates the value associated
+with the key
+</li>
+<li>
+<strong>PutString(key, value)</strong>: Stores or updates the value
+associated with the string key (Dictionary and HashMap with string keys)
+</li>
+<li>
+<strong>Get(key, VAR result)</strong>: Retrieves value for the key,
+returns <code>TRUE</code> if found and sets <code>result</code>
+</li>
+<li>
+<strong>GetString(key, VAR result)</strong>: Retrieves value for the
+string key, returns <code>TRUE</code> if found and sets
+<code>result</code> (Dictionary and HashMap with string keys)
+</li>
+<li>
+<strong>Contains(key)</strong>: Returns <code>TRUE</code> if the key
+exists in the map/dictionary
+</li>
+<li>
+<strong>ContainsString(key)</strong>: Returns <code>TRUE</code> if the
+string key exists (Dictionary and HashMap with string keys)
+</li>
+<li>
+<strong>Remove(key, VAR result)</strong>: Removes key-value pair,
+returns <code>TRUE</code> if found and sets <code>result</code> to the
+removed value (HashMap)
+</li>
+<li>
+<strong>Remove(key)</strong>: Removes key-value pair by key (Dictionary)
+</li>
+<li>
+<strong>RemoveString(key)</strong>: Removes key-value pair by string key
+(Dictionary and HashMap with string keys)
+</li>
+<li>
+<strong>Clear()</strong>: Removes all key-value pairs from the
+map/dictionary (HashMap, Dictionary)
+</li>
+</ul>
+<h3 id="priority-queue-operations-heap">
+Priority Queue Operations (Heap)
+</h3>
+<ul>
+<li>
+<strong>Insert(item)</strong>: Adds item to the heap, maintaining heap
+property
+</li>
+<li>
+<strong>ExtractMin(VAR result)</strong>: Removes and returns the minimum
+item, returns <code>TRUE</code> if successful and sets
+<code>result</code>
+</li>
+<li>
+<strong>PeekMin(VAR result)</strong>: Returns the minimum item without
+removing it, returns <code>TRUE</code> if successful and sets
+<code>result</code>
+</li>
+<li>
+<strong>Clear()</strong>: Removes all items from the heap
+</li>
+</ul>
+<h3 id="sorting-operations-heapsort">
+Sorting Operations (HeapSort)
+</h3>
+<ul>
+<li>
+<strong>SortInPlace(list, compare)</strong>: Sorts an ArrayList in-place
+using heap sort algorithm
+</li>
+<li>
+<strong>Sort(list, compare)</strong>: Creates a new sorted ArrayList
+without modifying the original
+</li>
+<li>
+<strong>IsSorted(list, compare)</strong>: Returns <code>TRUE</code> if
+the ArrayList is already sorted according to the comparison function
+</li>
+<li>
+<strong>FindKthSmallest(list, k, VAR result)</strong>: Finds the k-th
+smallest element (0-based), returns <code>TRUE</code> if successful and
+sets <code>result</code>
+</li>
+<li>
+<strong>MergeSorted(list1, list2, compare)</strong>: Merges two sorted
+ArrayLists into a new sorted ArrayList
+</li>
+</ul>
+<hr />
+<p>
+For detailed API documentation, see the respective
+<code>.def.html</code> files in the <code>obncdoc/</code> directory.
+</p>
+</section>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="./">README</a>
+</li>
+<li>
+<a href="license.html">LICENSE</a>
+</li>
+<li>
+<a href="install.html">INSTALL</a>
+</li>
+<li>
+<a href="./obnc/">OBNC Modules</a>
+</li>
+<li>
+<a href="./oxford/">Obc-3 Modules</a>
+</li>
+<li>
+<a href="./ofrontplus/">Ofront+ Modules</a>
+</li>
+<li>
+<a href="./development-notes.html">development notes</a>
+</li>
+<li>
+<a href="https://github.com/rsdoiel/Artemis">Github</a>
+</li>
+</ul>
+</nav>
+<footer>
+copyright (c) 2021 all rights reserved.
+Released under the BSD 3-Clause license
+See: http://opensource.org/licenses/BSD-3-Clause
+</footer>
+</body>
+</html>

@@ -19,10 +19,11 @@ Next
 </h2>
 <ul class="task-list">
 <li>
-<input type="checkbox" disabled="" /> Need a module for working with UTF-8 encoded strings, Scanner need to support UTF-8 encoded files
+<label><input type="checkbox" />Need a module for working with UTF-8
+encoded strings, Scanner need to support UTF-8 encoded files</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Tests.Mod
+<label><input type="checkbox" />Tests.Mod</label>
 <ul>
 <li>
 rename ExpectedString to ExpectedChars (for consistency in Artemis)
@@ -33,7 +34,7 @@ Conform the const CHAR descriptions between Scanner.Mod and Chars.Mod
 </ul>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Chars.Mod
+<label><input type="checkbox" />Chars.Mod</label>
 <ul>
 <li>
 QUOTE should be DQUOTE 34X
@@ -44,37 +45,53 @@ Add SQUOTE 39X
 </ul>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Add Scanner.Mod implementing a simple text scanner supporting ARRAY OF CHAR and plain text files
+<label><input type="checkbox" />Add Scanner.Mod implementing a simple
+text scanner supporting ARRAY OF CHAR and plain text files</label>
 </li>
 <li>
-<input type="checkbox" disabled="" checked="" /> Clock.Mod should wrap host system clock for use by a more general purpose DateTime.Mod.
+<label><input type="checkbox" checked="" />Clock.Mod should wrap host
+system clock for use by a more general purpose DateTime.Mod.</label>
 </li>
 <li>
-<input type="checkbox" disabled="" checked="" /> Refactor CharsTest.Mod to test Strings compatible procedures
+<label><input type="checkbox" checked="" />Refactor CharsTest.Mod to
+test Strings compatible procedures</label>
 </li>
 <li>
-<input type="checkbox" disabled="" checked="" /> Tests module for easily writing tests of modules
+<label><input type="checkbox" checked="" />Tests module for easily
+writing tests of modules</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Reals.Mod should provide easy conversion to/from String for Real with exponential or fixed notations without reliance on extConvert.
+<label><input type="checkbox" />Reals.Mod should provide easy conversion
+to/from String for Real with exponential or fixed notations without
+reliance on extConvert.</label>
 </li>
 <li>
-<input type="checkbox" disabled="" checked="" /> Chars should provide a more modern approach to text processing that the Oakwood Strings module
+<label><input type="checkbox" checked="" />Chars should provide a more
+modern approach to text processing that the Oakwood Strings
+module</label>
 </li>
 <li>
-<input type="checkbox" disabled="" checked="" /> Chars module should work as a drop in replacement for Oakwood Strings
+<label><input type="checkbox" checked="" />Chars module should work as a
+drop in replacement for Oakwood Strings</label>
 </li>
 <li>
-<input type="checkbox" disabled="" checked="" /> DStrings module for dynamic strings, compatible with Chars and Strings where it makes sense, it should include Rider suppport since we lack index notation for working in the string object
+<label><input type="checkbox" checked="" />DStrings module for dynamic
+strings, compatible with Chars and Strings where it makes sense, it
+should include Rider suppport since we lack index notation for working
+in the string object</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> JSON module for working with JSON data
+<label><input type="checkbox" />JSON module for working with JSON
+data</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Document coding conventions on when to use snake, camel case in variables and procedure names.
+<label><input type="checkbox" />Document coding conventions on when to
+use snake, camel case in variables and procedure names.</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Use the <code>curl –libcurl</code> option to assemble a C module for handling HTTP/HTTPS and possibly other curl supported protocols
+<label><input type="checkbox" />Use the <code>curl –libcurl</code>
+option to assemble a C module for handling HTTP/HTTPS and possibly other
+curl supported protocols</label>
 </li>
 </ul>
 <h2 id="requested-ports-from-native-oberon">
@@ -82,22 +99,28 @@ Requested Ports from Native Oberon
 </h2>
 <ul class="task-list">
 <li>
-<input type="checkbox" disabled="" /> Files.Mod (Confirm Can I use OBNC’s implementation, confirm PO 2013 Files.Mod works as replacement)
+<label><input type="checkbox" />Files.Mod (Confirm Can I use OBNC’s
+implementation, confirm PO 2013 Files.Mod works as replacement)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Objects.Mod (Port needed for POSIX, port needed for PO 2013)
+<label><input type="checkbox" />Objects.Mod (Port needed for POSIX, port
+needed for PO 2013)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Display.Mod (Port needed for POSIX, confirm PO 2013 Display.Mod works as replacement)
+<label><input type="checkbox" />Display.Mod (Port needed for POSIX,
+confirm PO 2013 Display.Mod works as replacement)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Fonts.Mod (Port needed for POSIX, confirm PO 2013 Fonts.Mod works as replacement)
+<label><input type="checkbox" />Fonts.Mod (Port needed for POSIX,
+confirm PO 2013 Fonts.Mod works as replacement)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Reals.Mod (Port needed for POSIX and for PO 2013)
+<label><input type="checkbox" />Reals.Mod (Port needed for POSIX and for
+PO 2013)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Texts.Mod, see https://en.wikibooks.org/wiki/Oberon/ETH_Oberon/2003-01-05/Texts.Mod
+<label><input type="checkbox" />Texts.Mod, see
+https://en.wikibooks.org/wiki/Oberon/ETH_Oberon/2003-01-05/Texts.Mod</label>
 <ul>
 <li>
 Depends on: Files, Objects, Display, Fonts, and Reals
@@ -105,7 +128,9 @@ Depends on: Files, Objects, Display, Fonts, and Reals
 </ul>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Figure out if the other Native Oberon modules like Kernel, Modules, Displays.Display.Mod, etc. need to be ported or we can use PO 2013 modules
+<label><input type="checkbox" />Figure out if the other Native Oberon
+modules like Kernel, Modules, Displays.Display.Mod, etc. need to be
+ported or we can use PO 2013 modules</label>
 </li>
 </ul>
 <h2 id="someday-maybe">
@@ -113,55 +138,80 @@ Someday, maybe
 </h2>
 <ul class="task-list">
 <li>
-<input type="checkbox" disabled="" /> Reals.Mod
+<label><input type="checkbox" />Reals.Mod</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> EBNF.Mod and ebnfc.Mod
+<label><input type="checkbox" />EBNF.Mod and ebnfc.Mod</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Scanner.Mod implementing a Texts like Scanner
+<label><input type="checkbox" />Scanner.Mod implementing a Texts like
+Scanner</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> RISC5 emulator (based on Compiler Construction RISC0 emulator)
+<label><input type="checkbox" />RISC5 emulator (based on Compiler
+Construction RISC0 emulator)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Create a Ofront/V4 like dev environment with direct access to host file system
+<label><input type="checkbox" />Create a Ofront/V4 like dev environment
+with direct access to host file system</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Re-implement Fonts.Mod so Oberon System can use ADA friendly fonts like Open Dyslexia and Atikson Hyperledgable
+<label><input type="checkbox" />Re-implement Fonts.Mod so Oberon System
+can use ADA friendly fonts like Open Dyslexia and Atikson
+Hyperledgable</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Rename String.Init() to something that both suggests both initialization AND assignment. NOTE: Set/Get/Put are taken by the Rider procedures to remain signature compatible with Files.Rider
+<label><input type="checkbox" />Rename String.Init() to something that
+both suggests both initialization AND assignment. NOTE: Set/Get/Put are
+taken by the Rider procedures to remain signature compatible with
+Files.Rider</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Refactor StringDesc record for holding CHAR to hold INTEGER to allow support for difference character sets (e.g. UTF-8/UTF-32)
+<label><input type="checkbox" />Refactor StringDesc record for holding
+CHAR to hold INTEGER to allow support for difference character sets
+(e.g. UTF-8/UTF-32)</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Portable Convert module, look at V4 and OBNC implementations as well as Oxford compiler and VOC
+<label><input type="checkbox" />Portable Convert module, look at V4 and
+OBNC implementations as well as Oxford compiler and VOC</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> RegExp module is needed
+<label><input type="checkbox" />RegExp module is needed</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> CSV module for working with CSV data
+<label><input type="checkbox" />CSV module for working with CSV
+data</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> XML module for working with XML data
+<label><input type="checkbox" />XML module for working with XML
+data</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> HTML review A2 and Native Oberon-7, evaluate a port to Oberon-7
+<label><input type="checkbox" />HTML review A2 and Native Oberon-7,
+evaluate a port to Oberon-7</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> OBNC ext modules used need to be re-implemented as pure Oberon-7 to allow Artemis to be Oberon-7 compiler agnostic.
+<label><input type="checkbox" />OBNC ext modules used need to be
+re-implemented as pure Oberon-7 to allow Artemis to be Oberon-7 compiler
+agnostic.</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Need to test under Oberon Project 2013 in DeWachter’s emulator as well as Extended Oberon and IO Core
+<label><input type="checkbox" />Need to test under Oberon Project 2013
+in DeWachter’s emulator as well as Extended Oberon and IO Core</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Cli modules (e.g. OCat) need to be clearly marked as non-portable between Oberon Systems and POSIX
+<label><input type="checkbox" />Cli modules (e.g. OCat) need to be
+clearly marked as non-portable between Oberon Systems and POSIX</label>
 </li>
 <li>
-<input type="checkbox" disabled="" /> Makefile needs to handle compile Cli modules to sensible lowercase names based on Oberon-7 compiler used
+<label><input type="checkbox" />Makefile needs to handle compile Cli
+modules to sensible lowercase names based on Oberon-7 compiler
+used</label>
+</li>
+<li>
+<label><input type="checkbox" />Look at FLTK’s Go bindings as well as
+Fyne’s and see if there are some insights for a general purpose set of
+GUI bindings for Artemis</label>
 </li>
 </ul>
 </section>

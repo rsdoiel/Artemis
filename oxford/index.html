@@ -18,17 +18,23 @@ Oxford - Not portable
 DRAFT: sketch of untested code.
 </p>
 <p>
-FIXME: I have not gotten the current Obc-3 to compile under Darwin (macOS).
+FIXME: I have not gotten the current Obc-3 to compile under Darwin
+(macOS).
 </p>
 <p>
-Modules in this directory are being ported to the Obc-3 compiler and should be compiled with the <code>-07</code> option.
+Modules in this directory are being ported to the Obc-3 compiler and
+should be compiled with the <code>-07</code> option.
 </p>
 <ul>
 <li>
-<a href="https://spivey.oriel.ox.ac.uk/corner/Oxford_Oberon-2_compiler">Obc-3 compiler</a>
+<a
+href="https://spivey.oriel.ox.ac.uk/corner/Oxford_Oberon-2_compiler">Obc-3
+compiler</a>
 </li>
 <li>
-<a href="https://spivey.oriel.ox.ac.uk/corner/How_to_add_primitives_to_OBC">How to add primitives to Obc-3</a>
+<a
+href="https://spivey.oriel.ox.ac.uk/corner/How_to_add_primitives_to_OBC">How
+to add primitives to Obc-3</a>
 </li>
 </ul>
 <h2 id="pre-requisites">
@@ -38,16 +44,20 @@ Pre-requisites
 <strong>Debian systems</strong>
 </p>
 <div id="cb1" class="sourceCode">
-<pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>  <span class="fu">sudo</span> apt install build-essential autotools automake autoconf git</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="fu">sudo</span> apt install ocaml</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  <span class="fu">sudo</span> apt install libgtksourceview2.0-dev</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  <span class="fu">git</span> clone git@github.com:Spivoxity/obc-3</span></code></pre>
+<pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sudo</span> apt install build-essential autotools automake autoconf git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sudo</span> apt install ocaml</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sudo</span> apt install libgtksourceview2.0-dev</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">git</span> clone git@github.com:Spivoxity/obc-3</span></code></pre>
 </div>
 <h2 id="note-unresolved-issues-on-macos">
 NOTE: Unresolved issues on macOS
 </h2>
 <p>
-I am currently running into issues compiling these modules on macOS. Not sure if this is specific to my Mac (it is rather vintage) or due to problems with compiler flags. I suspect my Makefile is not calling the right options for macOS compilation.
+I am currently running into issues compiling these modules on macOS. Not
+sure if this is specific to my Mac (it is rather vintage) or due to
+problems with compiler flags. I suspect my Makefile is not calling the
+right options for macOS compilation.
 </p>
 </section>
 <nav>
