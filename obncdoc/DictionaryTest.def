@@ -9,11 +9,16 @@ DEFINITION DictionaryTest;
 
 (* Create a new test item *)
 <<<<<<< HEAD
+<<<<<<< HEAD
 (* Visitor procedure for testing iteration with integer keys *)
 (* Visitor procedure for testing iteration with string keys *)
 =======
 (* Visitor procedure for testing iteration *)
 >>>>>>> PathLists
+=======
+(* Visitor procedure for testing iteration with integer keys *)
+(* Visitor procedure for testing iteration with string keys *)
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 PROCEDURE TestNewAndFree(): BOOLEAN;
 
 PROCEDURE TestPutAndGet(): BOOLEAN;
@@ -31,8 +36,13 @@ PROCEDURE TestClear(): BOOLEAN;
 PROCEDURE TestStringKeys(): BOOLEAN;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 PROCEDURE TestStringForeach(): BOOLEAN;
 
 =======
 >>>>>>> PathLists
+=======
+PROCEDURE TestStringForeach(): BOOLEAN;
+
+>>>>>>> 953433dce0973cd96a8994eaa82945ec47378690
 END DictionaryTest.

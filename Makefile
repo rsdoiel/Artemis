@@ -95,7 +95,6 @@ docs: .FORCE
 clean: .FORCE
 	@if [ -d dist ]; then rm -fR dist; fi
 	@if [ -d .obnc ]; then rm -fR .obnc; fi
-	@if [ -d examples/bin ]; then rm -fR examples/bin; fi
 	@for FNAME in $(PROG_NAMES); do if [ -f "bin/$${FNAME}$(EXT)" ]; then rm -v "bin/$${FNAME}"; fi; done
 	@for FNAME in $(TEST_NAMES); do if [ -f "$${FNAME}$(EXT)" ]; then rm -v "$${FNAME}"; fi; done
 	@for FNAME in $(EXAMPLE_NAMES); do if [ -f "examples/bin/$${FNAME}$(EXT)" ]; then rm -v "examples/bin/$${FNAME}${EXT}"; fi; done
