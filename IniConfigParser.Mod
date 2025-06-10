@@ -185,47 +185,37 @@ BEGIN
 END DetectValueType;
 
 (** Find section index by name *)
+PROCEDURE StringsEqual(a, b: ARRAY OF CHAR): BOOLEAN;
+VAR i: INTEGER; equal: BOOLEAN;
+BEGIN
+    i := 0; equal := TRUE;
+    WHILE (i < LEN(a)) & (i < LEN(b)) & (a[i] # 0X) & (b[i] # 0X) & equal DO
+        IF a[i] # b[i] THEN equal := FALSE END;
+        INC(i)
+    END;
+    IF equal & ((a[i] # 0X) OR (b[i] # 0X)) THEN equal := FALSE END;
+    RETURN equal
+END StringsEqual;
+
 PROCEDURE FindSectionIndex(config: Config; sectionName: ARRAY OF CHAR): INTEGER;
 VAR 
     i, count: INTEGER;
     nameItem: Collections.ItemPtr;
     sectionNamePtr: SectionNamePtr;
-    found: BOOLEAN;
-    j: INTEGER;
     result: INTEGER;
 BEGIN
     result := -1;
     count := ArrayList.Count(config.sectionNames);
     i := 0;
-    found := FALSE;
-    
-    WHILE (i < count) & ~found DO
+    WHILE (i < count) & (result = -1) DO
         IF ArrayList.GetAt(config.sectionNames, i, nameItem) THEN
             sectionNamePtr := nameItem(SectionNamePtr);
-            
-            (* Compare section names *)
-            j := 0;
-            found := TRUE;
-            WHILE (j < LEN(sectionName)) & (j < LEN(sectionNamePtr.name)) & 
-                  (sectionName[j] # 0X) & (sectionNamePtr.name[j] # 0X) & found DO
-                IF sectionName[j] # sectionNamePtr.name[j] THEN
-                    found := FALSE
-                END;
-                INC(j)
-            END;
-            
-            (* Check if both strings ended at same position *)
-            IF found & ((sectionName[j] # 0X) OR (sectionNamePtr.name[j] # 0X)) THEN
-                found := FALSE
-            END;
-            
-            IF found THEN
+            IF StringsEqual(sectionName, sectionNamePtr.name) THEN
                 result := i
             END
         END;
         INC(i)
     END;
-    
     RETURN result
 END FindSectionIndex;
 
@@ -318,6 +308,48 @@ BEGIN
 END FreeConfig;
 
 (** Load configuration from file *)
+(* Internal: Handle section token, switch to new section *)
+PROCEDURE HandleSectionToken(VAR currentSection: Dictionary.Dictionary;
+                            VAR currentSectionName: ARRAY OF CHAR;
+                            config: Config;
+                            token: IniConfigTokenizer.Token);
+BEGIN
+    Chars.Copy(token.value, currentSectionName);
+    currentSection := GetOrCreateSection(config, currentSectionName)
+END HandleSectionToken;
+
+(* Internal: Handle key token, store key-value pair *)
+PROCEDURE HandleKeyToken(VAR currentSection: Dictionary.Dictionary;
+                        VAR currentKey: ARRAY OF CHAR;
+                        config: Config;
+                        tokenizer: IniConfigTokenizer.Tokenizer;
+                        VAR token: IniConfigTokenizer.Token;
+                        VAR result: INTEGER);
+VAR
+    valueType: INTEGER;
+    configValue: ConfigValuePtr;
+BEGIN
+    Chars.Copy(token.value, currentKey);
+    IniConfigTokenizer.GetValue(tokenizer, token);
+    IF token.type = IniConfigTokenizer.ValueToken THEN
+        valueType := DetectValueType(token.value);
+        configValue := NewConfigValue(token.value, valueType, token.line);
+        Dictionary.PutString(currentSection, currentKey, configValue)
+    ELSE
+        result := SyntaxError;
+        config.error := SyntaxError;
+        config.errorLine := token.line
+    END
+END HandleKeyToken;
+
+(* Internal: Handle error token, set error state *)
+PROCEDURE HandleErrorToken(config: Config; token: IniConfigTokenizer.Token; VAR result: INTEGER);
+BEGIN
+    result := SyntaxError;
+    config.error := SyntaxError;
+    config.errorLine := token.line
+END HandleErrorToken;
+
 PROCEDURE LoadConfig*(filename: ARRAY OF CHAR; VAR config: Config): INTEGER;
 VAR 
     file: Files.File;
@@ -326,71 +358,35 @@ VAR
     currentSection: Dictionary.Dictionary;
     currentSectionName: ARRAY 256 OF CHAR;
     currentKey: ARRAY 256 OF CHAR;
-    configValue: ConfigValuePtr;
-    valueType: INTEGER;
     result: INTEGER;
 BEGIN
     result := NoError;
     config := NewConfig();
-    
-    (* Try to open file *)
     file := Files.Old(filename);
     IF file = NIL THEN
         result := FileNotFound;
         config.error := FileNotFound
     ELSE
-        (* Initialize tokenizer *)
         IniConfigTokenizer.Init(tokenizer, file);
-        
-        (* Start with default section *)
         currentSectionName[0] := 0X;
         currentSection := GetOrCreateSection(config, currentSectionName);
-        
-        (* Parse tokens *)
         WHILE (~IniConfigTokenizer.AtEof(tokenizer)) & (result = NoError) DO
             IniConfigTokenizer.NextToken(tokenizer, token);
-            
             IF token.type = IniConfigTokenizer.SectionToken THEN
-                (* Switch to new section *)
-                Chars.Copy(token.value, currentSectionName);
-                currentSection := GetOrCreateSection(config, currentSectionName)
-                
+                HandleSectionToken(currentSection, currentSectionName, config, token)
             ELSIF token.type = IniConfigTokenizer.KeyToken THEN
-                (* Store the key and get the value for this key *)
-                Chars.Copy(token.value, currentKey);
-                IniConfigTokenizer.GetValue(tokenizer, token);
-                
-                IF token.type = IniConfigTokenizer.ValueToken THEN
-                    (* Detect value type and store *)
-                    valueType := DetectValueType(token.value);
-                    configValue := NewConfigValue(token.value, valueType, token.line);
-                    Dictionary.PutString(currentSection, currentKey, configValue)
-                ELSE
-                    (* Error: expected value after key *)
-                    result := SyntaxError;
-                    config.error := SyntaxError;
-                    config.errorLine := token.line
-                END
-                
+                HandleKeyToken(currentSection, currentKey, config, tokenizer, token, result)
             ELSIF token.type = IniConfigTokenizer.CommentToken THEN
                 (* Skip comments *)
-                
             ELSIF token.type = IniConfigTokenizer.ErrorToken THEN
-                (* Tokenizer error *)
-                result := SyntaxError;
-                config.error := SyntaxError;
-                config.errorLine := token.line
-                
+                HandleErrorToken(config, token, result)
             ELSIF token.type = IniConfigTokenizer.EofToken THEN
                 (* End of file - normal exit *)
-                
             (* Else: ignore unknown token types *)
             END
         END;
-        
         Files.Close(file)
     END;
-    
     RETURN result
 END LoadConfig;
 
@@ -572,6 +568,36 @@ BEGIN
     RETURN TRUE
 END WriteKeyValue;
 
+(* Internal: Write section header to file, including blank line and [section] *)
+PROCEDURE WriteSectionHeader(VAR writer: Files.Rider; sectionName: ARRAY OF CHAR; VAR isFirstSection: BOOLEAN; VAR success: BOOLEAN);
+VAR j: INTEGER;
+BEGIN
+    IF sectionName[0] # 0X THEN
+        (* Add blank line before section (except after empty default section) *)
+        IF ~isFirstSection THEN
+            Files.Write(writer, ORD(Chars.LF));
+            IF writer.res # 0 THEN success := FALSE END
+        END;
+        IF success THEN
+            Files.Write(writer, ORD("["));
+            IF writer.res # 0 THEN success := FALSE END;
+            j := 0;
+            WHILE (j < LEN(sectionName)) & (sectionName[j] # 0X) & success DO
+                Files.Write(writer, ORD(sectionName[j]));
+                IF writer.res # 0 THEN success := FALSE END;
+                INC(j)
+            END;
+            IF success THEN
+                Files.Write(writer, ORD("]"));
+                IF writer.res # 0 THEN success := FALSE END;
+                Files.Write(writer, ORD(Chars.LF));
+                IF writer.res # 0 THEN success := FALSE END
+            END
+        END;
+        isFirstSection := FALSE
+    END
+END WriteSectionHeader;
+
 (** Save configuration to file *)
 PROCEDURE SaveConfig*(config: Config; filename: ARRAY OF CHAR): INTEGER;
 VAR 
@@ -583,21 +609,17 @@ VAR
     wrapper: DictionaryWrapperPtr;
     nameItem: Collections.ItemPtr;
     sectionNamePtr: SectionNamePtr;
-    j: INTEGER;
     success: BOOLEAN;
     isFirstSection: BOOLEAN;
 BEGIN
     result := NoError;
-    
     IF config = NIL THEN
         result := SyntaxError
     ELSE
-        (* Create/open file for writing *)
         file := Files.New(filename);
         IF file = NIL THEN
             result := IOError
         ELSE
-                  (* Zero out writeState to avoid garbage in Files.Rider *)
             FOR i := 0 TO LEN(writeState.sectionName) - 1 DO
                 writeState.sectionName[i] := 0X
             END;
@@ -606,83 +628,36 @@ BEGIN
             Files.Set(writeState.writer, file, 0);
             writeState.success := TRUE;
             isFirstSection := TRUE;
-            
-            (* Iterate through all sections *)
             count := ArrayList.Count(config.sections);
             i := 0;
             WHILE (i < count) & writeState.success DO
                 success := ArrayList.GetAt(config.sections, i, section);
                 IF success THEN
                     wrapper := section(DictionaryWrapperPtr);
-                    
-                    (* Get section name *)
                     success := ArrayList.GetAt(config.sectionNames, i, nameItem);
                     IF success THEN
                         sectionNamePtr := nameItem(SectionNamePtr);
                         Chars.Copy(sectionNamePtr.name, writeState.sectionName);
-                        
-                        (* Write section header (skip for default section) *)
-                        IF sectionNamePtr.name[0] # 0X THEN
-                            (* Add blank line before section (except after empty default section) *)
-                            IF ~isFirstSection THEN
-                                Files.Write(writeState.writer, ORD(Chars.LF));
-                                IF writeState.writer.res # 0 THEN 
-                                writeState.success := FALSE END
-                            END;
-                            
-                            IF writeState.success THEN
-                                (* Write [section] *)
-                                Files.Write(writeState.writer, ORD("["));
-                                IF writeState.writer.res # 0 THEN
-                                    writeState.success := FALSE END;
-                                
-                                j := 0;
-                                WHILE (j < LEN(sectionNamePtr.name)) & (sectionNamePtr.name[j] # 0X) & writeState.success DO
-                                    Files.Write(writeState.writer, ORD(sectionNamePtr.name[j]));
-                                    IF writeState.writer.res # 0 THEN 
-                                    writeState.success := FALSE END;
-                                    INC(j)
-                                END;
-                                
-                                IF writeState.success THEN
-                                    Files.Write(writeState.writer, ORD("]"));
-                                    IF writeState.writer.res # 0 THEN     
-                                    writeState.success := FALSE END;
-                                    Files.Write(writeState.writer, ORD(Chars.LF));
-                                    IF writeState.writer.res # 0 THEN   
-                                    writeState.success := FALSE END
-                                END
-                            END
-                        END;
-                        
-                        (* Write key-value pairs using visitor pattern - FOR ALL SECTIONS *)
+                        WriteSectionHeader(writeState.writer, writeState.sectionName, isFirstSection, writeState.success);
                         IF writeState.success THEN
                             Dictionary.ForeachString(wrapper.dict, WriteKeyValue, writeState)
-                        END;
-                        
-                        (* Mark that we've processed at least one section only after writing content *)
-                        IF sectionNamePtr.name[0] # 0X THEN
-                            isFirstSection := FALSE
                         END
                     ELSE
-                        writeState.success := FALSE;
+                        writeState.success := FALSE
                     END
                 ELSE
-                    writeState.success := FALSE;
+                    writeState.success := FALSE
                 END;
                 INC(i)
             END;
-            
             IF writeState.success THEN
                 Files.Register(file)
             ELSE
                 result := IOError
             END;
-            
             Files.Close(file)
         END
     END;
-    
     RETURN result
 END SaveConfig;
 
