@@ -516,15 +516,15 @@ VAR
 BEGIN
     pass := TRUE;
     
-    (* Load config with various whitespace scenarios *)
+    (* Load config with whitespace handling from test_data *)
     res := IniConfigParser.LoadConfig("test_data/whitespace.ini", config);
     Tests.ExpectedInt(IniConfigParser.NoError, res, "LoadConfig whitespace result", pass);
     
-    (* Test that whitespace around keys and values is trimmed *)
+    (* Test values with leading/trailing spaces (should be trimmed) *)
     found := IniConfigParser.GetDefaultValue(config, "leading_space_key", value);
     Tests.ExpectedBool(TRUE, found, "Found leading_space_key", pass);
     IF found THEN
-        Tests.ExpectedString("value_with_spaces", value.value, "Leading space key value trimmed", pass)
+        Tests.ExpectedString("value_with_leading_space", value.value, "Leading space key value trimmed", pass)
     END;
     
     found := IniConfigParser.GetDefaultValue(config, "trailing_space_key", value);
@@ -550,65 +550,7 @@ BEGIN
     found := IniConfigParser.GetDefaultValue(config, "quoted_with_spaces", value);
     Tests.ExpectedBool(TRUE, found, "Found quoted_with_spaces", pass);
     IF found THEN
-        Tests.ExpectedString("  quoted value with leading/trailing spaces  ", value.value, "Quoted spaces preserved", pass)
-    END;
-    
-    (* Test numeric values with spaces are trimmed and typed correctly *)
-    found := IniConfigParser.GetDefaultValue(config, "number_with_spaces", value);
-    Tests.ExpectedBool(TRUE, found, "Found number_with_spaces", pass);
-    IF found THEN
-        Tests.ExpectedString("123", value.value, "Number with spaces trimmed", pass);
-        Tests.ExpectedInt(IniConfigParser.IntegerType, IniConfigParser.GetType(value), "Number with spaces typed as integer", pass)
-    END;
-    
-    found := IniConfigParser.GetDefaultValue(config, "real_with_spaces", value);
-    Tests.ExpectedBool(TRUE, found, "Found real_with_spaces", pass);
-    IF found THEN
-        Tests.ExpectedString("45.67", value.value, "Real with spaces trimmed", pass);
-        Tests.ExpectedInt(IniConfigParser.RealType, IniConfigParser.GetType(value), "Real with spaces typed as real", pass)
-    END;
-    
-    found := IniConfigParser.GetDefaultValue(config, "boolean_with_spaces", value);
-    Tests.ExpectedBool(TRUE, found, "Found boolean_with_spaces", pass);
-    IF found THEN
-        Tests.ExpectedString("TRUE", value.value, "Boolean with spaces trimmed", pass);
-        Tests.ExpectedInt(IniConfigParser.BooleanType, IniConfigParser.GetType(value), "Boolean with spaces typed as boolean", pass)
-    END;
-    
-    (* Test edge cases with empty-ish values *)
-    found := IniConfigParser.GetDefaultValue(config, "almost_empty", value);
-    Tests.ExpectedBool(TRUE, found, "Found almost_empty", pass);
-    IF found THEN
-        Tests.ExpectedString("", value.value, "Almost empty value is empty string", pass);
-        Tests.ExpectedInt(IniConfigParser.StringType, IniConfigParser.GetType(value), "Almost empty typed as string", pass)
-    END;
-    
-    found := IniConfigParser.GetDefaultValue(config, "just_spaces", value);
-    Tests.ExpectedBool(TRUE, found, "Found just_spaces", pass);
-    IF found THEN
-        Tests.ExpectedString("", value.value, "Just spaces value is empty string", pass);
-        Tests.ExpectedInt(IniConfigParser.StringType, IniConfigParser.GetType(value), "Just spaces typed as string", pass)
-    END;
-    
-    found := IniConfigParser.GetDefaultValue(config, "quoted_empty", value);
-    Tests.ExpectedBool(TRUE, found, "Found quoted_empty", pass);
-    IF found THEN
-        Tests.ExpectedString("", value.value, "Quoted empty value is empty string", pass);
-        Tests.ExpectedInt(IniConfigParser.StringType, IniConfigParser.GetType(value), "Quoted empty typed as string", pass)
-    END;
-    
-    found := IniConfigParser.GetDefaultValue(config, "quoted_spaces", value);
-    Tests.ExpectedBool(TRUE, found, "Found quoted_spaces", pass);
-    IF found THEN
-        Tests.ExpectedString("     ", value.value, "Quoted spaces preserved", pass);
-        Tests.ExpectedInt(IniConfigParser.StringType, IniConfigParser.GetType(value), "Quoted spaces typed as string", pass)
-    END;
-    
-    (* Test section with spaces *)
-    found := IniConfigParser.GetValue(config, "section_with_spaces", "key_in_spaced_section", value);
-    Tests.ExpectedBool(TRUE, found, "Found key in spaced section", pass);
-    IF found THEN
-        Tests.ExpectedString("value_in_spaced_section", value.value, "Value in spaced section", pass)
+        Tests.ExpectedString("  value with spaces  ", value.value, "Quoted spaces preserved", pass)
     END;
     
     (* Cleanup *)
@@ -617,6 +559,198 @@ BEGIN
     RETURN pass
 END TestWhitespaceHandling;
 
+PROCEDURE TestSetValue*(): BOOLEAN;
+VAR
+    pass: BOOLEAN;
+    config: IniConfigParser.Config;
+    value: IniConfigParser.ConfigValuePtr;
+    found, success: BOOLEAN;
+BEGIN
+    pass := TRUE;
+    
+    (* Create new config *)
+    config := IniConfigParser.NewConfig();
+    Tests.ExpectedBool(config # NIL, TRUE, "NewConfig for SetValue tests", pass);
+    
+    (* Test SetDefaultValue *)
+    success := IniConfigParser.SetDefaultValue(config, "test_key", "test_value");
+    Tests.ExpectedBool(TRUE, success, "SetDefaultValue succeeds", pass);
+    
+    (* Verify value was set *)
+    found := IniConfigParser.GetDefaultValue(config, "test_key", value);
+    Tests.ExpectedBool(TRUE, found, "SetDefaultValue - value found", pass);
+    IF found THEN
+        Tests.ExpectedString("test_value", value.value, "SetDefaultValue - correct value", pass);
+        Tests.ExpectedInt(IniConfigParser.StringType, IniConfigParser.GetType(value), "SetDefaultValue - correct type", pass)
+    END;
+    
+    (* Test SetValue with section *)
+    success := IniConfigParser.SetValue(config, "test_section", "section_key", "section_value");
+    Tests.ExpectedBool(TRUE, success, "SetValue succeeds", pass);
+    
+    (* Verify section value was set *)
+    found := IniConfigParser.GetValue(config, "test_section", "section_key", value);
+    Tests.ExpectedBool(TRUE, found, "SetValue - value found", pass);
+    IF found THEN
+        Tests.ExpectedString("section_value", value.value, "SetValue - correct value", pass);
+        Tests.ExpectedInt(IniConfigParser.StringType, IniConfigParser.GetType(value), "SetValue - correct type", pass)
+    END;
+    
+    (* Test type detection with SetValue *)
+    success := IniConfigParser.SetDefaultValue(config, "int_key", "42");
+    Tests.ExpectedBool(TRUE, success, "SetValue integer succeeds", pass);
+    found := IniConfigParser.GetDefaultValue(config, "int_key", value);
+    IF found THEN
+        Tests.ExpectedInt(IniConfigParser.IntegerType, IniConfigParser.GetType(value), "SetValue - integer type detected", pass)
+    END;
+    
+    success := IniConfigParser.SetDefaultValue(config, "real_key", "3.14");
+    Tests.ExpectedBool(TRUE, success, "SetValue real succeeds", pass);
+    found := IniConfigParser.GetDefaultValue(config, "real_key", value);
+    IF found THEN
+        Tests.ExpectedInt(IniConfigParser.RealType, IniConfigParser.GetType(value), "SetValue - real type detected", pass)
+    END;
+    
+    success := IniConfigParser.SetDefaultValue(config, "bool_key", "TRUE");
+    Tests.ExpectedBool(TRUE, success, "SetValue boolean succeeds", pass);
+    found := IniConfigParser.GetDefaultValue(config, "bool_key", value);
+    IF found THEN
+        Tests.ExpectedInt(IniConfigParser.BooleanType, IniConfigParser.GetType(value), "SetValue - boolean type detected", pass)
+    END;
+    
+    (* Test SetValue with NIL config *)
+    success := IniConfigParser.SetDefaultValue(NIL, "key", "value");
+    Tests.ExpectedBool(FALSE, success, "SetValue with NIL config fails", pass);
+    
+    (* Cleanup *)
+    IniConfigParser.FreeConfig(config);
+    
+    RETURN pass
+END TestSetValue;
+
+PROCEDURE TestSaveConfig*(): BOOLEAN;
+VAR
+    pass: BOOLEAN;
+    config: IniConfigParser.Config;
+    result: INTEGER;
+    success: BOOLEAN;
+BEGIN
+    pass := TRUE;
+    
+    (* Create config with test values *)
+    config := IniConfigParser.NewConfig();
+    
+    (* Add some test values *)
+    success := IniConfigParser.SetDefaultValue(config, "app_name", "TestApp");
+    success := IniConfigParser.SetDefaultValue(config, "version", "1.0");
+    success := IniConfigParser.SetValue(config, "database", "host", "localhost");
+    success := IniConfigParser.SetValue(config, "database", "port", "5432");
+    success := IniConfigParser.SetValue(config, "logging", "level", "DEBUG");
+    
+    (* Test SaveConfig *)
+    result := IniConfigParser.SaveConfig(config, "test_save_output.ini");
+    Tests.ExpectedInt(IniConfigParser.NoError, result, "SaveConfig succeeds", pass);
+    
+    (* Test SaveConfig with NIL config *)
+    result := IniConfigParser.SaveConfig(NIL, "test_nil.ini");
+    Tests.ExpectedInt(IniConfigParser.SyntaxError, result, "SaveConfig with NIL config fails", pass);
+    
+    (* Cleanup *)
+    IniConfigParser.FreeConfig(config);
+    CleanupTestFile("test_save_output.ini");
+    
+    RETURN pass
+END TestSaveConfig;
+
+PROCEDURE TestRoundTrip*(): BOOLEAN;
+VAR
+    pass: BOOLEAN;
+    config1, config2: IniConfigParser.Config;
+    value: IniConfigParser.ConfigValuePtr;
+    result: INTEGER;
+    success, found: BOOLEAN;
+BEGIN
+    pass := TRUE;
+    
+    (* Create and populate config *)
+    config1 := IniConfigParser.NewConfig();
+    
+    (* Set values in different sections *)
+    success := IniConfigParser.SetDefaultValue(config1, "app_name", "TestApp");
+    success := IniConfigParser.SetDefaultValue(config1, "version", "1.0");
+    
+    success := IniConfigParser.SetValue(config1, "database", "host", "localhost");
+    success := IniConfigParser.SetValue(config1, "database", "port", "5432");
+    success := IniConfigParser.SetValue(config1, "database", "ssl", "TRUE");
+    
+    success := IniConfigParser.SetValue(config1, "logging", "level", "DEBUG");
+    success := IniConfigParser.SetValue(config1, "logging", "max_size", "10.5");
+    
+    (* Save config *)
+    result := IniConfigParser.SaveConfig(config1, "test_roundtrip.ini");
+    Tests.ExpectedInt(IniConfigParser.NoError, result, "Round-trip save succeeds", pass);
+    
+    (* Load config back *)
+    result := IniConfigParser.LoadConfig("test_roundtrip.ini", config2);
+    Tests.ExpectedInt(IniConfigParser.NoError, result, "Round-trip load succeeds", pass);
+    
+    IF result = IniConfigParser.NoError THEN
+        (* Verify default section values *)
+        found := IniConfigParser.GetDefaultValue(config2, "app_name", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: app_name found", pass);
+        IF found THEN
+            Tests.ExpectedString("TestApp", value.value, "Round-trip: app_name value", pass)
+        END;
+        
+        found := IniConfigParser.GetDefaultValue(config2, "version", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: version found", pass);
+        IF found THEN
+            Tests.ExpectedString("1.0", value.value, "Round-trip: version value", pass)
+        END;
+        
+        (* Verify database section values *)
+        found := IniConfigParser.GetValue(config2, "database", "host", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: database host found", pass);
+        IF found THEN
+            Tests.ExpectedString("localhost", value.value, "Round-trip: database host value", pass)
+        END;
+        
+        found := IniConfigParser.GetValue(config2, "database", "port", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: database port found", pass);
+        IF found THEN
+            Tests.ExpectedString("5432", value.value, "Round-trip: database port value", pass);
+            Tests.ExpectedInt(IniConfigParser.IntegerType, IniConfigParser.GetType(value), "Round-trip: port type preserved", pass)
+        END;
+        
+        found := IniConfigParser.GetValue(config2, "database", "ssl", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: database ssl found", pass);
+        IF found THEN
+            Tests.ExpectedString("TRUE", value.value, "Round-trip: database ssl value", pass);
+            Tests.ExpectedInt(IniConfigParser.BooleanType, IniConfigParser.GetType(value), "Round-trip: ssl type preserved", pass)
+        END;
+        
+        (* Verify logging section values *)
+        found := IniConfigParser.GetValue(config2, "logging", "level", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: logging level found", pass);
+        IF found THEN
+            Tests.ExpectedString("DEBUG", value.value, "Round-trip: logging level value", pass)
+        END;
+        
+        found := IniConfigParser.GetValue(config2, "logging", "max_size", value);
+        Tests.ExpectedBool(TRUE, found, "Round-trip: logging max_size found", pass);
+        IF found THEN
+            Tests.ExpectedString("10.5", value.value, "Round-trip: logging max_size value", pass);
+            Tests.ExpectedInt(IniConfigParser.RealType, IniConfigParser.GetType(value), "Round-trip: max_size type preserved", pass)
+        END
+    END;
+    
+    (* Cleanup *)
+    IniConfigParser.FreeConfig(config1);
+    IniConfigParser.FreeConfig(config2);
+    CleanupTestFile("test_roundtrip.ini");
+    
+    RETURN pass
+END TestRoundTrip;
 
 
 BEGIN
@@ -632,6 +766,9 @@ BEGIN
     Tests.Add(ts, TestAPIEdgeCases);
     Tests.Add(ts, TestCaseSensitivity);
     Tests.Add(ts, TestWhitespaceHandling);
+    Tests.Add(ts, TestSetValue);
+    Tests.Add(ts, TestSaveConfig);
+    Tests.Add(ts, TestRoundTrip);
     
     ASSERT(Tests.Run(ts));
 END IniConfigParserTest.

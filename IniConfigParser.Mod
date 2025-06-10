@@ -54,6 +54,13 @@ TYPE
         error: INTEGER;
         errorLine: INTEGER
     END;
+    
+    (** Write visitor state for saving config to file *)
+    WriteVisitorState = RECORD(Dictionary.DictVisitorState)
+        writer: Files.Rider;
+        sectionName: ARRAY 256 OF CHAR;
+        success: BOOLEAN
+    END;
 
 (** Create a new ConfigValue *)
 PROCEDURE NewConfigValue*(value: ARRAY OF CHAR; valueType, lineNumber: INTEGER): ConfigValuePtr;
@@ -480,5 +487,189 @@ BEGIN
     END;
     RETURN result
 END GetErrorLine;
+
+(** Set value in specific section *)
+PROCEDURE SetValue*(config: Config; sectionName, key, value: ARRAY OF CHAR): BOOLEAN;
+VAR 
+    section: Dictionary.Dictionary;
+    configValue: ConfigValuePtr;
+    valueType: INTEGER;
+    result: BOOLEAN;
+BEGIN
+    result := FALSE;
+    
+    IF config # NIL THEN
+        section := GetOrCreateSection(config, sectionName);
+        IF section # NIL THEN
+            valueType := DetectValueType(value);
+            configValue := NewConfigValue(value, valueType, 0);
+            Dictionary.PutString(section, key, configValue);
+            result := TRUE
+        END
+    END;
+    
+    RETURN result
+END SetValue;
+
+(** Set value in default section *)
+PROCEDURE SetDefaultValue*(config: Config; key, value: ARRAY OF CHAR): BOOLEAN;
+VAR result: BOOLEAN;
+BEGIN
+    result := SetValue(config, DefaultSectionName, key, value);
+    RETURN result
+END SetDefaultValue;
+
+(** Visitor procedure for writing key-value pairs to file *)
+PROCEDURE WriteKeyValue(key: ARRAY OF CHAR; value: Collections.ItemPtr; VAR state: Collections.VisitorState): BOOLEAN;
+VAR 
+    configValue: ConfigValuePtr;
+    i: INTEGER;
+BEGIN
+    configValue := value(ConfigValuePtr);
+    
+    IF state(WriteVisitorState).success THEN
+        (* Write key *)
+        i := 0;
+        WHILE (i < LEN(key)) & (key[i] # 0X) & state(WriteVisitorState).success DO
+            Files.Write(state(WriteVisitorState).writer, ORD(key[i]));
+            IF state(WriteVisitorState).writer.res # 0 THEN 
+                state(WriteVisitorState).success := FALSE 
+            END;
+            INC(i)
+        END;
+        
+        (* Write = *)
+        IF state(WriteVisitorState).success THEN
+            Files.Write(state(WriteVisitorState).writer, ORD("="));
+            IF state(WriteVisitorState).writer.res # 0 THEN 
+                state(WriteVisitorState).success := FALSE 
+            END
+        END;
+        
+        (* Write value *)
+        IF state(WriteVisitorState).success THEN
+            i := 0;
+            WHILE (i < LEN(configValue.value)) & (configValue.value[i] # 0X) & state(WriteVisitorState).success DO
+                Files.Write(state(WriteVisitorState).writer, ORD(configValue.value[i]));
+                IF state(WriteVisitorState).writer.res # 0 THEN 
+                    state(WriteVisitorState).success := FALSE 
+                END;
+                INC(i)
+            END
+        END;
+        
+        (* Write newline *)
+        IF state(WriteVisitorState).success THEN
+            Files.Write(state(WriteVisitorState).writer, ORD(Chars.LF));
+            IF state(WriteVisitorState).writer.res # 0 THEN 
+                state(WriteVisitorState).success := FALSE 
+            END
+        END
+    END;
+    
+    (* Return TRUE to continue iteration, FALSE to stop *)
+    (* We continue even on I/O errors, tracking success in the state *)
+    RETURN TRUE
+END WriteKeyValue;
+
+(** Save configuration to file *)
+PROCEDURE SaveConfig*(config: Config; filename: ARRAY OF CHAR): INTEGER;
+VAR 
+    file: Files.File;
+    writeState: WriteVisitorState;
+    result: INTEGER;
+    i, count: INTEGER;
+    section: Collections.ItemPtr;
+    wrapper: DictionaryWrapperPtr;
+    nameItem: Collections.ItemPtr;
+    sectionNamePtr: SectionNamePtr;
+    j: INTEGER;
+    success: BOOLEAN;
+    isFirstSection: BOOLEAN;
+BEGIN
+    result := NoError;
+    
+    IF config = NIL THEN
+        result := SyntaxError
+    ELSE
+        (* Create/open file for writing *)
+        file := Files.New(filename);
+        IF file = NIL THEN
+            result := IOError
+        ELSE
+            Files.Set(writeState.writer, file, 0);
+            writeState.success := TRUE;
+            isFirstSection := TRUE;
+            
+            (* Iterate through all sections *)
+            count := ArrayList.Count(config.sections);
+            i := 0;
+            WHILE (i < count) & writeState.success DO
+                success := ArrayList.GetAt(config.sections, i, section);
+                IF success THEN
+                    wrapper := section(DictionaryWrapperPtr);
+                    
+                    (* Get section name *)
+                    success := ArrayList.GetAt(config.sectionNames, i, nameItem);
+                    IF success THEN
+                        sectionNamePtr := nameItem(SectionNamePtr);
+                        Chars.Copy(sectionNamePtr.name, writeState.sectionName);
+                        
+                        (* Write section header (skip for default section) *)
+                        IF sectionNamePtr.name[0] # 0X THEN
+                            (* Add blank line before section (except for first section) *)
+                            IF ~isFirstSection THEN
+                                Files.Write(writeState.writer, ORD(Chars.LF));
+                                IF writeState.writer.res # 0 THEN writeState.success := FALSE END
+                            END;
+                            
+                            IF writeState.success THEN
+                                (* Write [section] *)
+                                Files.Write(writeState.writer, ORD("["));
+                                IF writeState.writer.res # 0 THEN writeState.success := FALSE END;
+                                
+                                j := 0;
+                                WHILE (j < LEN(sectionNamePtr.name)) & (sectionNamePtr.name[j] # 0X) & writeState.success DO
+                                    Files.Write(writeState.writer, ORD(sectionNamePtr.name[j]));
+                                    IF writeState.writer.res # 0 THEN writeState.success := FALSE END;
+                                    INC(j)
+                                END;
+                                
+                                IF writeState.success THEN
+                                    Files.Write(writeState.writer, ORD("]"));
+                                    IF writeState.writer.res # 0 THEN writeState.success := FALSE END;
+                                    Files.Write(writeState.writer, ORD(Chars.LF));
+                                    IF writeState.writer.res # 0 THEN writeState.success := FALSE END
+                                END
+                            END;
+                            
+                            isFirstSection := FALSE
+                        END;
+                        
+                        (* Write key-value pairs using visitor pattern - FOR ALL SECTIONS *)
+                        IF writeState.success THEN
+                            Dictionary.ForeachString(wrapper.dict, WriteKeyValue, writeState)
+                        END
+                    ELSE
+                        writeState.success := FALSE
+                    END
+                ELSE
+                    writeState.success := FALSE
+                END;
+                INC(i)
+            END;
+            
+            IF writeState.success THEN
+                Files.Register(file)
+            ELSE
+                result := IOError
+            END;
+            
+            Files.Close(file)
+        END
+    END;
+    
+    RETURN result
+END SaveConfig;
 
 END IniConfigParser.
