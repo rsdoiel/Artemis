@@ -120,6 +120,27 @@ BEGIN
     END
 END ReadIdentifier;
 
+(* Internal: Read a value (after = sign) - stops at semicolon comments *)
+PROCEDURE ReadValueIdentifier(tokenizer: Tokenizer; VAR value: ARRAY OF CHAR);
+VAR pos: INTEGER;
+BEGIN
+    pos := 0;
+    WHILE ~tokenizer.atEof & (tokenizer.currentChar # ";") & 
+          (tokenizer.currentChar # Chars.CR) & (tokenizer.currentChar # Chars.LF) &
+          (pos < LEN(value) - 1) DO
+        value[pos] := tokenizer.currentChar;
+        INC(pos);
+        ReadChar(tokenizer)
+    END;
+    value[pos] := 0X;
+    
+    (* Trim trailing whitespace *)
+    WHILE (pos > 0) & Chars.IsSpace(value[pos - 1]) DO
+        DEC(pos);
+        value[pos] := 0X
+    END
+END ReadValueIdentifier;
+
 (* Internal: Read a quoted string value *)
 PROCEDURE ReadQuotedString(tokenizer: Tokenizer; VAR value: ARRAY OF CHAR);
 VAR pos: INTEGER; quote: CHAR;
@@ -145,7 +166,7 @@ END ReadQuotedString;
 
 (* Internal: Read a section name *)
 PROCEDURE ReadSection(tokenizer: Tokenizer; VAR value: ARRAY OF CHAR);
-VAR pos: INTEGER;
+VAR pos, start: INTEGER;
 BEGIN
     ReadChar(tokenizer); (* Skip opening [ *)
     pos := 0;
@@ -164,9 +185,25 @@ BEGIN
     
     value[pos] := 0X;
     
-    (* Trim whitespace *)
+    (* Trim trailing whitespace *)
     WHILE (pos > 0) & Chars.IsSpace(value[pos - 1]) DO
         DEC(pos);
+        value[pos] := 0X
+    END;
+    
+    (* Trim leading whitespace *)
+    start := 0;
+    WHILE (start < pos) & Chars.IsSpace(value[start]) DO
+        INC(start)
+    END;
+    
+    (* Shift string if needed *)
+    IF start > 0 THEN
+        pos := 0;
+        WHILE (start + pos < LEN(value)) & (value[start + pos] # 0X) DO
+            value[pos] := value[start + pos];
+            INC(pos)
+        END;
         value[pos] := 0X
     END
 END ReadSection;
@@ -179,7 +216,7 @@ BEGIN
     IF (tokenizer.currentChar = Chars.QUOT) OR (tokenizer.currentChar = Chars.APOS) THEN
         ReadQuotedString(tokenizer, value)
     ELSE
-        ReadIdentifier(tokenizer, value)
+        ReadValueIdentifier(tokenizer, value)
     END
 END ReadValue;
 
