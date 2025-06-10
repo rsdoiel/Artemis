@@ -31,17 +31,15 @@ TYPE
 
     (* Section name holder *)
 
-    (* Dictionary wrapper for ArrayList storage *)
-
     (* INI Configuration parser *)
     Config = POINTER TO ConfigDesc;
+
+    (* Write visitor state for saving config to file *)
 
 (* Create a new ConfigValue *)
 PROCEDURE NewConfigValue(value: ARRAY OF CHAR; valueType, lineNumber: INTEGER): ConfigValuePtr;
 
 (* Create a new section name holder *)
-
-(* Create a new dictionary wrapper *)
 
 (* Detect value type based on content *)
 
@@ -56,6 +54,7 @@ PROCEDURE NewConfig(): Config;
 PROCEDURE FreeConfig(VAR config: Config);
 
 (* Load configuration from file *)
+
 PROCEDURE LoadConfig(filename: ARRAY OF CHAR; VAR config: Config): INTEGER;
 
 (* Get section by name *)
@@ -75,5 +74,16 @@ PROCEDURE GetError(config: Config): INTEGER;
 
 (* Get error line number *)
 PROCEDURE GetErrorLine(config: Config): INTEGER;
+
+(* Set value in specific section *)
+PROCEDURE SetValue(config: Config; sectionName, key, value: ARRAY OF CHAR): BOOLEAN;
+
+(* Set value in default section *)
+PROCEDURE SetDefaultValue(config: Config; key, value: ARRAY OF CHAR): BOOLEAN;
+
+(* Visitor procedure for writing key-value pairs to file *)
+
+(* Save configuration to file *)
+PROCEDURE SaveConfig(config: Config; filename: ARRAY OF CHAR): INTEGER;
 
 END IniConfigParser.

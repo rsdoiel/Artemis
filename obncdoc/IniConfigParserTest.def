@@ -26,4 +26,10 @@ PROCEDURE TestCaseSensitivity(): BOOLEAN;
 
 PROCEDURE TestWhitespaceHandling(): BOOLEAN;
 
+PROCEDURE TestSetValue(): BOOLEAN;
+
+PROCEDURE TestSaveConfig(): BOOLEAN;
+
+PROCEDURE TestRoundTrip(): BOOLEAN;
+
 END IniConfigParserTest.

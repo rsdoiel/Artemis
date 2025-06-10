@@ -43,17 +43,15 @@ TYPE
 
     <span class='comment'>(* Section name holder *)</span>
 
-    <span class='comment'>(* Dictionary wrapper for ArrayList storage *)</span>
-
     <span class='comment'>(* INI Configuration parser *)</span>
     Config = POINTER TO ConfigDesc;
+
+    <span class='comment'>(* Write visitor state for saving config to file *)</span>
 
 <span class='comment'>(* Create a new ConfigValue *)</span>
 PROCEDURE <em>NewConfigValue</em>(value: ARRAY OF CHAR; valueType, lineNumber: INTEGER): ConfigValuePtr;
 
 <span class='comment'>(* Create a new section name holder *)</span>
-
-<span class='comment'>(* Create a new dictionary wrapper *)</span>
 
 <span class='comment'>(* Detect value type based on content *)</span>
 
@@ -68,6 +66,7 @@ PROCEDURE <em>NewConfig</em>(): Config;
 PROCEDURE <em>FreeConfig</em>(VAR config: Config);
 
 <span class='comment'>(* Load configuration from file *)</span>
+
 PROCEDURE <em>LoadConfig</em>(filename: ARRAY OF CHAR; VAR config: Config): INTEGER;
 
 <span class='comment'>(* Get section by name *)</span>
@@ -87,6 +86,17 @@ PROCEDURE <em>GetError</em>(config: Config): INTEGER;
 
 <span class='comment'>(* Get error line number *)</span>
 PROCEDURE <em>GetErrorLine</em>(config: Config): INTEGER;
+
+<span class='comment'>(* Set value in specific section *)</span>
+PROCEDURE <em>SetValue</em>(config: Config; sectionName, key, value: ARRAY OF CHAR): BOOLEAN;
+
+<span class='comment'>(* Set value in default section *)</span>
+PROCEDURE <em>SetDefaultValue</em>(config: Config; key, value: ARRAY OF CHAR): BOOLEAN;
+
+<span class='comment'>(* Visitor procedure for writing key-value pairs to file *)</span>
+
+<span class='comment'>(* Save configuration to file *)</span>
+PROCEDURE <em>SaveConfig</em>(config: Config; filename: ARRAY OF CHAR): INTEGER;
 
 END IniConfigParser.
 </pre>
