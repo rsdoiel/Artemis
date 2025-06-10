@@ -597,6 +597,12 @@ BEGIN
         IF file = NIL THEN
             result := IOError
         ELSE
+                  (* Zero out writeState to avoid garbage in Files.Rider *)
+            FOR i := 0 TO LEN(writeState.sectionName) - 1 DO
+                writeState.sectionName[i] := 0X
+            END;
+            writeState.success := TRUE;
+            writeState.writer.res := 0;
             Files.Set(writeState.writer, file, 0);
             writeState.success := TRUE;
             isFirstSection := TRUE;
@@ -617,44 +623,52 @@ BEGIN
                         
                         (* Write section header (skip for default section) *)
                         IF sectionNamePtr.name[0] # 0X THEN
-                            (* Add blank line before section (except for first section) *)
+                            (* Add blank line before section (except after empty default section) *)
                             IF ~isFirstSection THEN
                                 Files.Write(writeState.writer, ORD(Chars.LF));
-                                IF writeState.writer.res # 0 THEN writeState.success := FALSE END
+                                IF writeState.writer.res # 0 THEN 
+                                writeState.success := FALSE END
                             END;
                             
                             IF writeState.success THEN
                                 (* Write [section] *)
                                 Files.Write(writeState.writer, ORD("["));
-                                IF writeState.writer.res # 0 THEN writeState.success := FALSE END;
+                                IF writeState.writer.res # 0 THEN
+                                    writeState.success := FALSE END;
                                 
                                 j := 0;
                                 WHILE (j < LEN(sectionNamePtr.name)) & (sectionNamePtr.name[j] # 0X) & writeState.success DO
                                     Files.Write(writeState.writer, ORD(sectionNamePtr.name[j]));
-                                    IF writeState.writer.res # 0 THEN writeState.success := FALSE END;
+                                    IF writeState.writer.res # 0 THEN 
+                                    writeState.success := FALSE END;
                                     INC(j)
                                 END;
                                 
                                 IF writeState.success THEN
                                     Files.Write(writeState.writer, ORD("]"));
-                                    IF writeState.writer.res # 0 THEN writeState.success := FALSE END;
+                                    IF writeState.writer.res # 0 THEN     
+                                    writeState.success := FALSE END;
                                     Files.Write(writeState.writer, ORD(Chars.LF));
-                                    IF writeState.writer.res # 0 THEN writeState.success := FALSE END
+                                    IF writeState.writer.res # 0 THEN   
+                                    writeState.success := FALSE END
                                 END
-                            END;
-                            
-                            isFirstSection := FALSE
+                            END
                         END;
                         
                         (* Write key-value pairs using visitor pattern - FOR ALL SECTIONS *)
                         IF writeState.success THEN
                             Dictionary.ForeachString(wrapper.dict, WriteKeyValue, writeState)
+                        END;
+                        
+                        (* Mark that we've processed at least one section only after writing content *)
+                        IF sectionNamePtr.name[0] # 0X THEN
+                            isFirstSection := FALSE
                         END
                     ELSE
-                        writeState.success := FALSE
+                        writeState.success := FALSE;
                     END
                 ELSE
-                    writeState.success := FALSE
+                    writeState.success := FALSE;
                 END;
                 INC(i)
             END;
