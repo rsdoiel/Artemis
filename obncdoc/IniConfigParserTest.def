@@ -1,0 +1,29 @@
+(* IniConfigParserTest.Mod - Tests for IniConfigParser.Mod.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+DEFINITION IniConfigParserTest;
+
+PROCEDURE TestBasicConfigLoading(): BOOLEAN;
+
+PROCEDURE TestSectionsFromFile(): BOOLEAN;
+
+PROCEDURE TestTypeDetectionFromFile(): BOOLEAN;
+
+PROCEDURE TestCommentsAndWhitespace(): BOOLEAN;
+
+PROCEDURE TestErrorHandling(): BOOLEAN;
+
+PROCEDURE TestEmptyAndCommentsOnly(): BOOLEAN;
+
+PROCEDURE TestConfigValueCreation(): BOOLEAN;
+
+PROCEDURE TestAPIEdgeCases(): BOOLEAN;
+
+PROCEDURE TestCaseSensitivity(): BOOLEAN;
+
+PROCEDURE TestWhitespaceHandling(): BOOLEAN;
+
+END IniConfigParserTest.

@@ -16,23 +16,23 @@ CONST
   MAXSTR = 1024;
 
   (* Character constants *)
-  EOT = 0X;
-  TAB = 9X;
-  LF  = 10X;
-  FF  = 11X;
-  CR  = 13X;
+  EOT = 03X;
+  TAB = 09X;
+  LF  = 0AX;
+  FF  = 0CX;
+  CR  = 0DX;
   SPACE = " ";
   SLASH = "/";
   PERIOD = ".";
-  BSLASH = 92X;
+  BSLASH = 5CX;
   DASH  = "-";
   LODASH = "_";
   CARET = "^";
   TILDE = "~";
-  QUOTE = 34X;
+  QUOTE = 22X;
 
   (* Constants commonly used characters to quote things.  *)
-  QUOT   = 34X;
+  QUOT   = 22X;
   AMP    = "&";
   APOS   = "'";
   LPAR   = ")";

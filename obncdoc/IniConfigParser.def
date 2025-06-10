@@ -1,0 +1,79 @@
+(* IniConfigParser.Mod - Main parser for INI configuration files.
+
+Copyright (C) 2025
+
+Released under The 3-Clause BSD License.
+*)
+
+DEFINITION IniConfigParser;
+
+IMPORT Dictionary, Collections;
+
+CONST
+    NoError = 0;
+    FileNotFound = 1;
+    SyntaxError = 2;
+    IOError = 3;
+
+    StringType = 0;
+    IntegerType = 1;
+    RealType = 2;
+    BooleanType = 3;
+
+TYPE
+    (* Configuration value with type information *)
+    ConfigValue = RECORD(Collections.Item)
+        value: ARRAY 512 OF CHAR;
+        valueType: INTEGER;
+        lineNumber: INTEGER
+    END;
+    ConfigValuePtr = POINTER TO ConfigValue;
+
+    (* Section name holder *)
+
+    (* Dictionary wrapper for ArrayList storage *)
+
+    (* INI Configuration parser *)
+    Config = POINTER TO ConfigDesc;
+
+(* Create a new ConfigValue *)
+PROCEDURE NewConfigValue(value: ARRAY OF CHAR; valueType, lineNumber: INTEGER): ConfigValuePtr;
+
+(* Create a new section name holder *)
+
+(* Create a new dictionary wrapper *)
+
+(* Detect value type based on content *)
+
+(* Find section index by name *)
+
+(* Get or create section dictionary *)
+
+(* Create a new configuration *)
+PROCEDURE NewConfig(): Config;
+
+(* Free configuration and all its resources *)
+PROCEDURE FreeConfig(VAR config: Config);
+
+(* Load configuration from file *)
+PROCEDURE LoadConfig(filename: ARRAY OF CHAR; VAR config: Config): INTEGER;
+
+(* Get section by name *)
+PROCEDURE GetSection(config: Config; sectionName: ARRAY OF CHAR): Dictionary.Dictionary;
+
+(* Get value from specific section *)
+PROCEDURE GetValue(config: Config; sectionName, key: ARRAY OF CHAR; VAR value: ConfigValuePtr): BOOLEAN;
+
+(* Get value from default section *)
+PROCEDURE GetDefaultValue(config: Config; key: ARRAY OF CHAR; VAR value: ConfigValuePtr): BOOLEAN;
+
+(* Get value type for a ConfigValue *)
+PROCEDURE GetType(value: ConfigValuePtr): INTEGER;
+
+(* Get error information *)
+PROCEDURE GetError(config: Config): INTEGER;
+
+(* Get error line number *)
+PROCEDURE GetErrorLine(config: Config): INTEGER;
+
+END IniConfigParser.
