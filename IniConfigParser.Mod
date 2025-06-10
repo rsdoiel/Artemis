@@ -7,7 +7,7 @@ Released under The 3-Clause BSD License.
 
 MODULE IniConfigParser;
 
-IMPORT IniConfigTokenizer, Files, ArrayList, Dictionary, Collections, Chars;
+IMPORT IniConfigTokenizer, Files, ArrayList, Dictionary, Collections, Chars, CollectionWrappers;
 
 CONST
     (* Error codes *)
@@ -39,12 +39,6 @@ TYPE
         name: ARRAY 256 OF CHAR
     END;
     SectionNamePtr = POINTER TO SectionName;
-    
-    (** Dictionary wrapper for ArrayList storage *)
-    DictionaryWrapper = RECORD(Collections.Item)
-        dict: Dictionary.Dictionary
-    END;
-    DictionaryWrapperPtr = POINTER TO DictionaryWrapper;
     
     (** INI Configuration parser *)
     Config* = POINTER TO ConfigDesc;
@@ -105,16 +99,6 @@ BEGIN
     result := sectionName;
     RETURN result
 END NewSectionName;
-
-(** Create a new dictionary wrapper *)
-PROCEDURE NewDictionaryWrapper(dict: Dictionary.Dictionary): Collections.ItemPtr;
-VAR wrapper: DictionaryWrapperPtr; result: Collections.ItemPtr;
-BEGIN
-    NEW(wrapper);
-    wrapper.dict := dict;
-    result := wrapper;
-    RETURN result
-END NewDictionaryWrapper;
 
 (** Detect value type based on content *)
 PROCEDURE DetectValueType(value: ARRAY OF CHAR): INTEGER;
@@ -224,7 +208,6 @@ PROCEDURE GetOrCreateSection(config: Config; sectionName: ARRAY OF CHAR): Dictio
 VAR 
     sectionIndex: INTEGER;
     section: Collections.ItemPtr;
-    wrapper: DictionaryWrapperPtr;
     dict: Dictionary.Dictionary;
     nameItem: Collections.ItemPtr;
     success: BOOLEAN;
@@ -236,14 +219,13 @@ BEGIN
         (* Section exists, get it *)
         success := ArrayList.GetAt(config.sections, sectionIndex, section);
         ASSERT(success);
-        wrapper := section(DictionaryWrapperPtr);
-        result := wrapper.dict
+        result := section(CollectionWrappers.DictionaryWrapperPtr).dict
     ELSE
         (* Create new section *)
         dict := Dictionary.NewStringDict();
         nameItem := NewSectionName(sectionName);
         
-        success := ArrayList.Append(config.sections, NewDictionaryWrapper(dict));
+        success := ArrayList.Append(config.sections, CollectionWrappers.NewDictionaryWrapper(dict));
         ASSERT(success);
         success := ArrayList.Append(config.sectionNames, nameItem);
         ASSERT(success);
@@ -273,7 +255,7 @@ BEGIN
     defaultSection := Dictionary.NewStringDict();
     defaultName := NewSectionName(DefaultSectionName);
     
-    success := ArrayList.Append(config.sections, NewDictionaryWrapper(defaultSection));
+    success := ArrayList.Append(config.sections, CollectionWrappers.NewDictionaryWrapper(defaultSection));
     ASSERT(success);
     success := ArrayList.Append(config.sectionNames, defaultName);
     ASSERT(success);
@@ -287,14 +269,14 @@ PROCEDURE FreeConfig*(VAR config: Config);
 VAR 
     i, count: INTEGER;
     section: Collections.ItemPtr;
-    wrapper: DictionaryWrapperPtr;
+    wrapper: CollectionWrappers.DictionaryWrapperPtr;
 BEGIN
     IF config # NIL THEN
         (* Free all section dictionaries *)
         count := ArrayList.Count(config.sections);
         FOR i := 0 TO count - 1 DO
             IF ArrayList.GetAt(config.sections, i, section) THEN
-                wrapper := section(DictionaryWrapperPtr);
+                wrapper := section(CollectionWrappers.DictionaryWrapperPtr);
                 Dictionary.Free(wrapper.dict)
             END
         END;
@@ -395,7 +377,7 @@ PROCEDURE GetSection*(config: Config; sectionName: ARRAY OF CHAR): Dictionary.Di
 VAR 
     sectionIndex: INTEGER;
     section: Collections.ItemPtr;
-    wrapper: DictionaryWrapperPtr;
+    wrapper: CollectionWrappers.DictionaryWrapperPtr;
     success: BOOLEAN;
     result: Dictionary.Dictionary;
 BEGIN
@@ -406,7 +388,7 @@ BEGIN
         IF sectionIndex >= 0 THEN
             success := ArrayList.GetAt(config.sections, sectionIndex, section);
             IF success THEN
-                wrapper := section(DictionaryWrapperPtr);
+                wrapper := section(CollectionWrappers.DictionaryWrapperPtr);
                 result := wrapper.dict
             END
         END
@@ -606,7 +588,7 @@ VAR
     result: INTEGER;
     i, count: INTEGER;
     section: Collections.ItemPtr;
-    wrapper: DictionaryWrapperPtr;
+    wrapper: CollectionWrappers.DictionaryWrapperPtr;
     nameItem: Collections.ItemPtr;
     sectionNamePtr: SectionNamePtr;
     success: BOOLEAN;
@@ -633,7 +615,7 @@ BEGIN
             WHILE (i < count) & writeState.success DO
                 success := ArrayList.GetAt(config.sections, i, section);
                 IF success THEN
-                    wrapper := section(DictionaryWrapperPtr);
+                    wrapper := section(CollectionWrappers.DictionaryWrapperPtr);
                     success := ArrayList.GetAt(config.sectionNames, i, nameItem);
                     IF success THEN
                         sectionNamePtr := nameItem(SectionNamePtr);
