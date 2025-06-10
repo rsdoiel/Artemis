@@ -38,6 +38,11 @@ presentations or books about the language and system.
 All have help me study the path Prof. Wirth and Prof. Gutkneckt
 pioneered all those many years ago.
 
+Project Status 2025
+-------------------
+
+It's the middle of 2025. Weird things are afoot in North America. But I can take joy in that people out there are still interested in Oberon-07. I have merged several Pull requests recently for this project. That is very cool. Thank you [erno-szabados](https://github.com/erno-szabados). RSD 2025-06-10
+
 Project Status 2023
 -------------------
 
