@@ -1,6 +1,6 @@
 # Artemis Log Module
 
-A simple, flexible logging module for Oberon-07 that makes it easy to add logging to your applications.
+A simple, logging module for Oberon-07 that  enables logging for your applications.
 
 ## What It Does
 
@@ -81,4 +81,15 @@ Log.Info(logger, "This message has no timestamp");
 
 If file creation fails, file loggers automatically fall back to console output. The module handles NIL loggers gracefully and filters messages below the minimum log level without errors.
 
+## Limitations
+
+- Fixed buffer size: messages longer than Log.MAX_MESSAGE_LEN are truncated.
+- no log rotation
+- no concurrent logging
+- structured logging not supported
+- no runtime configuration
+- no log filtering
+
 This makes the Log module robust and safe to use in any situation.
+
+
