@@ -52,6 +52,7 @@ BEGIN
   logger.timestamp := TRUE;
   
   IF (destination = FILE) OR (destination = BOTH) THEN
+    logger.filename[0] := 0X; (* Initialize as empty string *)
     Strings.Append(filename, logger.filename);
     logger.file := Files.New(logger.filename);
     IF logger.file = NIL THEN
@@ -100,6 +101,7 @@ END GetDestination;
 (* Internal procedure to get level name as string *)
 PROCEDURE GetLevelName(level: INTEGER; VAR levelName: ARRAY OF CHAR);
 BEGIN
+  levelName[0] := 0X; (* Initialize as empty string *)
   IF level = DEBUG THEN
     Strings.Append("DEBUG", levelName)
   ELSIF level = INFO THEN
@@ -122,6 +124,7 @@ BEGIN
   
   (* Format: YYYY-MM-DD HH:MM:SS *)
   (* Year *)
+  temp[0] := 0X;
   Convert.IntToString(clock.year, temp, ok);
   Strings.Append(temp, timestamp);
   Strings.Append("-", timestamp);
@@ -130,6 +133,7 @@ BEGIN
   IF clock.month < 10 THEN
     Strings.Append("0", timestamp)
   END;
+  temp[0] := 0X;
   Convert.IntToString(clock.month, temp, ok);
   Strings.Append(temp, timestamp);
   Strings.Append("-", timestamp);
@@ -138,6 +142,7 @@ BEGIN
   IF clock.day < 10 THEN
     Strings.Append("0", timestamp)
   END;
+  temp[0] := 0X;
   Convert.IntToString(clock.day, temp, ok);
   Strings.Append(temp, timestamp);
   Strings.Append(" ", timestamp);
@@ -146,6 +151,7 @@ BEGIN
   IF clock.hour < 10 THEN
     Strings.Append("0", timestamp)
   END;
+  temp[0] := 0X;
   Convert.IntToString(clock.hour, temp, ok);
   Strings.Append(temp, timestamp);
   Strings.Append(":", timestamp);
@@ -154,6 +160,7 @@ BEGIN
   IF clock.minute < 10 THEN
     Strings.Append("0", timestamp)
   END;
+  temp[0] := 0X;
   Convert.IntToString(clock.minute, temp, ok);
   Strings.Append(temp, timestamp);
   Strings.Append(":", timestamp);
@@ -162,6 +169,7 @@ BEGIN
   IF clock.second < 10 THEN
     Strings.Append("0", timestamp)
   END;
+  temp[0] := 0X;
   Convert.IntToString(clock.second, temp, ok);
   Strings.Append(temp, timestamp)
 END FormatTimestamp;
@@ -183,13 +191,21 @@ PROCEDURE WriteToFile(file: Files.File; message: ARRAY OF CHAR);
   VAR 
     rider: Files.Rider;
     newline: BYTE;
+    i: INTEGER;
 BEGIN
   IF file # NIL THEN
     Files.Set(rider, file, Files.Length(file));
-    Files.WriteString(rider, message);
+    
+    (* Write message character by character to avoid writing the terminating 0X *)
+    i := 0;
+    WHILE (i < LEN(message)) & (message[i] # 0X) DO
+      Files.Write(rider, ORD(message[i]));
+      INC(i)
+    END;
+    
     newline := ORD(Chars.LF); (* Line feed *)
-    Files.Write(rider, newline);
-    Files.Close(file)
+    Files.Write(rider, newline)
+    (* Note: File is kept open for subsequent writes - closed only in Close() *)
   END
 END WriteToFile;
 
@@ -213,7 +229,6 @@ BEGIN
     END;
     
     (* Add level *)
-    levelName[0] := 0X;
     GetLevelName(level, levelName);
     Strings.Append("[", formattedMsg);
     Strings.Append(levelName, formattedMsg);
