@@ -100,6 +100,8 @@ BEGIN
     ELSE
       logger.file := NIL
     END;
+  ELSE
+    logger := NIL
   END;
   
   RETURN logger

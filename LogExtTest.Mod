@@ -31,8 +31,8 @@ BEGIN
   level := Log.GetLevel(nilLogger);
   dest := Log.GetDestination(nilLogger);
   tsEnabled := Log.GetTimestamp(nilLogger);
-  T.ExpectedInt(0, level, "GetLevel(NIL) returns 0", test);
-  T.ExpectedInt(0, dest, "GetDestination(NIL) returns 0", test);
+  T.ExpectedInt(-1, level, "GetLevel(NIL) returns -1", test);
+  T.ExpectedInt(-1, dest, "GetDestination(NIL) returns -1", test);
   T.ExpectedBool(FALSE, tsEnabled, "GetTimestamp(NIL) returns FALSE", test);
   RETURN test
 END TestNilLogger;
