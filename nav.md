@@ -9,5 +9,5 @@
 + [Development notes](./development-notes.html)
 + [Collections](./docs/Collections.md)
 + [IniConfigParser](./docs/IniConfigParser.md)
-+ [Github](https://github.com/erno-szabados/Artemis)
++ [Github](https://github.com/rsdoiel/Artemis)
 
