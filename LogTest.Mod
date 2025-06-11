@@ -128,7 +128,10 @@ BEGIN
   logger := Log.New(Log.INFO, Log.FILE, "test.log");
   T.ExpectedBool(logger # NIL, TRUE, "File logger created", test);
   
+  Log.Debug(logger, "This won't show up");
   Log.Info(logger, "Test file logging message");
+  Log.Warning(logger, "Test file logging message");
+  Log.Error(logger, "Test file logging message");
   Log.Close(logger);
   
   RETURN test
