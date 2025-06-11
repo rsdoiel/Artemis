@@ -10,7 +10,7 @@ support for console and file output, and timestamping capabilities.
 *)
 MODULE Log;
 
-IMPORT Out, extErr, Files, Strings, artClock, DStrings, Convert := extConvert, Chars;
+IMPORT Out, Err := extErr, Files, Clock := artClock, DStrings, Convert := extConvert, Chars;
 
 CONST
   (* Log levels *)
@@ -53,7 +53,7 @@ BEGIN
   
   IF (destination = FILE) OR (destination = BOTH) THEN
     logger.filename[0] := 0X; (* Initialize as empty string *)
-    Strings.Append(filename, logger.filename);
+    Chars.Append(filename, logger.filename);
     logger.file := Files.New(logger.filename);
     IF logger.file = NIL THEN
       (* Fallback to console if file creation fails *)
@@ -103,83 +103,70 @@ PROCEDURE GetLevelName(level: INTEGER; VAR levelName: ARRAY OF CHAR);
 BEGIN
   levelName[0] := 0X; (* Initialize as empty string *)
   IF level = DEBUG THEN
-    Strings.Append("DEBUG", levelName)
+    Chars.Append("DEBUG", levelName)
   ELSIF level = INFO THEN
-    Strings.Append("INFO", levelName)
+    Chars.Append("INFO", levelName)
   ELSIF level = WARNING THEN
-    Strings.Append("WARNING", levelName)
+    Chars.Append("WARNING", levelName)
   ELSIF level = ERROR THEN
-    Strings.Append("ERROR", levelName)
+    Chars.Append("ERROR", levelName)
   ELSE
-    Strings.Append("UNKNOWN", levelName)
+    Chars.Append("UNKNOWN", levelName)
   END
 END GetLevelName;
 
+(* Internal helper to append a padded integer to a string *)
+PROCEDURE AppendPaddedInt(value: INTEGER; VAR dest: ARRAY OF CHAR);
+  VAR temp: ARRAY 32 OF CHAR; ok: BOOLEAN;
+BEGIN
+  IF value < 10 THEN
+    Chars.Append("0", dest)
+  END;
+  temp[0] := 0X;
+  Convert.IntToString(value, temp, ok);
+  IF ok THEN
+    Chars.Append(temp, dest)
+  END
+END AppendPaddedInt;
+
+(* Internal helper to append an unpaded integer to a string *)
+PROCEDURE AppendInt(value: INTEGER; VAR dest: ARRAY OF CHAR);
+  VAR temp: ARRAY 32 OF CHAR; ok: BOOLEAN;
+BEGIN
+  temp[0] := 0X;
+  Convert.IntToString(value, temp, ok);
+  IF ok THEN
+    Chars.Append(temp, dest)
+  END
+END AppendInt;
+
 (* Internal procedure to format timestamp *)
 PROCEDURE FormatTimestamp(VAR timestamp: ARRAY OF CHAR);
-  VAR clock: artClock.Clock; temp: ARRAY 32 OF CHAR; ok: BOOLEAN;
+  VAR clock: Clock.Clock;
 BEGIN
   timestamp[0] := 0X; (* Clear the string *)
-  artClock.Get(clock);
+  Clock.Get(clock);
   
   (* Format: YYYY-MM-DD HH:MM:SS *)
-  (* Year *)
-  temp[0] := 0X;
-  Convert.IntToString(clock.year, temp, ok);
-  Strings.Append(temp, timestamp);
-  Strings.Append("-", timestamp);
-  
-  (* Month *)
-  IF clock.month < 10 THEN
-    Strings.Append("0", timestamp)
-  END;
-  temp[0] := 0X;
-  Convert.IntToString(clock.month, temp, ok);
-  Strings.Append(temp, timestamp);
-  Strings.Append("-", timestamp);
-  
-  (* Day *)
-  IF clock.day < 10 THEN
-    Strings.Append("0", timestamp)
-  END;
-  temp[0] := 0X;
-  Convert.IntToString(clock.day, temp, ok);
-  Strings.Append(temp, timestamp);
-  Strings.Append(" ", timestamp);
-  
-  (* Hour *)
-  IF clock.hour < 10 THEN
-    Strings.Append("0", timestamp)
-  END;
-  temp[0] := 0X;
-  Convert.IntToString(clock.hour, temp, ok);
-  Strings.Append(temp, timestamp);
-  Strings.Append(":", timestamp);
-  
-  (* Minute *)
-  IF clock.minute < 10 THEN
-    Strings.Append("0", timestamp)
-  END;
-  temp[0] := 0X;
-  Convert.IntToString(clock.minute, temp, ok);
-  Strings.Append(temp, timestamp);
-  Strings.Append(":", timestamp);
-  
-  (* Second *)
-  IF clock.second < 10 THEN
-    Strings.Append("0", timestamp)
-  END;
-  temp[0] := 0X;
-  Convert.IntToString(clock.second, temp, ok);
-  Strings.Append(temp, timestamp)
+  AppendInt(clock.year, timestamp);
+  Chars.Append("-", timestamp);
+  AppendPaddedInt(clock.month, timestamp);
+  Chars.Append("-", timestamp);
+  AppendPaddedInt(clock.day, timestamp);
+  Chars.Append(" ", timestamp);
+  AppendPaddedInt(clock.hour, timestamp);
+  Chars.Append(":", timestamp);
+  AppendPaddedInt(clock.minute, timestamp);
+  Chars.Append(":", timestamp);
+  AppendPaddedInt(clock.second, timestamp)
 END FormatTimestamp;
 
 (* Internal procedure to write to console *)
 PROCEDURE WriteToConsole(level: INTEGER; message: ARRAY OF CHAR);
 BEGIN
   IF level = ERROR THEN
-    extErr.String(message);
-    extErr.Ln
+    Err.String(message);
+    Err.Ln
   ELSE
     Out.String(message);
     Out.Ln
@@ -224,18 +211,18 @@ BEGIN
     (* Add timestamp if enabled *)
     IF logger.timestamp THEN
         FormatTimestamp(timestamp);
-        Strings.Append(timestamp, formattedMsg);
-        Strings.Append(" ", formattedMsg)
+        Chars.Append(timestamp, formattedMsg);
+        Chars.Append(" ", formattedMsg)
     END;
     
     (* Add level *)
     GetLevelName(level, levelName);
-    Strings.Append("[", formattedMsg);
-    Strings.Append(levelName, formattedMsg);
-    Strings.Append("] ", formattedMsg);
+    Chars.Append("[", formattedMsg);
+    Chars.Append(levelName, formattedMsg);
+    Chars.Append("] ", formattedMsg);
     
     (* Add message *)
-    Strings.Append(message, formattedMsg);
+    Chars.Append(message, formattedMsg);
     
     (* Output based on destination *)
     IF (logger.destination = CONSOLE) OR (logger.destination = BOTH) THEN
