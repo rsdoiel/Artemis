@@ -25,8 +25,8 @@ CONST
   BOTH* = 2;
   
   (* Internal constants *)
-  MAX_MESSAGE_LEN = Chars.MAXSTR;
-  MAX_FILENAME_LEN = Chars.MEDIUMSTR;
+  MAX_MESSAGE_LEN* = Chars.MAXSTR;
+  MAX_FILENAME_LEN* = Chars.MEDIUMSTR;
   MAX_LEVELNAME_LEN = 16;
   MAX_TEMP_LEN = 32;
   MAX_TIMESTAMP_LEN = 32;
@@ -42,13 +42,22 @@ TYPE
     timestamp: BOOLEAN     (* Whether to include timestamps *)
   END;
 
-(* Safe string concatenation helper *)
+(* Safe string concatenation helper. Truncates source if it would overflow dest. *)
 PROCEDURE SafeAppend(source: ARRAY OF CHAR; VAR dest: ARRAY OF CHAR);
+  VAR
+    destLen, sourceLen, space, i, j: INTEGER;
 BEGIN
-  IF LEN(dest) - Chars.Length(dest) > Chars.Length(source) THEN
-    Chars.Append(source, dest)
-  ELSE
-    (* Buffer would overflow *)
+  destLen := Chars.Length(dest);
+  sourceLen := Chars.Length(source);
+  space := LEN(dest) - destLen - 1; (* -1 for trailing 0X *)
+
+  IF space > 0 THEN
+    i := 0; j := destLen;
+    WHILE (i < sourceLen) & (i < space) DO
+      dest[j] := source[i];
+      INC(i); INC(j)
+    END;
+    dest[j] := 0X
   END
 END SafeAppend;
 
@@ -106,26 +115,49 @@ END SetLevel;
 
 (** Get the current log level for the logger *)
 PROCEDURE GetLevel*(logger: Logger): INTEGER;
+VAR
+  result : INTEGER;
 BEGIN
-  RETURN logger.level
+  IF logger = NIL THEN
+    result := -1
+  ELSE
+    result := logger.level
+  END;
+  RETURN result
 END GetLevel;
 
 (** Enable or disable timestamping *)
 PROCEDURE SetTimestamp*(logger: Logger; enabled: BOOLEAN);
 BEGIN
-  logger.timestamp := enabled
+  IF logger # NIL THEN
+    logger.timestamp := enabled
+  END
 END SetTimestamp;
 
 (** Get current timestamp setting *)
 PROCEDURE GetTimestamp*(logger: Logger): BOOLEAN;
+VAR 
+  result : BOOLEAN;
 BEGIN
-  RETURN logger.timestamp
+  IF logger # NIL THEN
+    result := logger.timestamp
+  ELSE
+    result := FALSE
+  END;
+  RETURN result
 END GetTimestamp;
 
 (** Get the current destination setting *)
 PROCEDURE GetDestination*(logger: Logger): INTEGER;
+VAR 
+  result : INTEGER;
 BEGIN
-  RETURN logger.destination
+  IF logger # NIL THEN
+    result := logger.destination
+  ELSE
+    result := -1
+  END;
+  RETURN result
 END GetDestination;
 
 (* Internal procedure to get level name as string *)
@@ -159,7 +191,7 @@ BEGIN
   END
 END AppendPaddedInt;
 
-(* Internal helper to append an unpaded integer to a string *)
+(* Internal helper to append an unpadded integer to a string *)
 PROCEDURE AppendInt(value: INTEGER; VAR dest: ARRAY OF CHAR);
   VAR temp: ARRAY MAX_TEMP_LEN OF CHAR; ok: BOOLEAN;
 BEGIN

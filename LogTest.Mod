@@ -10,7 +10,10 @@ proper usage of the opaque Logger type.
 *)
 MODULE LogTest;
 
-IMPORT T := Tests, Log, DStrings;
+IMPORT T := Tests, Log, Chars;
+
+CONST 
+  OVERLONG_MSG_LEN = Chars.MAXSTR + 10;
 
 VAR 
   ts: T.TestSet;
@@ -104,10 +107,32 @@ BEGIN
   RETURN test
 END TestFileLogging;
 
+PROCEDURE TestTruncation(): BOOLEAN;
+VAR
+  test: BOOLEAN;
+  logger: Log.Logger;
+  longMsg: ARRAY OVERLONG_MSG_LEN OF CHAR; (* Longer than MAX_MESSAGE_LEN *)
+  i: INTEGER;
+BEGIN
+  test := TRUE;
+  FOR i := 0 TO LEN(longMsg)-2 DO
+    longMsg[i] := "A"
+  END;
+  longMsg[LEN(longMsg)-1] := 0X;
+
+  logger := Log.New(Log.INFO, Log.CONSOLE, "");
+  Log.Info(logger, longMsg);
+  Log.Close(logger);
+
+  (* Manual check: No crash, output is truncated, string is valid *)
+  RETURN test
+END TestTruncation;
+
 BEGIN
   T.Init(ts, "Log");
   T.Add(ts, TestLoggerCreation);
   T.Add(ts, TestLogLevels);
   T.Add(ts, TestFileLogging);
+  T.Add(ts, TestTruncation);
   ASSERT(T.Run(ts))
 END LogTest.
