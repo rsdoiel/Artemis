@@ -25,17 +25,21 @@ DEFINITION <em>Log</em>;
 IMPORT Chars;
 
 CONST
+  <span class='comment'>(* Log levels *)</span>
   DEBUG = 0;
   INFO = 1; 
   WARNING = 2;
   ERROR = 3;
 
+  <span class='comment'>(* Output destinations *)</span>
   CONSOLE = 0;
   FILE = 1;
   BOTH = 2;
 
+  <span class='comment'>(*  Messages longer than this - in total after timestamp and level, are truncated. *)</span>
   MAX_MESSAGE_LEN = Chars.MAXSTR;
-  MAX_FILENAME_LEN = Chars.MEDIUMSTR;
+  <span class='comment'>(*  Maximum length of file path to be used. *)</span>
+  MAX_FILENAME_LEN = Chars.MAXSTR;
 
 TYPE
   Logger = POINTER TO LoggerDesc;
@@ -74,8 +78,6 @@ PROCEDURE <em>Warning</em>(logger: Logger; message: ARRAY OF CHAR);
 
 <span class='comment'>(* Log an error message *)</span>
 PROCEDURE <em>Error</em>(logger: Logger; message: ARRAY OF CHAR);
-
-<span class='comment'>(* Convenience procedures using the default logger *)</span>
 
 <span class='comment'>(* Close the logger and flush any pending writes *)</span>
 PROCEDURE <em>Close</em>(logger: Logger);
