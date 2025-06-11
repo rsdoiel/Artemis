@@ -10,7 +10,7 @@ and proper information hiding.
 *)
 MODULE ExampleLog;
 
-IMPORT Log, DStrings;
+IMPORT Log;
 
 PROCEDURE DemonstrateBasicLogging();
 VAR 
