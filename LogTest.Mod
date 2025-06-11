@@ -84,39 +84,6 @@ BEGIN
   RETURN test
 END TestLogLevels;
 
-PROCEDURE TestDefaultLogger(): BOOLEAN;
-VAR test: BOOLEAN;
-BEGIN
-  test := TRUE;
-  
-  (* Test default logger convenience methods *)
-  Log.InfoDefault("Testing default logger info");
-  Log.WarningDefault("Testing default logger warning");
-  Log.ErrorDefault("Testing default logger error");
-  Log.DebugDefault("Testing default logger debug");
-  
-  RETURN test
-END TestDefaultLogger;
-
-PROCEDURE TestDStringLogging(): BOOLEAN;
-VAR 
-  test: BOOLEAN;
-  logger: Log.Logger;
-  message: DStrings.String;
-BEGIN
-  test := TRUE;
-  
-  logger := Log.New(Log.INFO, Log.CONSOLE, "");
-  
-  (* Test DString logging *)
-  DStrings.Init("This is a DString message", message);
-  Log.LogDString(logger, Log.INFO, message);
-  
-  Log.Close(logger);
-  
-  RETURN test
-END TestDStringLogging;
-
 PROCEDURE TestFileLogging(): BOOLEAN;
 VAR 
   test: BOOLEAN;
@@ -141,8 +108,6 @@ BEGIN
   T.Init(ts, "Log");
   T.Add(ts, TestLoggerCreation);
   T.Add(ts, TestLogLevels);
-  T.Add(ts, TestDefaultLogger);
-  T.Add(ts, TestDStringLogging);
   T.Add(ts, TestFileLogging);
   ASSERT(T.Run(ts))
 END LogTest.

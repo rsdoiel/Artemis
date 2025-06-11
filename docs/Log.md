@@ -4,19 +4,14 @@ A simple, flexible logging module for Oberon-07 that makes it easy to add loggin
 
 ## What It Does
 
-The Log module provides basic logging functionality with multiple log levels, support for both console and file output, and automatic timestamping. It's designed to be lightweight and easy to use while following Oberon-07 best practices.
+The Log module provides basic logging functionality with multiple log levels, support for both console and file output, and automatic timestamping. It's designed to be lightweight, with no hidden behavior.
 
 ## Quick Start
 
 ```oberon
 IMPORT Log;
 
-(* Use the default logger for quick logging *)
-Log.InfoDefault("Application started");
-Log.WarningDefault("Something unusual happened");
-Log.ErrorDefault("Something went wrong");
-
-(* Or create your own logger *)
+(* Create your logger *)
 VAR logger: Log.Logger;
 logger := Log.New(Log.DEBUG, Log.CONSOLE, "");
 Log.Info(logger, "Custom logger message");
@@ -30,7 +25,6 @@ Log.Close(logger);
 - **Timestamping**: Automatic timestamps that can be toggled on/off
 - **String Support**: Works with both `ARRAY OF CHAR` and `DString` types
 - **Information Hiding**: Uses opaque pointers to hide implementation details
-- **Default Logger**: Convenience methods for quick logging without setup
 
 ## Log Levels
 
@@ -82,15 +76,6 @@ Log.SetTimestamp(logger, FALSE);
 Log.Info(logger, "This message has no timestamp");
 ```
 
-## DString Support
-
-The module also supports DString types for dynamic string content:
-
-```oberon
-VAR message: DStrings.String;
-DStrings.Init("Dynamic message content", message);
-Log.LogDString(logger, Log.INFO, message);
-```
 
 ## Error Handling
 

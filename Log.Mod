@@ -10,7 +10,7 @@ support for console and file output, and timestamping capabilities.
 *)
 MODULE Log;
 
-IMPORT Out, Err := extErr, Files, Clock := artClock, DStrings, Convert := extConvert, Chars;
+IMPORT Out, Err := extErr, Files, Clock := artClock, Convert := extConvert, Chars;
 
 CONST
   (* Log levels *)
@@ -25,8 +25,11 @@ CONST
   BOTH* = 2;
   
   (* Internal constants *)
-  MAX_MESSAGE_LEN = 1024;
-  MAX_FILENAME_LEN = 256;
+  MAX_MESSAGE_LEN = Chars.MAXSTR;
+  MAX_FILENAME_LEN = Chars.MEDIUMSTR;
+  MAX_LEVELNAME_LEN = 16;
+  MAX_TEMP_LEN = 32;
+  MAX_TIMESTAMP_LEN = 32;
 
 TYPE
   (* Opaque pointer - implementation details hidden from clients *)
@@ -39,8 +42,15 @@ TYPE
     timestamp: BOOLEAN     (* Whether to include timestamps *)
   END;
 
-VAR
-  defaultLogger*: Logger;
+(* Safe string concatenation helper *)
+PROCEDURE SafeAppend(source: ARRAY OF CHAR; VAR dest: ARRAY OF CHAR);
+BEGIN
+  IF LEN(dest) - Chars.Length(dest) > Chars.Length(source) THEN
+    Chars.Append(source, dest)
+  ELSE
+    (* Buffer would overflow *)
+  END
+END SafeAppend;
 
 (** Create a new logger with specified minimum level and destination *)
 PROCEDURE New*(level, destination: INTEGER; filename: ARRAY OF CHAR): Logger;
@@ -53,7 +63,7 @@ BEGIN
   
   IF (destination = FILE) OR (destination = BOTH) THEN
     logger.filename[0] := 0X; (* Initialize as empty string *)
-    Chars.Append(filename, logger.filename);
+    SafeAppend(filename, logger.filename);
     logger.file := Files.New(logger.filename);
     IF logger.file = NIL THEN
       (* Fallback to console if file creation fails *)
@@ -71,7 +81,9 @@ END New;
 (** Set the minimum log level for the logger *)
 PROCEDURE SetLevel*(logger: Logger; level: INTEGER);
 BEGIN
-  logger.level := level
+  IF (logger # NIL) & (level >= DEBUG) & (level <= ERROR) THEN
+    logger.level := level
+  END
 END SetLevel;
 
 (** Get the current log level for the logger *)
@@ -103,40 +115,40 @@ PROCEDURE GetLevelName(level: INTEGER; VAR levelName: ARRAY OF CHAR);
 BEGIN
   levelName[0] := 0X; (* Initialize as empty string *)
   IF level = DEBUG THEN
-    Chars.Append("DEBUG", levelName)
+    SafeAppend("DEBUG", levelName)
   ELSIF level = INFO THEN
-    Chars.Append("INFO", levelName)
+    SafeAppend("INFO", levelName)
   ELSIF level = WARNING THEN
-    Chars.Append("WARNING", levelName)
+    SafeAppend("WARNING", levelName)
   ELSIF level = ERROR THEN
-    Chars.Append("ERROR", levelName)
+    SafeAppend("ERROR", levelName)
   ELSE
-    Chars.Append("UNKNOWN", levelName)
+    SafeAppend("UNKNOWN", levelName)
   END
 END GetLevelName;
 
 (* Internal helper to append a padded integer to a string *)
 PROCEDURE AppendPaddedInt(value: INTEGER; VAR dest: ARRAY OF CHAR);
-  VAR temp: ARRAY 32 OF CHAR; ok: BOOLEAN;
+  VAR temp: ARRAY MAX_TEMP_LEN OF CHAR; ok: BOOLEAN;
 BEGIN
   IF value < 10 THEN
-    Chars.Append("0", dest)
+    SafeAppend("0", dest)
   END;
   temp[0] := 0X;
   Convert.IntToString(value, temp, ok);
   IF ok THEN
-    Chars.Append(temp, dest)
+    SafeAppend(temp, dest)
   END
 END AppendPaddedInt;
 
 (* Internal helper to append an unpaded integer to a string *)
 PROCEDURE AppendInt(value: INTEGER; VAR dest: ARRAY OF CHAR);
-  VAR temp: ARRAY 32 OF CHAR; ok: BOOLEAN;
+  VAR temp: ARRAY MAX_TEMP_LEN OF CHAR; ok: BOOLEAN;
 BEGIN
   temp[0] := 0X;
   Convert.IntToString(value, temp, ok);
   IF ok THEN
-    Chars.Append(temp, dest)
+    SafeAppend(temp, dest)
   END
 END AppendInt;
 
@@ -149,15 +161,15 @@ BEGIN
   
   (* Format: YYYY-MM-DD HH:MM:SS *)
   AppendInt(clock.year, timestamp);
-  Chars.Append("-", timestamp);
+  SafeAppend("-", timestamp);
   AppendPaddedInt(clock.month, timestamp);
-  Chars.Append("-", timestamp);
+  SafeAppend("-", timestamp);
   AppendPaddedInt(clock.day, timestamp);
-  Chars.Append(" ", timestamp);
+  SafeAppend(" ", timestamp);
   AppendPaddedInt(clock.hour, timestamp);
-  Chars.Append(":", timestamp);
+  SafeAppend(":", timestamp);
   AppendPaddedInt(clock.minute, timestamp);
-  Chars.Append(":", timestamp);
+  SafeAppend(":", timestamp);
   AppendPaddedInt(clock.second, timestamp)
 END FormatTimestamp;
 
@@ -200,8 +212,8 @@ END WriteToFile;
 PROCEDURE LogMessage*(logger: Logger; level: INTEGER; message: ARRAY OF CHAR);
   VAR 
     formattedMsg: ARRAY MAX_MESSAGE_LEN OF CHAR;
-    levelName: ARRAY 16 OF CHAR;
-    timestamp: ARRAY 32 OF CHAR;
+    levelName: ARRAY MAX_LEVELNAME_LEN OF CHAR;
+    timestamp: ARRAY MAX_TIMESTAMP_LEN OF CHAR;
 BEGIN
   IF (logger = NIL) OR (level < logger.level) THEN
     (* Couldn't log. *)
@@ -211,18 +223,18 @@ BEGIN
     (* Add timestamp if enabled *)
     IF logger.timestamp THEN
         FormatTimestamp(timestamp);
-        Chars.Append(timestamp, formattedMsg);
-        Chars.Append(" ", formattedMsg)
+        SafeAppend(timestamp, formattedMsg);
+        SafeAppend(" ", formattedMsg)
     END;
     
     (* Add level *)
     GetLevelName(level, levelName);
-    Chars.Append("[", formattedMsg);
-    Chars.Append(levelName, formattedMsg);
-    Chars.Append("] ", formattedMsg);
+    SafeAppend("[", formattedMsg);
+    SafeAppend(levelName, formattedMsg);
+    SafeAppend("] ", formattedMsg);
     
     (* Add message *)
-    Chars.Append(message, formattedMsg);
+    SafeAppend(message, formattedMsg);
     
     (* Output based on destination *)
     IF (logger.destination = CONSOLE) OR (logger.destination = BOTH) THEN
@@ -234,14 +246,6 @@ BEGIN
     END
   END;
 END LogMessage;
-
-(** Log a message with specified level using DString *)
-PROCEDURE LogDString*(logger: Logger; level: INTEGER; message: DStrings.String);
-  VAR chars: ARRAY MAX_MESSAGE_LEN OF CHAR; truncated: INTEGER;
-BEGIN
-  DStrings.ToChars(message, chars, truncated);
-  LogMessage(logger, level, chars)
-END LogDString;
 
 (** Convenience procedures for common log levels *)
 
@@ -271,30 +275,6 @@ END Error;
 
 (** Convenience procedures using the default logger *)
 
-(** Log a debug message using default logger *)
-PROCEDURE DebugDefault*(message: ARRAY OF CHAR);
-BEGIN
-  LogMessage(defaultLogger, DEBUG, message)
-END DebugDefault;
-
-(** Log an info message using default logger *)
-PROCEDURE InfoDefault*(message: ARRAY OF CHAR);
-BEGIN
-  LogMessage(defaultLogger, INFO, message)
-END InfoDefault;
-
-(** Log a warning message using default logger *)
-PROCEDURE WarningDefault*(message: ARRAY OF CHAR);
-BEGIN
-  LogMessage(defaultLogger, WARNING, message)
-END WarningDefault;
-
-(** Log an error message using default logger *)
-PROCEDURE ErrorDefault*(message: ARRAY OF CHAR);
-BEGIN
-  LogMessage(defaultLogger, ERROR, message)
-END ErrorDefault;
-
 (** Close the logger and flush any pending writes *)
 PROCEDURE Close*(logger: Logger);
 BEGIN
@@ -304,6 +284,4 @@ BEGIN
 END Close;
 
 BEGIN
-  (* Initialize default logger to console with INFO level *)
-  defaultLogger := New(INFO, CONSOLE, "")
 END Log.

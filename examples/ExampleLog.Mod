@@ -56,32 +56,6 @@ BEGIN
   Log.Close(fileLogger)
 END DemonstrateFileLogging;
 
-PROCEDURE DemonstrateDStringLogging();
-VAR 
-  logger: Log.Logger;
-  message: DStrings.String;
-  userId: INTEGER;
-BEGIN
-  logger := Log.New(Log.INFO, Log.CONSOLE, "");
-  userId := 12345;
-  
-  (* Build a complex log message using DStrings *)
-  DStrings.Init("User ", message);
-  (* Note: In a real implementation, you'd use DString riders to build complex messages *)
-  Log.LogDString(logger, Log.INFO, message);
-  
-  Log.Close(logger)
-END DemonstrateDStringLogging;
-
-PROCEDURE DemonstrateDefaultLogger();
-BEGIN
-  (* Use the built-in default logger for simple cases *)
-  Log.InfoDefault("Application initialized");
-  Log.WarningDefault("Using default logger");
-  Log.ErrorDefault("Critical system error");
-  
-  (* The default logger uses INFO level and console output *)
-END DemonstrateDefaultLogger;
 
 PROCEDURE DemonstrateBothDestinations();
 VAR logger: Log.Logger;
@@ -96,13 +70,7 @@ BEGIN
 END DemonstrateBothDestinations;
 
 BEGIN
-  Log.InfoDefault("=== Log Module Example ===");
-  
   DemonstrateBasicLogging();
   DemonstrateFileLogging();
-  DemonstrateDStringLogging();
-  DemonstrateDefaultLogger();
   DemonstrateBothDestinations();
-  
-  Log.InfoDefault("=== Example Complete ===")
 END ExampleLog.
