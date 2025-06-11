@@ -10,7 +10,7 @@ support for console and file output, and timestamping capabilities.
 *)
 DEFINITION Log;
 
-IMPORT DStrings;
+IMPORT Chars;
 
 CONST
   DEBUG = 0;
@@ -22,11 +22,11 @@ CONST
   FILE = 1;
   BOTH = 2;
 
+  MAX_MESSAGE_LEN = Chars.MAXSTR;
+  MAX_FILENAME_LEN = Chars.MEDIUMSTR;
+
 TYPE
   Logger = POINTER TO LoggerDesc;
-
-VAR
-  defaultLogger: Logger;
 
 (* Create a new logger with specified minimum level and destination *)
 PROCEDURE New(level, destination: INTEGER; filename: ARRAY OF CHAR): Logger;
@@ -49,9 +49,6 @@ PROCEDURE GetDestination(logger: Logger): INTEGER;
 (* Log a message with specified level using ARRAY OF CHAR *)
 PROCEDURE LogMessage(logger: Logger; level: INTEGER; message: ARRAY OF CHAR);
 
-(* Log a message with specified level using DString *)
-PROCEDURE LogDString(logger: Logger; level: INTEGER; message: DStrings.String);
-
 (* Convenience procedures for common log levels *)
 
 (* Log a debug message *)
@@ -67,18 +64,6 @@ PROCEDURE Warning(logger: Logger; message: ARRAY OF CHAR);
 PROCEDURE Error(logger: Logger; message: ARRAY OF CHAR);
 
 (* Convenience procedures using the default logger *)
-
-(* Log a debug message using default logger *)
-PROCEDURE DebugDefault(message: ARRAY OF CHAR);
-
-(* Log an info message using default logger *)
-PROCEDURE InfoDefault(message: ARRAY OF CHAR);
-
-(* Log a warning message using default logger *)
-PROCEDURE WarningDefault(message: ARRAY OF CHAR);
-
-(* Log an error message using default logger *)
-PROCEDURE ErrorDefault(message: ARRAY OF CHAR);
 
 (* Close the logger and flush any pending writes *)
 PROCEDURE Close(logger: Logger);

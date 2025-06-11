@@ -22,7 +22,7 @@ support for console and file output, and timestamping capabilities.
 *)</span>
 DEFINITION <em>Log</em>;
 
-IMPORT DStrings;
+IMPORT Chars;
 
 CONST
   DEBUG = 0;
@@ -34,11 +34,11 @@ CONST
   FILE = 1;
   BOTH = 2;
 
+  MAX_MESSAGE_LEN = Chars.MAXSTR;
+  MAX_FILENAME_LEN = Chars.MEDIUMSTR;
+
 TYPE
   Logger = POINTER TO LoggerDesc;
-
-VAR
-  defaultLogger: Logger;
 
 <span class='comment'>(* Create a new logger with specified minimum level and destination *)</span>
 PROCEDURE <em>New</em>(level, destination: INTEGER; filename: ARRAY OF CHAR): Logger;
@@ -61,9 +61,6 @@ PROCEDURE <em>GetDestination</em>(logger: Logger): INTEGER;
 <span class='comment'>(* Log a message with specified level using ARRAY OF CHAR *)</span>
 PROCEDURE <em>LogMessage</em>(logger: Logger; level: INTEGER; message: ARRAY OF CHAR);
 
-<span class='comment'>(* Log a message with specified level using DString *)</span>
-PROCEDURE <em>LogDString</em>(logger: Logger; level: INTEGER; message: DStrings.String);
-
 <span class='comment'>(* Convenience procedures for common log levels *)</span>
 
 <span class='comment'>(* Log a debug message *)</span>
@@ -79,18 +76,6 @@ PROCEDURE <em>Warning</em>(logger: Logger; message: ARRAY OF CHAR);
 PROCEDURE <em>Error</em>(logger: Logger; message: ARRAY OF CHAR);
 
 <span class='comment'>(* Convenience procedures using the default logger *)</span>
-
-<span class='comment'>(* Log a debug message using default logger *)</span>
-PROCEDURE <em>DebugDefault</em>(message: ARRAY OF CHAR);
-
-<span class='comment'>(* Log an info message using default logger *)</span>
-PROCEDURE <em>InfoDefault</em>(message: ARRAY OF CHAR);
-
-<span class='comment'>(* Log a warning message using default logger *)</span>
-PROCEDURE <em>WarningDefault</em>(message: ARRAY OF CHAR);
-
-<span class='comment'>(* Log an error message using default logger *)</span>
-PROCEDURE <em>ErrorDefault</em>(message: ARRAY OF CHAR);
 
 <span class='comment'>(* Close the logger and flush any pending writes *)</span>
 PROCEDURE <em>Close</em>(logger: Logger);
