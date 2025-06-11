@@ -13,20 +13,23 @@ MODULE Log;
 IMPORT Out, Err := extErr, Files, Clock := artClock, Convert := extConvert, Chars;
 
 CONST
-  (* Log levels *)
+  (** Log levels *)
   DEBUG* = 0;
   INFO* = 1; 
   WARNING* = 2;
   ERROR* = 3;
   
-  (* Output destinations *)
+  (** Output destinations *)
   CONSOLE* = 0;
   FILE* = 1;
   BOTH* = 2;
   
-  (* Internal constants *)
+  (**  Messages longer than this - in total after timestamp and level, are truncated. *)
   MAX_MESSAGE_LEN* = Chars.MAXSTR;
-  MAX_FILENAME_LEN* = Chars.MEDIUMSTR;
+  (**  Maximum length of file path to be used. *)
+  MAX_FILENAME_LEN* = Chars.MAXSTR;
+
+  (* Internal constants *)
   MAX_LEVELNAME_LEN = 16;
   MAX_TEMP_LEN = 32;
   MAX_TIMESTAMP_LEN = 32;
@@ -324,8 +327,6 @@ PROCEDURE Error*(logger: Logger; message: ARRAY OF CHAR);
 BEGIN
   LogMessage(logger, ERROR, message)
 END Error;
-
-(** Convenience procedures using the default logger *)
 
 (** Close the logger and flush any pending writes *)
 PROCEDURE Close*(logger: Logger);
