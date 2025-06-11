@@ -55,24 +55,42 @@ END SafeAppend;
 (** Create a new logger with specified minimum level and destination *)
 PROCEDURE New*(level, destination: INTEGER; filename: ARRAY OF CHAR): Logger;
   VAR logger: Logger;
+  ok : BOOLEAN;
 BEGIN
+  ok := TRUE;
   NEW(logger);
-  logger.level := level;
-  logger.destination := destination;
-  logger.timestamp := TRUE;
+
+  IF logger = NIL THEN
+    ok := FALSE (* Allocation failure *)
+  END;
   
-  IF (destination = FILE) OR (destination = BOTH) THEN
-    logger.filename[0] := 0X; (* Initialize as empty string *)
-    SafeAppend(filename, logger.filename);
-    logger.file := Files.New(logger.filename);
-    IF logger.file = NIL THEN
-      (* Fallback to console if file creation fails *)
-      logger.destination := CONSOLE
+  (* Validate parameters *)
+  IF (level < DEBUG) OR (level > ERROR) THEN
+    ok := FALSE
+  END;
+  
+  IF (destination < CONSOLE) OR (destination > BOTH) THEN
+    ok := FALSE
+  END;
+
+  IF ok THEN  
+    logger.level := level;
+    logger.destination := destination;
+    logger.timestamp := TRUE;
+    
+    IF (destination = FILE) OR (destination = BOTH) THEN
+      logger.filename[0] := 0X; (* Initialize as empty string *)
+      SafeAppend(filename, logger.filename);
+      logger.file := Files.New(logger.filename);
+      IF logger.file = NIL THEN
+        (* Fallback to console if file creation fails *)
+        logger.destination := CONSOLE
+      ELSE
+          Files.Register(logger.file)
+      END
     ELSE
-        Files.Register(logger.file)
-    END
-  ELSE
-    logger.file := NIL
+      logger.file := NIL
+    END;
   END;
   
   RETURN logger
