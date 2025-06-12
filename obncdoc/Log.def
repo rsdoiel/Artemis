@@ -1,0 +1,73 @@
+(* Log.Mod - Basic logging module for Artemis
+
+Copyright (C) 2025 Artemis Project
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+This module provides basic logging functionality with multiple log levels,
+support for console and file output, and timestamping capabilities.
+*)
+DEFINITION Log;
+
+IMPORT Chars;
+
+CONST
+  (* Log levels *)
+  DEBUG = 0;
+  INFO = 1; 
+  WARNING = 2;
+  ERROR = 3;
+
+  (* Output destinations *)
+  CONSOLE = 0;
+  FILE = 1;
+  BOTH = 2;
+
+  (*  Messages longer than this - in total after timestamp and level, are truncated. *)
+  MAX_MESSAGE_LEN = Chars.MAXSTR;
+  (*  Maximum length of file path to be used. *)
+  MAX_FILENAME_LEN = Chars.MAXSTR;
+
+TYPE
+  Logger = POINTER TO LoggerDesc;
+
+(* Create a new logger with specified minimum level and destination *)
+PROCEDURE New(level, destination: INTEGER; filename: ARRAY OF CHAR): Logger;
+
+(* Set the minimum log level for the logger *)
+PROCEDURE SetLevel(logger: Logger; level: INTEGER);
+
+(* Get the current log level for the logger *)
+PROCEDURE GetLevel(logger: Logger): INTEGER;
+
+(* Enable or disable timestamping *)
+PROCEDURE SetTimestamp(logger: Logger; enabled: BOOLEAN);
+
+(* Get current timestamp setting *)
+PROCEDURE GetTimestamp(logger: Logger): BOOLEAN;
+
+(* Get the current destination setting *)
+PROCEDURE GetDestination(logger: Logger): INTEGER;
+
+(* Log a message with specified level using ARRAY OF CHAR *)
+PROCEDURE LogMessage(logger: Logger; level: INTEGER; message: ARRAY OF CHAR);
+
+(* Convenience procedures for common log levels *)
+
+(* Log a debug message *)
+PROCEDURE Debug(logger: Logger; message: ARRAY OF CHAR);
+
+(* Log an info message *)
+PROCEDURE Info(logger: Logger; message: ARRAY OF CHAR);
+
+(* Log a warning message *)
+PROCEDURE Warning(logger: Logger; message: ARRAY OF CHAR);
+
+(* Log an error message *)
+PROCEDURE Error(logger: Logger; message: ARRAY OF CHAR);
+
+(* Close the logger and flush any pending writes *)
+PROCEDURE Close(logger: Logger);
+
+END Log.

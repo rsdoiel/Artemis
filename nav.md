@@ -6,6 +6,9 @@
 + [OBNC Modules](./obnc/)
 + [Obc-3 Modules](./oxford/)
 + [Ofront+ Modules](./ofrontplus/)
-+ [development notes](./development-notes.html)
++ [Development notes](./development-notes.html)
++ [Collections](./docs/Collections.md)
++ [IniConfigParser](./docs/IniConfigParser.md)
++ [Docs](./docs/Log.md)
 + [Github](https://github.com/rsdoiel/Artemis)
 

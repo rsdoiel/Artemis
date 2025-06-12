@@ -15,7 +15,7 @@ HTML_FILES=$(shell find . -type f | grep -E '.html')
 
 #OC = env OBNC_IMPORT_PATH="." obnc
 # Defaults
-OC = obnc
+OC = env OBNC_IMPORT_PATH=".:obnc:../:../obnc" obnc
 OS = $(shell uname)
 ARCH = $(shell uname -m)
 PREFIX = /usr/local

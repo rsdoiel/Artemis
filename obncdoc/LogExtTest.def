@@ -1,0 +1,12 @@
+(* LogExtTest.Mod - Extended corner case tests for Log
+
+Copyright (C) 2025 Artemis Project
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+This module tests additional corner cases for the Log module.
+*)
+DEFINITION LogExtTest;
+
+END LogExtTest.
