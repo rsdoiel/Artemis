@@ -48,7 +48,7 @@ int artDirent__NextEntry_(artDirent__DirScanner_ scanner_, char name_[], OBNC_IN
 	name_[OBNC_IT(0, name_len, 38)] = '\x00';
 	(*isDirectory_) = 0;
 	
-	if (scanner_ != 0 && (*OBNC_PT(scanner_, 28)).isOpen_ && !(*OBNC_PT(scanner_, 51)).hasError_) {
+	if (scanner_ != 0 && (*OBNC_PT(scanner_, 28)).isOpen_ && !(*OBNC_PT(scanner_, 29)).hasError_) {
 		/* Convert handle back to DIR* */
 		dir = (DIR*)(uintptr_t)(*OBNC_PT(scanner_, 27)).handle_;
 		
@@ -103,13 +103,13 @@ void artDirent__CloseScanner_(artDirent__DirScanner_ *scanner_)
 	DIR* dir;
 
 	if ((*scanner_) != 0) {
-		if ((*OBNC_PT((*scanner_), 50)).isOpen_) {
+		if ((*OBNC_PT((*scanner_), 28)).isOpen_) {
 			/* Convert handle back to DIR* and close it */
-			dir = (DIR*)(uintptr_t)(*OBNC_PT((*scanner_), 51)).handle_;
+			dir = (DIR*)(uintptr_t)(*OBNC_PT((*scanner_), 27)).handle_;
 			if (dir != NULL) {
 				closedir(dir);
 			}
-			(*OBNC_PT((*scanner_), 52)).isOpen_ = 0;
+			(*OBNC_PT((*scanner_), 28)).isOpen_ = 0;
 		}
 		(*scanner_) = 0;
 	}
@@ -122,7 +122,7 @@ int artDirent__IsValid_(artDirent__DirScanner_ scanner_)
 
 	result_ = 0;
 	if (scanner_ != 0) {
-		result_ = (*OBNC_PT(scanner_, 64)).isOpen_ && (! (*OBNC_PT(scanner_, 65)).hasError_);
+		result_ = (*OBNC_PT(scanner_, 28)).isOpen_ && (! (*OBNC_PT(scanner_, 29)).hasError_);
 	}
 	return result_;
 }
