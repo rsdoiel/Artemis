@@ -193,17 +193,41 @@ OBNC_INTEGER artSocket__Connect_(artSocket__Socket_ s_, const char address_[], O
 
 OBNC_INTEGER artSocket__Send_(artSocket__Socket_ s_, const char data_[], OBNC_INTEGER data_len, OBNC_INTEGER len_, OBNC_INTEGER *sent_)
 {
-
-	(*sent_) = 0;
-	return 99;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc || desc->handle_ < 0) {
+        if (sent_) *sent_ = 0;
+        return ART_CLOSED;
+    }
+    int n = send(desc->handle_, data_, (size_t)len_, 0);
+    if (n < 0) {
+        int err = errno;
+        if (sent_) *sent_ = 0;
+        desc->lastError_ = map_errno(err);
+        return desc->lastError_;
+    }
+    if (sent_) *sent_ = n;
+    desc->lastError_ = ART_OK;
+    return ART_OK;
 }
 
 
 OBNC_INTEGER artSocket__Receive_(artSocket__Socket_ s_, char data_[], OBNC_INTEGER data_len, OBNC_INTEGER maxLen_, OBNC_INTEGER *received_)
 {
-
-	(*received_) = 0;
-	return 99;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc || desc->handle_ < 0) {
+        if (received_) *received_ = 0;
+        return ART_CLOSED;
+    }
+    int n = recv(desc->handle_, data_, (size_t)maxLen_, 0);
+    if (n < 0) {
+        int err = errno;
+        if (received_) *received_ = 0;
+        desc->lastError_ = map_errno(err);
+        return desc->lastError_;
+    }
+    if (received_) *received_ = n;
+    desc->lastError_ = ART_OK;
+    return ART_OK;
 }
 
 
