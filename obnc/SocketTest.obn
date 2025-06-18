@@ -1,11 +1,21 @@
 MODULE SocketTest;
 
-IMPORT T := Tests, artSocket;
+IMPORT Tests, artSocket;
 
-VAR ts : T.TestSet;
+VAR ts : Tests.TestSet;
 
-(* Add socket tests here *)
+PROCEDURE TestCreateAndClose() : BOOLEAN;
+VAR s : artSocket.Socket; pass : BOOLEAN;
 BEGIN
-    T.Init(ts, "Socket Tests");
-    ASSERT(T.Run(ts));
+  s := artSocket.NewSocket();
+  pass := s # NIL;
+  Tests.ExpectedBool(TRUE, s # NIL, "Created socket is not null", pass);
+  IF pass THEN artSocket.Close(s) END;
+  RETURN pass
+END TestCreateAndClose;
+
+BEGIN
+    Tests.Init(ts, "Socket Tests");
+    Tests.Add(ts, TestCreateAndClose);
+    ASSERT(Tests.Run(ts));
 END SocketTest.

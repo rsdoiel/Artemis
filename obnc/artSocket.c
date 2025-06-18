@@ -1,7 +1,64 @@
 #include ".obnc/artSocket.h"
 #include <obnc/OBNC.h>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+
 #define OBERON_SOURCE_FILENAME "artSocket.obn"
+
+// C struct for Oberon SocketDesc
+typedef struct {
+    int fd;
+    int lastError;
+} artSocket_SocketDesc;
+
+// C struct for Oberon AddrInfoDesc
+typedef struct {
+    struct addrinfo *ai;
+} artSocket_AddrInfoDesc;
+
+// Oberon error codes
+enum {
+    ART_OK = 0,
+    ART_WOULDBLOCK = 1,
+    ART_INPROGRESS = 2,
+    ART_INTERRUPTED = 3,
+    ART_NOTCONNECTED = 4,
+    ART_ALREADYCONNECTED = 5,
+    ART_CONNECTIONREFUSED = 6,
+    ART_TIMEDOUT = 7,
+    ART_HOSTUNREACHABLE = 8,
+    ART_NETWORKUNREACHABLE = 9,
+    ART_ADDRINUSE = 10,
+    ART_ADDRNOTAVAILABLE = 11,
+    ART_CLOSED = 12,
+    ART_UNKNOWNERROR = 99
+};
+
+static int map_errno(int err) {
+    switch (err) {
+        case 0: return ART_OK;
+        case EAGAIN: return ART_WOULDBLOCK;
+        case EINPROGRESS: return ART_INPROGRESS;
+        case EINTR: return ART_INTERRUPTED;
+        case ENOTCONN: return ART_NOTCONNECTED;
+        case EISCONN: return ART_ALREADYCONNECTED;
+        case ECONNREFUSED: return ART_CONNECTIONREFUSED;
+        case ETIMEDOUT: return ART_TIMEDOUT;
+        case EHOSTUNREACH: return ART_HOSTUNREACHABLE;
+        case ENETUNREACH: return ART_NETWORKUNREACHABLE;
+        case EADDRINUSE: return ART_ADDRINUSE;
+        case EADDRNOTAVAIL: return ART_ADDRNOTAVAILABLE;
+        case EBADF: return ART_CLOSED;
+        default: return ART_UNKNOWNERROR;
+    }
+}
 
 const int artSocket__SocketDesc_id;
 const int *const artSocket__SocketDesc_ids[1] = {&artSocket__SocketDesc_id};
@@ -13,7 +70,22 @@ const OBNC_Td artSocket__AddrInfoDesc_td = {artSocket__AddrInfoDesc_ids, 1};
 
 artSocket__Socket_ artSocket__NewSocket_(void)
 {
-	return 0;
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0) return 0;
+    // Set non-blocking
+    int flags = fcntl(fd, F_GETFL, 0);
+    if (flags < 0 || fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0) {
+        close(fd);
+        return 0;
+    }
+    artSocket_SocketDesc *desc = malloc(sizeof(artSocket_SocketDesc));
+    if (!desc) {
+        close(fd);
+        return 0;
+    }
+    desc->fd = fd;
+    desc->lastError = 0;
+    return (artSocket__Socket_)desc;
 }
 
 
@@ -61,6 +133,12 @@ OBNC_INTEGER artSocket__Receive_(artSocket__Socket_ s_, char data_[], OBNC_INTEG
 
 void artSocket__Close_(artSocket__Socket_ s_)
 {
+    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
+    if (desc) {
+        if (desc->fd >= 0) close(desc->fd);
+        desc->fd = -1;
+        free(desc);
+    }
 }
 
 
