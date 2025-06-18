@@ -91,13 +91,46 @@ artSocket__Socket_ artSocket__NewSocket_(void)
 
 OBNC_INTEGER artSocket__Bind_(artSocket__Socket_ s_, const char address_[], OBNC_INTEGER address_len, OBNC_INTEGER port_)
 {
-	return 99;
+    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
+    if (!desc || desc->fd < 0) return ART_CLOSED;
+    char portstr[16];
+    snprintf(portstr, sizeof(portstr), "%d", (int)port_);
+    struct addrinfo hints, *res = NULL;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+    int ret = getaddrinfo(address_, portstr, &hints, &res);
+    if (ret != 0) {
+        desc->lastError = ART_UNKNOWNERROR;
+        return ART_UNKNOWNERROR;
+    }
+    int opt = 1;
+    setsockopt(desc->fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    int err = 0;
+    if (bind(desc->fd, res->ai_addr, res->ai_addrlen) < 0) {
+        err = errno;
+        desc->lastError = map_errno(err);
+        freeaddrinfo(res);
+        return desc->lastError;
+    }
+    freeaddrinfo(res);
+    desc->lastError = ART_OK;
+    return ART_OK;
 }
 
 
 OBNC_INTEGER artSocket__Listen_(artSocket__Socket_ s_, OBNC_INTEGER backlog_)
 {
-	return 99;
+    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
+    if (!desc || desc->fd < 0) return ART_CLOSED;
+    if (listen(desc->fd, (int)backlog_) < 0) {
+        int err = errno;
+        desc->lastError = map_errno(err);
+        return desc->lastError;
+    }
+    desc->lastError = ART_OK;
+    return ART_OK;
 }
 
 

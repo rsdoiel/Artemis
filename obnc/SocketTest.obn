@@ -38,9 +38,33 @@ BEGIN
   RETURN result
 END TestConnectNoServer;
 
+PROCEDURE TestBindAndListen() : BOOLEAN;
+VAR s : artSocket.Socket; err : INTEGER; result, pass : BOOLEAN;
+    addr : ARRAY 16 OF CHAR;
+BEGIN
+  pass := TRUE;
+  result := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass);
+    result := FALSE
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Bind(s, addr, 0);  (* 0 = ephemeral port *)
+    Tests.ExpectedInt(artSocket.Ok, err, "Bind should succeed", pass);
+    IF err = artSocket.Ok THEN
+      err := artSocket.Listen(s, 1);
+      Tests.ExpectedInt(artSocket.Ok, err, "Listen should succeed", pass)
+    END;
+    artSocket.Close(s)
+  END;
+  RETURN result
+END TestBindAndListen;
+
 BEGIN
     Tests.Init(ts, "Socket Tests");
     Tests.Add(ts, TestCreateAndClose);
     Tests.Add(ts, TestConnectNoServer);
+    Tests.Add(ts, TestBindAndListen);
     ASSERT(Tests.Run(ts));
 END SocketTest.
