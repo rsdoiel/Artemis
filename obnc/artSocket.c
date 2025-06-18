@@ -111,7 +111,29 @@ artSocket__Socket_ artSocket__Accept_(artSocket__Socket_ s_, OBNC_INTEGER *err_)
 
 OBNC_INTEGER artSocket__Connect_(artSocket__Socket_ s_, const char address_[], OBNC_INTEGER address_len, OBNC_INTEGER port_)
 {
-	return 99;
+    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
+    if (!desc || desc->fd < 0) return ART_CLOSED;
+    char portstr[16];
+    snprintf(portstr, sizeof(portstr), "%d", (int)port_);
+    struct addrinfo hints, *res = NULL;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    int ret = getaddrinfo(address_, portstr, &hints, &res);
+    if (ret != 0) {
+        desc->lastError = ART_UNKNOWNERROR;
+        return ART_UNKNOWNERROR;
+    }
+    int err = 0;
+    if (connect(desc->fd, res->ai_addr, res->ai_addrlen) < 0) {
+        err = errno;
+        desc->lastError = map_errno(err);
+        freeaddrinfo(res);
+        return desc->lastError;
+    }
+    freeaddrinfo(res);
+    desc->lastError = ART_OK;
+    return ART_OK;
 }
 
 

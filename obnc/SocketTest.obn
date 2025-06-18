@@ -14,8 +14,33 @@ BEGIN
   RETURN pass
 END TestCreateAndClose;
 
+PROCEDURE TestConnectNoServer() : BOOLEAN;
+VAR s : artSocket.Socket; err : INTEGER; pass, result : BOOLEAN;
+    addr : ARRAY 16 OF CHAR;
+BEGIN
+  pass := TRUE;
+  result := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass);
+    result := FALSE
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Connect(s, addr, 9); (* Port 9 is usually closed *)
+    IF (err = artSocket.ConnectionRefused) OR (err = artSocket.InProgress) THEN
+      Tests.ExpectedBool(TRUE, TRUE, "Connect to closed port returns ConnectionRefused or InProgress", pass)
+    ELSE
+      Tests.ExpectedInt(artSocket.ConnectionRefused, err, "Connect to closed port should refuse or be in progress", pass);
+      result := FALSE
+    END;
+    artSocket.Close(s)
+  END;
+  RETURN result
+END TestConnectNoServer;
+
 BEGIN
     Tests.Init(ts, "Socket Tests");
     Tests.Add(ts, TestCreateAndClose);
+    Tests.Add(ts, TestConnectNoServer);
     ASSERT(Tests.Run(ts));
 END SocketTest.
