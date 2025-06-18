@@ -1,0 +1,71 @@
+(**
+    artDirent - POSIX directory operations wrapper
+    
+    Provides safe, opaque directory enumeration with automatic resource management.
+    Implementation details are completely hidden from clients.
+    
+    Copyright (C) 2025
+    Released under The 3-Clause BSD License.
+    Author: Artemis Project
+*)
+MODULE artDirent;
+
+TYPE
+    (** Opaque directory scanner - implementation completely hidden *)
+    DirScanner* = POINTER TO DirScannerDesc;
+    DirScannerDesc = RECORD
+        handle: INTEGER;
+        isOpen: BOOLEAN;
+        hasError: BOOLEAN
+    END;
+
+(** Open directory for scanning *)
+PROCEDURE OpenScanner*(path: ARRAY OF CHAR): DirScanner;
+VAR scanner: DirScanner;
+BEGIN
+    NEW(scanner);
+    scanner.handle := 0;
+    scanner.isOpen := FALSE;
+    scanner.hasError := FALSE;
+    RETURN scanner
+END OpenScanner;
+
+(** Get next entry - returns TRUE if entry found, FALSE if done/error *)
+PROCEDURE NextEntry*(scanner: DirScanner; VAR name: ARRAY OF CHAR; VAR isDirectory: BOOLEAN): BOOLEAN;
+VAR result: BOOLEAN;
+BEGIN
+    result := FALSE;
+    name[0] := 0X;
+    isDirectory := FALSE;
+    IF scanner # NIL THEN
+        (* Implementation will call POSIX readdir() *)
+    END;
+    RETURN result
+END NextEntry;
+
+(** Close scanner and free resources - always call when done *)
+PROCEDURE CloseScanner*(VAR scanner: DirScanner);
+BEGIN
+    IF scanner # NIL THEN
+        IF scanner.isOpen THEN
+            (* Implementation will call POSIX closedir() *)
+            scanner.isOpen := FALSE
+        END;
+        scanner := NIL
+    END
+END CloseScanner;
+
+(** Check if scanner is valid (not closed/error) *)
+PROCEDURE IsValid*(scanner: DirScanner): BOOLEAN;
+VAR result: BOOLEAN;
+BEGIN
+    result := FALSE;
+    IF scanner # NIL THEN
+        result := scanner.isOpen & ~scanner.hasError
+    END;
+    RETURN result
+END IsValid;
+
+
+
+END artDirent.

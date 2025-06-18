@@ -1,0 +1,93 @@
+MODULE DirentTest;
+
+IMPORT Tests, Dirent := artDirent, Out, Chars;
+
+VAR ts : Tests.TestSet;
+
+PROCEDURE TestOpenAndClose*() : BOOLEAN;
+VAR 
+    pass : BOOLEAN; 
+    scanner : Dirent.DirScanner;
+BEGIN 
+    pass := TRUE;
+    
+    (* Test opening current directory *)
+    scanner := Dirent.OpenScanner(".");
+    Tests.ExpectedBool(TRUE, scanner # NIL, "Scanner should be created", pass);
+    
+    IF scanner # NIL THEN
+        Tests.ExpectedBool(TRUE, Dirent.IsValid(scanner), "Scanner should be valid after opening", pass);
+        
+        (* Close the scanner *)
+        Dirent.CloseScanner(scanner);
+        Tests.ExpectedBool(TRUE, scanner = NIL, "Scanner should be NIL after closing", pass)
+    END;
+
+    RETURN pass
+END TestOpenAndClose;
+
+PROCEDURE TestReadEntries*() : BOOLEAN;
+VAR 
+    pass : BOOLEAN; 
+    scanner : Dirent.DirScanner;
+    name : ARRAY 256 OF CHAR;
+    isDirectory : BOOLEAN;
+    entryCount : INTEGER;
+    foundSelf : BOOLEAN;
+BEGIN 
+    pass := TRUE;
+    entryCount := 0;
+    foundSelf := FALSE;
+    
+    (* Test reading entries from current directory *)
+    scanner := Dirent.OpenScanner(".");
+    IF scanner # NIL THEN
+        WHILE Dirent.NextEntry(scanner, name, isDirectory) DO
+            INC(entryCount);
+            Out.String("Entry: "); Out.String(name);
+            IF isDirectory THEN
+                Out.String(" (directory)")
+            END;
+            Out.Ln;
+            
+            (* Check if we find expected entries *)
+            IF Chars.Equal(name, ".") OR Chars.Equal(name, "..") THEN
+                foundSelf := TRUE
+            END
+        END;
+        
+        Tests.ExpectedBool(TRUE, entryCount > 0, "Should find at least one entry", pass);
+        Tests.ExpectedBool(TRUE, foundSelf, "Should find . or .. entries", pass);
+        
+        Dirent.CloseScanner(scanner)
+    ELSE
+        Tests.ExpectedBool(TRUE, FALSE, "Should be able to open current directory", pass)
+    END;
+
+    RETURN pass
+END TestReadEntries;
+
+PROCEDURE TestInvalidDirectory*() : BOOLEAN;
+VAR 
+    pass : BOOLEAN; 
+    scanner : Dirent.DirScanner;
+BEGIN 
+    pass := TRUE;
+    
+    (* Test opening non-existent directory *)
+    scanner := Dirent.OpenScanner("/this/path/should/not/exist");
+    IF scanner # NIL THEN
+        Tests.ExpectedBool(TRUE, ~Dirent.IsValid(scanner), "Invalid directory should not be valid", pass);
+        Dirent.CloseScanner(scanner)
+    END;
+
+    RETURN pass
+END TestInvalidDirectory;
+
+BEGIN
+    Tests.Init(ts, "Dirent Tests");
+    Tests.Add(ts, TestOpenAndClose);
+    Tests.Add(ts, TestReadEntries);
+    Tests.Add(ts, TestInvalidDirectory);
+    ASSERT(Tests.Run(ts));
+END DirentTest.
