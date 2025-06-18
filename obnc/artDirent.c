@@ -48,9 +48,9 @@ int artDirent__NextEntry_(artDirent__DirScanner_ scanner_, char name_[], OBNC_IN
 	name_[OBNC_IT(0, name_len, 38)] = '\x00';
 	(*isDirectory_) = 0;
 	
-	if (scanner_ != 0 && (*OBNC_PT(scanner_, 50)).isOpen_ && !(*OBNC_PT(scanner_, 51)).hasError_) {
+	if (scanner_ != 0 && (*OBNC_PT(scanner_, 28)).isOpen_ && !(*OBNC_PT(scanner_, 51)).hasError_) {
 		/* Convert handle back to DIR* */
-		dir = (DIR*)(uintptr_t)(*OBNC_PT(scanner_, 52)).handle_;
+		dir = (DIR*)(uintptr_t)(*OBNC_PT(scanner_, 27)).handle_;
 		
 		/* Clear errno to distinguish between error and end-of-directory */
 		errno = 0;
@@ -87,7 +87,7 @@ int artDirent__NextEntry_(artDirent__DirScanner_ scanner_, char name_[], OBNC_IN
 			/* readdir returned NULL - check if error or end of directory */
 			if (errno != 0) {
 				/* An error occurred */
-				(*OBNC_PT(scanner_, 53)).hasError_ = 1;
+				(*OBNC_PT(scanner_, 29)).hasError_ = 1;
 			}
 			/* If errno is 0, we've reached end of directory (normal) */
 			result_ = 0;
