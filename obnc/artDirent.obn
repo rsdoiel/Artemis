@@ -23,10 +23,7 @@ TYPE
 PROCEDURE OpenScanner*(path: ARRAY OF CHAR): DirScanner;
 VAR scanner: DirScanner;
 BEGIN
-    NEW(scanner);
-    scanner.handle := 0;
-    scanner.isOpen := FALSE;
-    scanner.hasError := FALSE;
+   (* Placeholder, implementation is in C. *)
     RETURN scanner
 END OpenScanner;
 
@@ -34,38 +31,22 @@ END OpenScanner;
 PROCEDURE NextEntry*(scanner: DirScanner; VAR name: ARRAY OF CHAR; VAR isDirectory: BOOLEAN): BOOLEAN;
 VAR result: BOOLEAN;
 BEGIN
-    result := FALSE;
-    name[0] := 0X;
-    isDirectory := FALSE;
-    IF scanner # NIL THEN
-        (* Implementation will call POSIX readdir() *)
-    END;
+    (* Placeholder, implementation is in C. *)
     RETURN result
 END NextEntry;
 
 (** Close scanner and free resources - always call when done *)
 PROCEDURE CloseScanner*(VAR scanner: DirScanner);
 BEGIN
-    IF scanner # NIL THEN
-        IF scanner.isOpen THEN
-            (* Implementation will call POSIX closedir() *)
-            scanner.isOpen := FALSE
-        END;
-        scanner := NIL
-    END
+   (* Placeholder, implementation is in C. *)
 END CloseScanner;
 
 (** Check if scanner is valid (not closed/error) *)
 PROCEDURE IsValid*(scanner: DirScanner): BOOLEAN;
 VAR result: BOOLEAN;
 BEGIN
-    result := FALSE;
-    IF scanner # NIL THEN
-        result := scanner.isOpen & ~scanner.hasError
-    END;
+   (* Placeholder, implementation is in C. *)
     RETURN result
 END IsValid;
-
-
 
 END artDirent.
