@@ -10,7 +10,7 @@ proper usage of the opaque Logger type.
 *)
 MODULE LogTest;
 
-IMPORT T := Tests, Log, Chars;
+IMPORT T := Tests, Log, Chars, Files;
 
 CONST 
   OVERLONG_MSG_LEN = Chars.MAXSTR + 10;
@@ -91,6 +91,7 @@ PROCEDURE TestFileLogging(): BOOLEAN;
 VAR 
   test: BOOLEAN;
   logger: Log.Logger;
+  res : INTEGER;
 BEGIN
   test := TRUE;
   
@@ -104,6 +105,7 @@ BEGIN
   Log.Error(logger, "Test file logging message");
   Log.Close(logger);
   
+  Files.Delete("test.log", res);
   RETURN test
 END TestFileLogging;
 
@@ -225,6 +227,7 @@ END TestTimestampToggle;
 PROCEDURE TestMultipleLoggers(): BOOLEAN;
 VAR test: BOOLEAN;
     logger1, logger2: Log.Logger;
+    res: INTEGER;
 BEGIN
   test := TRUE;
   logger1 := Log.New(Log.INFO, Log.CONSOLE, "");
@@ -235,6 +238,7 @@ BEGIN
   Log.Error(logger2, "Logger2 error");
   Log.Close(logger1);
   Log.Close(logger2);
+  Files.Delete("multi.log", res);
   RETURN test
 END TestMultipleLoggers;
 
@@ -267,7 +271,7 @@ BEGIN
 END TestEmptyAndExactBuffer;
 
 BEGIN
-  T.Init(ts, "Log");
+  T.Init(ts, "Log Tests");
   T.Add(ts, TestLoggerCreation);
   T.Add(ts, TestLogLevels);
   T.Add(ts, TestFileLogging);
