@@ -1,0 +1,11 @@
+MODULE SocketTest;
+
+IMPORT T := Tests, artSocket;
+
+VAR ts : T.TestSet;
+
+(* Add socket tests here *)
+BEGIN
+    T.Init(ts, "Socket Tests");
+    ASSERT(T.Run(ts));
+END SocketTest.
