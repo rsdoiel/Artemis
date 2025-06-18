@@ -166,7 +166,8 @@ BEGIN
         END;
         
         checksum := Finalize(calc);
-        success := TRUE
+        success := TRUE;
+        Files.Close(file);
     END
 END CalculateFile;
 
