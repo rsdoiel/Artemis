@@ -136,9 +136,30 @@ OBNC_INTEGER artSocket__Listen_(artSocket__Socket_ s_, OBNC_INTEGER backlog_)
 
 artSocket__Socket_ artSocket__Accept_(artSocket__Socket_ s_, OBNC_INTEGER *err_)
 {
-
-	(*err_) = 99;
-	return 0;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc || desc->handle_ < 0) {
+        if (err_) *err_ = ART_CLOSED;
+        return 0;
+    }
+    int client_fd = accept(desc->handle_, NULL, NULL);
+    if (client_fd < 0) {
+        int err = errno;
+        if (err_) *err_ = map_errno(err);
+        return 0;
+    }
+    // Set non-blocking
+    int flags = fcntl(client_fd, F_GETFL, 0);
+    if (flags >= 0) fcntl(client_fd, F_SETFL, flags | O_NONBLOCK);
+    struct artSocket__SocketDesc_ *client_desc = OBNC_Allocate(sizeof(struct artSocket__SocketDesc_), OBNC_REGULAR_ALLOC);
+    if (!client_desc) {
+        close(client_fd);
+        if (err_) *err_ = ART_UNKNOWNERROR;
+        return 0;
+    }
+    client_desc->handle_ = client_fd;
+    client_desc->lastError_ = ART_OK;
+    if (err_) *err_ = ART_OK;
+    return (artSocket__Socket_)client_desc;
 }
 
 
