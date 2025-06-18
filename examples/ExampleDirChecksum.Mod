@@ -82,6 +82,7 @@ PROCEDURE ScanAndProcessDirectory(path: ARRAY OF CHAR);
 VAR
     scanner: artDirent.DirScanner;
     name: ARRAY MaxNameLen OF CHAR;
+    fullPath: ARRAY MaxNameLen * 2 OF CHAR;
     isDir: BOOLEAN;
     fileCount: INTEGER;
     result: FileResult;
@@ -93,8 +94,14 @@ BEGIN
         ok := artDirent.NextEntry(scanner, name, isDir);
         WHILE ok DO
             IF ~isDir THEN
+                fullPath[0] := 0X;
+                Chars.Append(path, fullPath);
+                IF fullPath[Chars.Length(fullPath) - 1] # "/" THEN
+                    Chars.Append("/", fullPath)
+                END;
+                Chars.Append(name, fullPath);
                 NEW(result);
-                ComputeFileChecksum(name, result);
+                ComputeFileChecksum(fullPath, result);
                 PrintResult(result);
                 fileCount := fileCount + 1
             END;
