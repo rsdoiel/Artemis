@@ -78,21 +78,21 @@ artSocket__Socket_ artSocket__NewSocket_(void)
         close(fd);
         return 0;
     }
-    artSocket_SocketDesc *desc = malloc(sizeof(artSocket_SocketDesc));
+    struct artSocket__SocketDesc_ *desc = OBNC_Allocate(sizeof(struct artSocket__SocketDesc_), OBNC_REGULAR_ALLOC);
     if (!desc) {
         close(fd);
         return 0;
     }
-    desc->fd = fd;
-    desc->lastError = 0;
+    desc->handle_ = fd;
+    desc->lastError_ = 0;
     return (artSocket__Socket_)desc;
 }
 
 
 OBNC_INTEGER artSocket__Bind_(artSocket__Socket_ s_, const char address_[], OBNC_INTEGER address_len, OBNC_INTEGER port_)
 {
-    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
-    if (!desc || desc->fd < 0) return ART_CLOSED;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc || desc->handle_ < 0) return ART_CLOSED;
     char portstr[16];
     snprintf(portstr, sizeof(portstr), "%d", (int)port_);
     struct addrinfo hints, *res = NULL;
@@ -102,34 +102,34 @@ OBNC_INTEGER artSocket__Bind_(artSocket__Socket_ s_, const char address_[], OBNC
     hints.ai_flags = AI_PASSIVE;
     int ret = getaddrinfo(address_, portstr, &hints, &res);
     if (ret != 0) {
-        desc->lastError = ART_UNKNOWNERROR;
+        desc->lastError_ = ART_UNKNOWNERROR;
         return ART_UNKNOWNERROR;
     }
     int opt = 1;
-    setsockopt(desc->fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    setsockopt(desc->handle_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     int err = 0;
-    if (bind(desc->fd, res->ai_addr, res->ai_addrlen) < 0) {
+    if (bind(desc->handle_, res->ai_addr, res->ai_addrlen) < 0) {
         err = errno;
-        desc->lastError = map_errno(err);
+        desc->lastError_ = map_errno(err);
         freeaddrinfo(res);
-        return desc->lastError;
+        return desc->lastError_;
     }
     freeaddrinfo(res);
-    desc->lastError = ART_OK;
+    desc->lastError_ = ART_OK;
     return ART_OK;
 }
 
 
 OBNC_INTEGER artSocket__Listen_(artSocket__Socket_ s_, OBNC_INTEGER backlog_)
 {
-    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
-    if (!desc || desc->fd < 0) return ART_CLOSED;
-    if (listen(desc->fd, (int)backlog_) < 0) {
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc || desc->handle_ < 0) return ART_CLOSED;
+    if (listen(desc->handle_, (int)backlog_) < 0) {
         int err = errno;
-        desc->lastError = map_errno(err);
-        return desc->lastError;
+        desc->lastError_ = map_errno(err);
+        return desc->lastError_;
     }
-    desc->lastError = ART_OK;
+    desc->lastError_ = ART_OK;
     return ART_OK;
 }
 
@@ -144,8 +144,8 @@ artSocket__Socket_ artSocket__Accept_(artSocket__Socket_ s_, OBNC_INTEGER *err_)
 
 OBNC_INTEGER artSocket__Connect_(artSocket__Socket_ s_, const char address_[], OBNC_INTEGER address_len, OBNC_INTEGER port_)
 {
-    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
-    if (!desc || desc->fd < 0) return ART_CLOSED;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc || desc->handle_ < 0) return ART_CLOSED;
     char portstr[16];
     snprintf(portstr, sizeof(portstr), "%d", (int)port_);
     struct addrinfo hints, *res = NULL;
@@ -154,18 +154,18 @@ OBNC_INTEGER artSocket__Connect_(artSocket__Socket_ s_, const char address_[], O
     hints.ai_socktype = SOCK_STREAM;
     int ret = getaddrinfo(address_, portstr, &hints, &res);
     if (ret != 0) {
-        desc->lastError = ART_UNKNOWNERROR;
+        desc->lastError_ = ART_UNKNOWNERROR;
         return ART_UNKNOWNERROR;
     }
     int err = 0;
-    if (connect(desc->fd, res->ai_addr, res->ai_addrlen) < 0) {
+    if (connect(desc->handle_, res->ai_addr, res->ai_addrlen) < 0) {
         err = errno;
-        desc->lastError = map_errno(err);
+        desc->lastError_ = map_errno(err);
         freeaddrinfo(res);
-        return desc->lastError;
+        return desc->lastError_;
     }
     freeaddrinfo(res);
-    desc->lastError = ART_OK;
+    desc->lastError_ = ART_OK;
     return ART_OK;
 }
 
@@ -188,11 +188,11 @@ OBNC_INTEGER artSocket__Receive_(artSocket__Socket_ s_, char data_[], OBNC_INTEG
 
 void artSocket__Close_(artSocket__Socket_ s_)
 {
-    artSocket_SocketDesc *desc = (artSocket_SocketDesc*)s_;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
     if (desc) {
-        if (desc->fd >= 0) close(desc->fd);
-        desc->fd = -1;
-        free(desc);
+        if (desc->handle_ >= 0) close(desc->handle_);
+        desc->handle_ = -1;
+        // GC will reclaim desc
     }
 }
 
