@@ -91,11 +91,44 @@ BEGIN
   RETURN result
 END TestAcceptNoClient;
 
+PROCEDURE TestGetAddrInfoAndFree() : BOOLEAN;
+VAR ai : artSocket.AddrInfo; pass : BOOLEAN;
+    host : ARRAY 32 OF CHAR;
+BEGIN
+  pass := TRUE;
+  host := "127.0.0.1";
+  ai := artSocket.GetAddrInfo(host, 80);
+  Tests.ExpectedBool(TRUE, ai # NIL, "GetAddrInfo returns non-nil for localhost", pass);
+  artSocket.FreeAddrInfo(ai);
+  (* Should not crash or leak *)
+  RETURN pass
+END TestGetAddrInfoAndFree;
+
+PROCEDURE TestLastError() : BOOLEAN;
+VAR s : artSocket.Socket; err, last : INTEGER; pass : BOOLEAN;
+    addr : ARRAY 16 OF CHAR;
+BEGIN
+  pass := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass)
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Connect(s, addr, 9);
+    last := artSocket.LastError(s);
+    Tests.ExpectedInt(err, last, "LastError matches last operation", pass);
+    artSocket.Close(s)
+  END;
+  RETURN pass
+END TestLastError;
+
 BEGIN
     Tests.Init(ts, "Socket Tests");
     Tests.Add(ts, TestCreateAndClose);
     Tests.Add(ts, TestConnectNoServer);
     Tests.Add(ts, TestBindAndListen);
     Tests.Add(ts, TestAcceptNoClient);
+    Tests.Add(ts, TestGetAddrInfoAndFree);
+    Tests.Add(ts, TestLastError);
     ASSERT(Tests.Run(ts));
 END SocketTest.

@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #define OBERON_SOURCE_FILENAME "artSocket.obn"
@@ -244,18 +245,40 @@ void artSocket__Close_(artSocket__Socket_ s_)
 
 artSocket__AddrInfo_ artSocket__GetAddrInfo_(const char host_[], OBNC_INTEGER host_len, OBNC_INTEGER port_)
 {
-	return 0;
+    char portstr[16];
+    snprintf(portstr, sizeof(portstr), "%d", (int)port_);
+    struct addrinfo hints, *res = NULL;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    int ret = getaddrinfo(host_, portstr, &hints, &res);
+    if (ret != 0 || res == NULL) return 0;
+    struct artSocket__AddrInfoDesc_ *ai = OBNC_Allocate(sizeof(struct artSocket__AddrInfoDesc_), OBNC_REGULAR_ALLOC);
+    if (!ai) {
+        freeaddrinfo(res);
+        return 0;
+    }
+    ai->addrPtr_ = (OBNC_INTEGER)(uintptr_t)res;
+    return (artSocket__AddrInfo_)ai;
 }
 
 
 void artSocket__FreeAddrInfo_(artSocket__AddrInfo_ ai_)
 {
+    struct artSocket__AddrInfoDesc_ *ai = (struct artSocket__AddrInfoDesc_*)ai_;
+    if (ai && ai->addrPtr_ != 0) {
+        struct addrinfo *res = (struct addrinfo *)(uintptr_t)ai->addrPtr_;
+        freeaddrinfo(res);
+        ai->addrPtr_ = 0;
+    }
 }
 
 
 OBNC_INTEGER artSocket__LastError_(artSocket__Socket_ s_)
 {
-	return 99;
+    struct artSocket__SocketDesc_ *desc = (struct artSocket__SocketDesc_*)s_;
+    if (!desc) return ART_UNKNOWNERROR;
+    return desc->lastError_;
 }
 
 
