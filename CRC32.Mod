@@ -107,25 +107,6 @@ BEGIN
     RETURN result
 END Finalize;
 
-(** Convert CRC32 result to hexadecimal string *)
-PROCEDURE ToString*(checksum: INTEGER; VAR result: ARRAY OF CHAR);
-VAR i, digit, pos: INTEGER;
-    hexChars: ARRAY 17 OF CHAR;
-BEGIN
-    ASSERT(LEN(result) >= 9); (* Need space for 8 hex digits + 0X *)
-    
-    hexChars := "0123456789abcdef";
-    result[8] := 0X;
-    pos := 7;
-    
-    FOR i := 0 TO 7 DO
-        digit := Bitwise.And(checksum, 0FH);
-        result[pos] := hexChars[digit];
-        checksum := Bitwise.LogicalShiftRight(checksum, 4);
-        DEC(pos)
-    END
-END ToString;
-
 (** Calculate CRC32 for entire file using streaming *)
 PROCEDURE CalculateFile*(filename: ARRAY OF CHAR; VAR checksum: INTEGER; VAR success: BOOLEAN);
 VAR 
