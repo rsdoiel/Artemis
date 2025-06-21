@@ -333,7 +333,7 @@ BEGIN
 END TestSpecialCharacters;
 
 BEGIN
-    Tests.Init(ts, "Test IniConfigTokenizer");
+    Tests.Init(ts, "IniConfigTokenizer Tests");
     Tests.Add(ts, TestBasicTokens);
     Tests.Add(ts, TestKeyValuePairs);
     Tests.Add(ts, TestQuotedValues);

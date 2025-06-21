@@ -593,7 +593,7 @@ END TestRoundTrip;
 
 
 BEGIN
-    Tests.Init(ts, "Test IniConfigParser");
+    Tests.Init(ts, "IniConfigParser Tests");
 
     Tests.Add(ts, TestBasicConfigLoading);
     Tests.Add(ts, TestSectionsFromFile);

@@ -499,7 +499,7 @@ BEGIN
 END TestQuote;
 
 BEGIN
-  T.Init(ts, "DUtf8StringsTest");
+  T.Init(ts, "DUtf8Strings Test");
   T.Add(ts, TestInit);
   T.Add(ts, TestToChars);
   T.Add(ts, TestCopy);

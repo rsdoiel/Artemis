@@ -382,7 +382,7 @@ BEGIN
 END TestPrevChar;
 
 BEGIN
-    Tests.Init(ts, "UTF-8 Tests");
+    Tests.Init(ts, "Utf8 Tests");
     Tests.Add(ts, TestCharLen);
     Tests.Add(ts, TestHasBOM);
     Tests.Add(ts, TestIsValid);
