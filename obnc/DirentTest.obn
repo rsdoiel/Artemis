@@ -21,7 +21,7 @@ BEGIN
         (* Close the scanner *)
         Dirent.CloseScanner(scanner);
         Tests.ExpectedBool(TRUE, scanner = NIL, "Scanner should be NIL after closing", pass)
-    END;
+    END; 
 
     RETURN pass
 END TestOpenAndClose;
