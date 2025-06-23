@@ -1,4 +1,4 @@
-#include ".obnc/artSocket.h"
+#include "artSocket.h"
 #include <obnc/OBNC.h>
 
 #include <sys/types.h>
@@ -258,7 +258,7 @@ artSocket__AddrInfo_ artSocket__GetAddrInfo_(const char host_[], OBNC_INTEGER ho
         freeaddrinfo(res);
         return 0;
     }
-    ai->addrPtr_ = (OBNC_INTEGER)(uintptr_t)res;
+    ai->addrPtr_ = (uintptr_t)res;
     return (artSocket__AddrInfo_)ai;
 }
 

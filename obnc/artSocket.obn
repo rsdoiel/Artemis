@@ -26,15 +26,17 @@ CONST
   UnknownError*      = 99;
 
 TYPE
+  (** Socket descriptor.  *)
   Socket* = POINTER TO SocketDesc;
   SocketDesc = RECORD
     handle: INTEGER;
     lastError: INTEGER
   END;
 
+  (** Address information structure. Used for hostname resolution. *)
   AddrInfo* = POINTER TO AddrInfoDesc;
   AddrInfoDesc = RECORD
-    addrPtr: INTEGER
+  (* Placeholder. Implementation in C wrapper. *)
   END;
 
 (** Create a new TCP socket. Returns NIL on error. *)
