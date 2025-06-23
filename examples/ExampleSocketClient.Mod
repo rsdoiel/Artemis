@@ -74,7 +74,7 @@ BEGIN
     n := 0;
     err := artSocket.Send(sock, buf, Chars.Length(buf), n);
     IF n > 0 THEN
-      LogInfoWithData(logger, "Sent: ", buf)
+      LogInfoWithData(logger, "Sent: ", "OK")
     ELSIF err = artSocket.WouldBlock THEN
       (* Optionally yield or retry here *)
     ELSE
