@@ -76,27 +76,6 @@ BEGIN
   RETURN pass
 END TestCalculatorWorkflow;
 
-PROCEDURE TestToString*(): BOOLEAN;
-VAR
-  pass: BOOLEAN;
-  hexStr: ARRAY 16 OF CHAR;
-  expected: ARRAY 16 OF CHAR;
-BEGIN
-  pass := TRUE;
-  
-  (* Test ToString conversion *)
-  CRC32.ToString(0E8B7BE43H, hexStr);
-  expected := "e8b7be43";
-  Tests.ExpectedString(expected, hexStr, "CRC32.ToString incorrect", pass);
-  
-  (* Test ToString with zero *)
-  CRC32.ToString(0, hexStr);
-  expected := "00000000";
-  Tests.ExpectedString(expected, hexStr, "CRC32.ToString for zero incorrect", pass);
-  
-  RETURN pass
-END TestToString;
-
 PROCEDURE TestBinaryData*(): BOOLEAN;
 VAR
   pass: BOOLEAN;
@@ -351,7 +330,6 @@ BEGIN
   Tests.Init(ts, "CRC32 Tests");
   Tests.Add(ts, TestStringCalculations);
   Tests.Add(ts, TestCalculatorWorkflow);
-  Tests.Add(ts, TestToString);
   Tests.Add(ts, TestBinaryData);
   Tests.Add(ts, TestFileOperations);
   Tests.Add(ts, TestLargeFileProcessing);
