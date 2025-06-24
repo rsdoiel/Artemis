@@ -11,7 +11,7 @@ and sends it back. Logging is performed using the Log module.
 *)
 MODULE ExampleSocketServer;
 
-IMPORT artSocket, Chars, Log;
+IMPORT artSleep, artSocket, Chars, Log;
 
 CONST
   PORT = 12345;
@@ -85,6 +85,7 @@ BEGIN
         clientSock := artSocket.Accept(serverSock, err);
         IF clientSock = NIL THEN
           IF err = artSocket.WouldBlock THEN
+            artSleep.Millis(100);
             (* Optionally yield or sleep here *)
           ELSE
             LogErrorWithCode(logger, "Accept failed: ", err);
