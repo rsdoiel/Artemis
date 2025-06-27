@@ -6,7 +6,7 @@
 VERSION = $(shell if [ -f VERSION ]; then cat VERSION; else echo "0.0.0"; fi)
 BUILD_NAME = Artemis-Modules-NP
 PROG_NAMES =
-TEST_NAMES = ClockTest UnixTest DirentTest
+TEST_NAMES = ClockTest UnixTest DirentTest SocketTest SleepTest
 MODULES = $(shell ls *.obn)
 DOCS= README.md ../LICENSE ../INSTALL.txt
 

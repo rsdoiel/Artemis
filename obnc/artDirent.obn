@@ -14,9 +14,7 @@ TYPE
     (** Opaque directory scanner - implementation completely hidden *)
     DirScanner* = POINTER TO DirScannerDesc;
     DirScannerDesc = RECORD
-        handle: INTEGER;
-        isOpen: BOOLEAN;
-        hasError: BOOLEAN
+    (* C implementation used for the opaque pointer *)
     END;
 
 (** Open directory for scanning *)
@@ -27,13 +25,19 @@ BEGIN
     RETURN scanner
 END OpenScanner;
 
+(* Not exported, calls the C implementation *)
+PROCEDURE NextEntryC(scanner: DirScanner; VAR name: ARRAY OF CHAR; nameLen: INTEGER; VAR isDirectory: BOOLEAN): BOOLEAN;
+BEGIN
+    (* Placeholder, implemented in C *)
+    RETURN FALSE
+END NextEntryC;
+
 (** Get next entry - returns TRUE if entry found, FALSE if done/error *)
 PROCEDURE NextEntry*(scanner: DirScanner; VAR name: ARRAY OF CHAR; VAR isDirectory: BOOLEAN): BOOLEAN;
-VAR result: BOOLEAN;
 BEGIN
-    (* Placeholder, implementation is in C. *)
-    RETURN result
+    RETURN NextEntryC(scanner, name, LEN(name), isDirectory)
 END NextEntry;
+
 
 (** Close scanner and free resources - always call when done *)
 PROCEDURE CloseScanner*(VAR scanner: DirScanner);

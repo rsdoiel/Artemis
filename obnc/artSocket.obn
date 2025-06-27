@@ -1,0 +1,119 @@
+(*
+  Copyright (c) 2025, Artemis Project
+  All rights reserved.
+  
+  artSocket - TCP socket API for Oberon-07 (POSIX wrapper)
+  Provides non-blocking TCP sockets, address resolution, and integration with cooperative multitasking.
+  Author: Artemis Project contributors
+*)
+
+MODULE artSocket;
+
+CONST
+  Ok*                = 0;
+  WouldBlock*        = 1;
+  InProgress*        = 2;
+  Interrupted*       = 3;
+  NotConnected*      = 4;
+  AlreadyConnected*  = 5;
+  ConnectionRefused* = 6;
+  TimedOut*          = 7;
+  HostUnreachable*   = 8;
+  NetworkUnreachable*= 9;
+  AddrInUse*         = 10;
+  AddrNotAvailable*  = 11;
+  Closed*            = 12;
+  UnknownError*      = 99;
+
+TYPE
+  (** Socket descriptor.  *)
+  Socket* = POINTER TO SocketDesc;
+  SocketDesc = RECORD
+    handle: INTEGER;
+    lastError: INTEGER
+  END;
+
+  (** Address information structure. Used for hostname resolution. *)
+  AddrInfo* = POINTER TO AddrInfoDesc;
+  AddrInfoDesc = RECORD
+  (* Placeholder. Implementation in C wrapper. *)
+  END;
+
+(** Create a new TCP socket. Returns NIL on error. *)
+PROCEDURE NewSocket*() : Socket;
+BEGIN
+  RETURN NIL
+END NewSocket;
+
+(** Bind a socket to a local address and port. Returns error code. *)
+PROCEDURE Bind*(s: Socket; address: ARRAY OF CHAR; port: INTEGER) : INTEGER;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  RETURN UnknownError
+END Bind;
+
+(** Listen for incoming connections. Returns error code. *)
+PROCEDURE Listen*(s: Socket; backlog: INTEGER) : INTEGER;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  RETURN UnknownError
+END Listen;
+
+(** Accept an incoming connection. Returns new Socket or NIL on error. Error code in VAR parameter. *)
+PROCEDURE Accept*(s: Socket; VAR err: INTEGER) : Socket;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  err := UnknownError;
+  RETURN NIL
+END Accept;
+
+(** Connect to a remote address and port. Returns error code. *)
+PROCEDURE Connect*(s: Socket; address: ARRAY OF CHAR; port: INTEGER) : INTEGER;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  RETURN UnknownError
+END Connect;
+
+(** Send data (non-blocking). Returns error code, number of bytes sent in VAR parameter. *)
+PROCEDURE Send*(s: Socket; data: ARRAY OF CHAR; len: INTEGER; VAR sent: INTEGER) : INTEGER;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  sent := 0;
+  RETURN UnknownError
+END Send;
+
+(** Receive data (non-blocking). Returns error code, number of bytes received in VAR parameter. *)
+PROCEDURE Receive*(s: Socket; VAR data: ARRAY OF CHAR; maxLen: INTEGER; VAR received: INTEGER) : INTEGER;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  received := 0;
+  RETURN UnknownError
+END Receive;
+
+(** Close the socket and free resources. *)
+PROCEDURE Close*(s: Socket);
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+END Close;
+
+(** Resolve hostname to address info. Returns AddrInfo or NIL on error. *)
+PROCEDURE GetAddrInfo*(host: ARRAY OF CHAR; port: INTEGER) : AddrInfo;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  RETURN NIL
+END GetAddrInfo;
+
+(** Free address info resources. *)
+PROCEDURE FreeAddrInfo*(ai: AddrInfo);
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+END FreeAddrInfo;
+
+(** Get last error code for a socket. *)
+PROCEDURE LastError*(s: Socket) : INTEGER;
+BEGIN
+  (* Placeholder. Implementation in C wrapper. *)
+  RETURN UnknownError
+END LastError;
+
+END artSocket.

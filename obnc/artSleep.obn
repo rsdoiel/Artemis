@@ -1,0 +1,21 @@
+(** artSleep.obn - Sleep and delay functions for POSIX systems (OBNC).
+
+Copyright (C) 2025 Artemis Project Contributors
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
+MODULE artSleep; (** NOT PORTABLE, Assumes OBNC compiler and POSIX system *)
+
+(** Suspends execution for the given number of seconds. *)
+PROCEDURE Seconds*(duration: INTEGER);
+BEGIN
+END Seconds;
+
+(** Suspends execution for the given number of milliseconds. *)
+PROCEDURE Millis*(duration: INTEGER);
+BEGIN
+END Millis;
+
+END artSleep.

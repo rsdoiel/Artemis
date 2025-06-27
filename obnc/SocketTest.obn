@@ -1,0 +1,134 @@
+MODULE SocketTest;
+
+IMPORT Tests, artSocket;
+
+VAR ts : Tests.TestSet;
+
+PROCEDURE TestCreateAndClose() : BOOLEAN;
+VAR s : artSocket.Socket; pass : BOOLEAN;
+BEGIN
+  s := artSocket.NewSocket();
+  pass := s # NIL;
+  Tests.ExpectedBool(TRUE, s # NIL, "Created socket is not null", pass);
+  IF pass THEN artSocket.Close(s) END;
+  RETURN pass
+END TestCreateAndClose;
+
+PROCEDURE TestConnectNoServer() : BOOLEAN;
+VAR s : artSocket.Socket; err : INTEGER; pass, result : BOOLEAN;
+    addr : ARRAY 16 OF CHAR;
+BEGIN
+  pass := TRUE;
+  result := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass);
+    result := FALSE
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Connect(s, addr, 9); (* Port 9 is usually closed *)
+    IF (err = artSocket.ConnectionRefused) OR (err = artSocket.InProgress) THEN
+      Tests.ExpectedBool(TRUE, TRUE, "Connect to closed port returns ConnectionRefused or InProgress", pass)
+    ELSE
+      Tests.ExpectedInt(artSocket.ConnectionRefused, err, "Connect to closed port should refuse or be in progress", pass);
+      result := FALSE
+    END;
+    artSocket.Close(s)
+  END;
+  RETURN result
+END TestConnectNoServer;
+
+PROCEDURE TestBindAndListen() : BOOLEAN;
+VAR s : artSocket.Socket; err : INTEGER; result, pass : BOOLEAN;
+    addr : ARRAY 16 OF CHAR;
+BEGIN
+  pass := TRUE;
+  result := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass);
+    result := FALSE
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Bind(s, addr, 0);  (* 0 = ephemeral port *)
+    Tests.ExpectedInt(artSocket.Ok, err, "Bind should succeed", pass);
+    IF err = artSocket.Ok THEN
+      err := artSocket.Listen(s, 1);
+      Tests.ExpectedInt(artSocket.Ok, err, "Listen should succeed", pass)
+    END;
+    artSocket.Close(s)
+  END;
+  RETURN result
+END TestBindAndListen;
+
+PROCEDURE TestAcceptNoClient() : BOOLEAN;
+VAR s : artSocket.Socket; err : INTEGER; result, pass : BOOLEAN; addr : ARRAY 16 OF CHAR; c : artSocket.Socket;
+BEGIN
+  pass := TRUE;
+  result := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass);
+    result := FALSE
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Bind(s, addr, 0);
+    IF err = artSocket.Ok THEN
+      err := artSocket.Listen(s, 1);
+      IF err = artSocket.Ok THEN
+        c := artSocket.Accept(s, err);
+        Tests.ExpectedInt(artSocket.WouldBlock, err, "Accept with no client should return WouldBlock", pass)
+      ELSE
+        Tests.ExpectedInt(artSocket.Ok, err, "Listen should succeed", pass);
+        result := FALSE
+      END
+    ELSE
+      Tests.ExpectedInt(artSocket.Ok, err, "Bind should succeed", pass);
+      result := FALSE
+    END;
+    artSocket.Close(s)
+  END;
+  RETURN result
+END TestAcceptNoClient;
+
+PROCEDURE TestGetAddrInfoAndFree() : BOOLEAN;
+VAR ai : artSocket.AddrInfo; pass : BOOLEAN;
+    host : ARRAY 32 OF CHAR;
+BEGIN
+  pass := TRUE;
+  host := "127.0.0.1";
+  ai := artSocket.GetAddrInfo(host, 80);
+  Tests.ExpectedBool(TRUE, ai # NIL, "GetAddrInfo returns non-nil for localhost", pass);
+  artSocket.FreeAddrInfo(ai);
+  (* Should not crash or leak *)
+  RETURN pass
+END TestGetAddrInfoAndFree;
+
+PROCEDURE TestLastError() : BOOLEAN;
+VAR s : artSocket.Socket; err, last : INTEGER; pass : BOOLEAN;
+    addr : ARRAY 16 OF CHAR;
+BEGIN
+  pass := TRUE;
+  s := artSocket.NewSocket();
+  IF s = NIL THEN
+    Tests.ExpectedBool(TRUE, FALSE, "Socket creation failed", pass)
+  ELSE
+    addr := "127.0.0.1";
+    err := artSocket.Connect(s, addr, 9);
+    last := artSocket.LastError(s);
+    Tests.ExpectedInt(err, last, "LastError matches last operation", pass);
+    artSocket.Close(s)
+  END;
+  RETURN pass
+END TestLastError;
+
+BEGIN
+    Tests.Init(ts, "Socket Tests");
+    Tests.Add(ts, TestCreateAndClose);
+    Tests.Add(ts, TestConnectNoServer);
+    Tests.Add(ts, TestBindAndListen);
+    Tests.Add(ts, TestAcceptNoClient);
+    Tests.Add(ts, TestGetAddrInfoAndFree);
+    Tests.Add(ts, TestLastError);
+    ASSERT(Tests.Run(ts));
+END SocketTest.

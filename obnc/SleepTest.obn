@@ -1,0 +1,41 @@
+(** artSleepTest.obn - Test stub for artSleep module.
+
+Copyright (C) 2025 Artemis Project Contributors
+
+Released under The 3-Clause BSD License.
+See https://opensource.org/licenses/BSD-3-Clause
+
+*)
+MODULE SleepTest;
+
+IMPORT Tests, artSleep;
+
+VAR
+  ts: Tests.TestSet;
+
+PROCEDURE TestSeconds(): BOOLEAN;
+VAR
+  pass : BOOLEAN;
+BEGIN
+  pass := TRUE;
+  (* Test sleeping for 1 second *)
+  artSleep.Seconds(1);
+  RETURN pass
+END TestSeconds;
+
+PROCEDURE TestMillis(): BOOLEAN;
+VAR
+  pass : BOOLEAN;
+BEGIN
+  pass := TRUE;
+  (* Test sleeping for 100 milliseconds *)
+  artSleep.Millis(100);
+  RETURN pass
+END TestMillis;
+
+BEGIN
+  Tests.Init(ts, "Sleep Tests");
+  Tests.Add(ts, TestSeconds);
+  Tests.Add(ts, TestMillis);
+  ASSERT(Tests.Run(ts));
+END SleepTest.

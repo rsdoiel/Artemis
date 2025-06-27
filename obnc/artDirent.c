@@ -1,4 +1,4 @@
-#include ".obnc/artDirent.h"
+#include "artDirent.h"
 #include <obnc/OBNC.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -23,14 +23,14 @@ artDirent__DirScanner_ artDirent__OpenScanner_(const char path_[], OBNC_INTEGER 
 	dir = opendir(path_);
 	if (dir != NULL) {
 		/* Store DIR* as integer handle (cast pointer to uintptr_t to integer) */
-		(*OBNC_PT(scanner_, 27)).handle_ = (OBNC_INTEGER)(uintptr_t)dir;
-		(*OBNC_PT(scanner_, 28)).isOpen_ = 1;
-		(*OBNC_PT(scanner_, 29)).hasError_ = 0;
+		(*OBNC_PT(scanner_, __LINE__)).handle_ = dir;
+		(*OBNC_PT(scanner_, __LINE__)).isOpen_ = 1;
+		(*OBNC_PT(scanner_, __LINE__)).hasError_ = 0;
 	} else {
 		/* Failed to open directory */
-		(*OBNC_PT(scanner_, 27)).handle_ = 0;
-		(*OBNC_PT(scanner_, 28)).isOpen_ = 0;
-		(*OBNC_PT(scanner_, 29)).hasError_ = 1;
+		(*OBNC_PT(scanner_, __LINE__)).handle_ = 0;
+		(*OBNC_PT(scanner_, __LINE__)).isOpen_ = 0;
+		(*OBNC_PT(scanner_, __LINE__)).hasError_ = 1;
 	}
 	
 	return scanner_;
@@ -45,12 +45,12 @@ int artDirent__NextEntry_(artDirent__DirScanner_ scanner_, char name_[], OBNC_IN
 	size_t nameLength;
 
 	result_ = 0;
-	name_[OBNC_IT(0, name_len, 38)] = '\x00';
+	name_[OBNC_IT(0, name_len, __LINE__)] = '\x00';
 	(*isDirectory_) = 0;
 	
-	if (scanner_ != 0 && (*OBNC_PT(scanner_, 28)).isOpen_ && !(*OBNC_PT(scanner_, 29)).hasError_) {
+	if (scanner_ != 0 && (*OBNC_PT(scanner_, __LINE__)).isOpen_ && !(*OBNC_PT(scanner_, __LINE__)).hasError_) {
 		/* Convert handle back to DIR* */
-		dir = (DIR*)(uintptr_t)(*OBNC_PT(scanner_, 27)).handle_;
+		dir = (DIR*)(uintptr_t)(*OBNC_PT(scanner_, __LINE__)).handle_;
 		
 		/* Clear errno to distinguish between error and end-of-directory */
 		errno = 0;
@@ -87,7 +87,7 @@ int artDirent__NextEntry_(artDirent__DirScanner_ scanner_, char name_[], OBNC_IN
 			/* readdir returned NULL - check if error or end of directory */
 			if (errno != 0) {
 				/* An error occurred */
-				(*OBNC_PT(scanner_, 29)).hasError_ = 1;
+				(*OBNC_PT(scanner_, __LINE__)).hasError_ = 1;
 			}
 			/* If errno is 0, we've reached end of directory (normal) */
 			result_ = 0;
@@ -103,13 +103,13 @@ void artDirent__CloseScanner_(artDirent__DirScanner_ *scanner_)
 	DIR* dir;
 
 	if ((*scanner_) != 0) {
-		if ((*OBNC_PT((*scanner_), 28)).isOpen_) {
+		if ((*OBNC_PT((*scanner_), __LINE__)).isOpen_) {
 			/* Convert handle back to DIR* and close it */
-			dir = (DIR*)(uintptr_t)(*OBNC_PT((*scanner_), 27)).handle_;
+			dir = (DIR*)(uintptr_t)(*OBNC_PT((*scanner_), __LINE__)).handle_;
 			if (dir != NULL) {
 				closedir(dir);
 			}
-			(*OBNC_PT((*scanner_), 28)).isOpen_ = 0;
+			(*OBNC_PT((*scanner_), __LINE__)).isOpen_ = 0;
 		}
 		(*scanner_) = 0;
 	}
@@ -122,7 +122,7 @@ int artDirent__IsValid_(artDirent__DirScanner_ scanner_)
 
 	result_ = 0;
 	if (scanner_ != 0) {
-		result_ = (*OBNC_PT(scanner_, 28)).isOpen_ && (! (*OBNC_PT(scanner_, 29)).hasError_);
+		result_ = (*OBNC_PT(scanner_, __LINE__)).isOpen_ && (! (*OBNC_PT(scanner_, __LINE__)).hasError_);
 	}
 	return result_;
 }
